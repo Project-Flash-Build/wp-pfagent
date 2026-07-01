@@ -1,0 +1,523 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ProjectFlash\Licensing;
+
+/**
+ * ProjectFlash — shared license + update-checker drop-in.
+ *
+ * ONE self-contained file that every ProjectFlash plugin (WP-PFWorkflow,
+ * WP-PFAgent, WP-PFManagement) bundles verbatim. It talks to the portal's
+ * license/update server (`pfw-portal/v1`) and wires the NATIVE WordPress update
+ * flow so the customer sees the standard "there is a new version — update" row
+ * on Plugins.
+ *
+ * Scope (v1): update-NOTICE only. It never gates or disables features. With no
+ * license key (or an inactive one) it simply offers no update and raises no
+ * error — safe on dev / unlicensed sites.
+ *
+ * ── Adoption (each plugin, in its bootstrap) ──────────────────────────────
+ *   if (!class_exists(\ProjectFlash\Licensing\LicenseClient::class)) {
+ *       require_once __DIR__ . '/includes/Licensing/LicenseClient.php';
+ *   }
+ *   (new \ProjectFlash\Licensing\LicenseClient([
+ *       'plugin_file' => __FILE__,          // main plugin file (for the update slug)
+ *       'slug'        => 'wp-pfworkflow',    // portal product slug — MUST match the portal
+ *       'name'        => 'WP-PFWorkflow',    // display name
+ *       'version'     => PFW_VERSION,        // current installed version
+ *       'option_key'  => 'pfw_license',      // wp_options key for stored state
+ *       'text_domain' => 'wp-pfworkflow',
+ *       'menu_parent' => 'pfw-workflow',     // parent admin menu slug (optional)
+ *   ]))->register();
+ *
+ * The class is guarded by class_exists at require time, so whichever PF plugin
+ * loads first defines it and the others reuse the same class. Each instance is
+ * fully independent (its own slug / option / update hooks), so several PF
+ * plugins share the code without colliding.
+ *
+ * Portal base URL: defaults to the production portal; override with the
+ * `pfw_license_portal_url` filter or a `PFW_LICENSE_PORTAL_URL` constant (handy
+ * for pointing a dev site at a local portal).
+ */
+final class LicenseClient
+{
+    /** Drop-in revision — bump when the shared file changes so adopters can tell copies apart. */
+    public const DROPIN_VERSION = '1.0.0';
+
+    private const REST_NAMESPACE = 'pfw-portal/v1';
+    private const DEFAULT_PORTAL = 'https://project-flash.com';
+    /** How long a check-update result is cached (portal rate-limit is 60/min/IP; be gentle). */
+    private const CHECK_TTL = 12 * HOUR_IN_SECONDS;
+
+    private string $pluginFile;
+    private string $pluginBasename;
+    private string $slug;
+    private string $name;
+    private string $version;
+    private string $optionKey;
+    private string $textDomain;
+    private string $menuParent;
+    private string $menuTitle;
+
+    /**
+     * @param array{plugin_file:string, slug:string, name:string, version:string,
+     *              option_key:string, text_domain?:string, menu_parent?:string,
+     *              menu_title?:string} $config
+     */
+    public function __construct(array $config)
+    {
+        $this->pluginFile     = (string) ($config['plugin_file'] ?? '');
+        $this->pluginBasename = $this->pluginFile !== '' ? plugin_basename($this->pluginFile) : '';
+        $this->slug           = (string) ($config['slug'] ?? '');
+        $this->name           = (string) ($config['name'] ?? $this->slug);
+        $this->version        = (string) ($config['version'] ?? '0.0.0');
+        $this->optionKey      = (string) ($config['option_key'] ?? ('pf_license_' . $this->slug));
+        $this->textDomain     = (string) ($config['text_domain'] ?? 'default');
+        $this->menuParent     = (string) ($config['menu_parent'] ?? '');
+        $this->menuTitle      = (string) ($config['menu_title'] ?? __('License', 'default'));
+    }
+
+    // ── wiring ────────────────────────────────────────────────────────────
+
+    public function register(): void
+    {
+        if ($this->slug === '' || $this->pluginBasename === '') {
+            return; // misconfigured — do nothing rather than fatal.
+        }
+
+        // Native WP update flow.
+        add_filter('pre_set_site_transient_update_plugins', [$this, 'inject_update']);
+        add_filter('plugins_api', [$this, 'plugins_api'], 10, 3);
+        // Drop our cached result when WP clears its update cache (e.g. after an update).
+        add_action('upgrader_process_complete', [$this, 'flush_cache']);
+
+        // Daily background refresh (kept well under the portal rate-limit).
+        $cron = $this->cron_hook();
+        add_action($cron, [$this, 'refresh_check']);
+        if (!wp_next_scheduled($cron)) {
+            wp_schedule_event(time() + HOUR_IN_SECONDS, 'daily', $cron);
+        }
+
+        // License settings screen + form handler.
+        add_action('admin_menu', [$this, 'admin_menu'], 20);
+        add_action('admin_post_' . $this->action_slug(), [$this, 'handle_form']);
+    }
+
+    // ── identity / config helpers ───────────────────────────────────────────
+
+    private function cron_hook(): string
+    {
+        return 'pf_license_check_' . str_replace('-', '_', $this->slug);
+    }
+
+    private function action_slug(): string
+    {
+        return 'pf_license_save_' . str_replace('-', '_', $this->slug);
+    }
+
+    private function page_slug(): string
+    {
+        return 'pf-license-' . $this->slug;
+    }
+
+    private function portal_base(): string
+    {
+        $base = defined('PFW_LICENSE_PORTAL_URL') ? (string) PFW_LICENSE_PORTAL_URL : self::DEFAULT_PORTAL;
+        /** Filter the portal base URL (scheme + host, no trailing slash). */
+        $base = (string) apply_filters('pfw_license_portal_url', $base, $this->slug);
+        return untrailingslashit($base);
+    }
+
+    private function rest_url(string $path): string
+    {
+        return $this->portal_base() . '/wp-json/' . self::REST_NAMESPACE . '/' . ltrim($path, '/');
+    }
+
+    /**
+     * Opaque per-site fingerprint: sha256(home_url + a per-site random secret).
+     * The secret is minted once and stored, so the fingerprint is stable across
+     * activations on this site yet unique per install. The portal stores it at
+     * activation and compares it on verify / update-check.
+     */
+    private function fingerprint(): string
+    {
+        $secretKey = $this->optionKey . '_fp_secret';
+        $secret = get_option($secretKey, '');
+        if (!is_string($secret) || $secret === '') {
+            $secret = wp_generate_password(64, false, false);
+            update_option($secretKey, $secret, false);
+        }
+        return hash('sha256', home_url('/') . '|' . $secret);
+    }
+
+    // ── stored state ────────────────────────────────────────────────────────
+
+    /** @return array{key:string, status:string, site_match:bool, expires_at:string, last_activation:string} */
+    private function state(): array
+    {
+        $s = get_option($this->optionKey, []);
+        if (!is_array($s)) {
+            $s = [];
+        }
+        return [
+            'key'             => (string) ($s['key'] ?? ''),
+            'status'          => (string) ($s['status'] ?? 'inactive'),
+            'site_match'      => (bool) ($s['site_match'] ?? false),
+            'expires_at'      => (string) ($s['expires_at'] ?? ''),
+            'last_activation' => (string) ($s['last_activation'] ?? ''),
+        ];
+    }
+
+    /** @param array<string,mixed> $patch */
+    private function save_state(array $patch): void
+    {
+        $s = $this->state();
+        update_option($this->optionKey, array_merge($s, $patch), false);
+    }
+
+    private function is_licensed(): bool
+    {
+        $s = $this->state();
+        return $s['key'] !== '' && in_array($s['status'], ['active', 'grace'], true) && $s['site_match'];
+    }
+
+    // ── portal calls ────────────────────────────────────────────────────────
+
+    /**
+     * @return array{ok:bool, error?:string, data?:array<string,mixed>}
+     */
+    private function activate(string $key): array
+    {
+        $res = wp_remote_post($this->rest_url('licenses/' . rawurlencode($key) . '/activate'), [
+            'timeout' => 15,
+            'body'    => [
+                'site_url'         => home_url('/'),
+                'site_fingerprint' => $this->fingerprint(),
+                'wp_version'       => get_bloginfo('version'),
+                'php_version'      => PHP_VERSION,
+                'plugin_version'   => $this->version,
+            ],
+        ]);
+        return $this->parse($res);
+    }
+
+    /**
+     * @return array{ok:bool, error?:string, data?:array<string,mixed>}
+     */
+    private function deactivate(string $key): array
+    {
+        $res = wp_remote_post($this->rest_url('licenses/' . rawurlencode($key) . '/deactivate'), [
+            'timeout' => 15,
+            'body'    => ['site_fingerprint' => $this->fingerprint()],
+        ]);
+        return $this->parse($res);
+    }
+
+    /**
+     * Ask the portal whether a newer release exists. Cached in a transient for
+     * CHECK_TTL. Returns the decoded portal payload (or a safe no-update stub).
+     *
+     * @return array<string,mixed>
+     */
+    public function check_update(bool $force = false): array
+    {
+        $cacheKey = $this->optionKey . '_upd';
+        if (!$force) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        $stub = ['has_update' => false];
+        $state = $this->state();
+        if ($state['key'] === '') {
+            set_transient($cacheKey, $stub, self::CHECK_TTL);
+            return $stub; // unlicensed → no update, no error.
+        }
+
+        $url = add_query_arg([
+            'license'          => $state['key'],
+            'site_fingerprint' => $this->fingerprint(),
+            'current_version'  => $this->version,
+        ], $this->rest_url('updates/' . rawurlencode($this->slug)));
+
+        $res = wp_remote_get($url, ['timeout' => 15]);
+        $parsed = $this->parse_raw($res);
+        if (!is_array($parsed)) {
+            // Network / portal error — cache the stub briefly so we retry soon.
+            set_transient($cacheKey, $stub, HOUR_IN_SECONDS);
+            return $stub;
+        }
+
+        set_transient($cacheKey, $parsed, self::CHECK_TTL);
+        return $parsed;
+    }
+
+    /**
+     * Normalise a portal response that uses the {status, data|error} envelope.
+     *
+     * @param mixed $res
+     * @return array{ok:bool, error?:string, data?:array<string,mixed>}
+     */
+    private function parse($res): array
+    {
+        $body = $this->parse_raw($res);
+        if (!is_array($body)) {
+            return ['ok' => false, 'error' => 'network_error'];
+        }
+        if (($body['status'] ?? '') === 'ok') {
+            return ['ok' => true, 'data' => is_array($body['data'] ?? null) ? $body['data'] : $body];
+        }
+        return ['ok' => false, 'error' => (string) ($body['error'] ?? 'unknown_error')];
+    }
+
+    /**
+     * Decode a wp_remote_* response body to an array, or null on any failure.
+     *
+     * @param mixed $res
+     * @return array<string,mixed>|null
+     */
+    private function parse_raw($res): ?array
+    {
+        if (is_wp_error($res)) {
+            return null;
+        }
+        $code = (int) wp_remote_retrieve_response_code($res);
+        if ($code < 200 || $code >= 300) {
+            return null;
+        }
+        $decoded = json_decode((string) wp_remote_retrieve_body($res), true);
+        return is_array($decoded) ? $decoded : null;
+    }
+
+    // ── native WP update flow ────────────────────────────────────────────────
+
+    /**
+     * Inject our update into the plugins update transient when the portal
+     * reports a newer version with a signed download URL.
+     *
+     * @param mixed $transient
+     * @return mixed
+     */
+    public function inject_update($transient)
+    {
+        if (!is_object($transient)) {
+            return $transient;
+        }
+
+        $info = $this->check_update();
+        if (empty($info['has_update']) || empty($info['download_url']) || empty($info['latest_version'])) {
+            // No update (or notice-only degrade): make sure we don't leave a stale offer.
+            if (isset($transient->response[$this->pluginBasename])) {
+                unset($transient->response[$this->pluginBasename]);
+            }
+            return $transient;
+        }
+
+        $update = (object) [
+            'slug'        => $this->slug,
+            'plugin'      => $this->pluginBasename,
+            'new_version' => (string) $info['latest_version'],
+            'url'         => $this->portal_base(),
+            'package'     => (string) $info['download_url'],
+            'tested'      => (string) ($info['tested'] ?? ''),
+            'requires'    => (string) ($info['requires'] ?? ''),
+            'requires_php' => (string) ($info['requires_php'] ?? ''),
+        ];
+        $transient->response[$this->pluginBasename] = $update;
+        return $transient;
+    }
+
+    /**
+     * Supply the "View version details" modal content.
+     *
+     * @param mixed  $result
+     * @param string $action
+     * @param mixed  $args
+     * @return mixed
+     */
+    public function plugins_api($result, $action, $args)
+    {
+        if ($action !== 'plugin_information' || !isset($args->slug) || $args->slug !== $this->slug) {
+            return $result;
+        }
+
+        $info = $this->check_update();
+        $latest = (string) ($info['latest_version'] ?? $this->version);
+
+        return (object) [
+            'name'          => $this->name,
+            'slug'          => $this->slug,
+            'version'       => $latest,
+            'requires'      => (string) ($info['requires'] ?? ''),
+            'tested'        => (string) ($info['tested'] ?? ''),
+            'requires_php'  => (string) ($info['requires_php'] ?? ''),
+            'download_link' => (string) ($info['download_url'] ?? ''),
+            'sections'      => [
+                'description' => sprintf(
+                    /* translators: %s: plugin name */
+                    esc_html__('%s is distributed and updated through the Project Flash portal. Updates require an active license.', $this->textDomain),
+                    esc_html($this->name)
+                ),
+            ],
+        ];
+    }
+
+    public function flush_cache(): void
+    {
+        delete_transient($this->optionKey . '_upd');
+    }
+
+    public function refresh_check(): void
+    {
+        $this->check_update(true);
+    }
+
+    // ── admin: license settings ──────────────────────────────────────────────
+
+    public function admin_menu(): void
+    {
+        $cap = 'manage_options';
+        if ($this->menuParent !== '') {
+            add_submenu_page(
+                $this->menuParent,
+                $this->name . ' — ' . $this->menuTitle,
+                $this->menuTitle,
+                $cap,
+                $this->page_slug(),
+                [$this, 'render_page']
+            );
+        } else {
+            add_options_page(
+                $this->name . ' — ' . $this->menuTitle,
+                $this->name . ' ' . $this->menuTitle,
+                $cap,
+                $this->page_slug(),
+                [$this, 'render_page']
+            );
+        }
+    }
+
+    public function render_page(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        $state = $this->state();
+        $masked = $state['key'] !== ''
+            ? str_repeat('•', max(0, strlen($state['key']) - 4)) . substr($state['key'], -4)
+            : '';
+        $notice = isset($_GET['pf_lic']) ? sanitize_key((string) wp_unslash($_GET['pf_lic'])) : '';
+
+        echo '<div class="wrap">';
+        echo '<h1>' . esc_html($this->name . ' — ' . $this->menuTitle) . '</h1>';
+
+        if ($notice !== '') {
+            $map = [
+                'activated'   => [__('License activated. This site will now receive updates.', $this->textDomain), 'success'],
+                'deactivated' => [__('License deactivated on this site.', $this->textDomain), 'info'],
+                'error'       => [__('Could not reach the license server or the key was rejected. Check the key and try again.', $this->textDomain), 'error'],
+            ];
+            if (isset($map[$notice])) {
+                printf(
+                    '<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
+                    esc_attr($map[$notice][1]),
+                    esc_html($map[$notice][0])
+                );
+            }
+        }
+
+        $isLicensed = $this->is_licensed();
+        echo '<table class="form-table" role="presentation"><tbody>';
+        echo '<tr><th scope="row">' . esc_html__('Status', $this->textDomain) . '</th><td>';
+        if ($isLicensed) {
+            echo '<span style="color:#008a20;font-weight:600;">● ' . esc_html__('Active', $this->textDomain) . '</span>';
+            if ($state['expires_at'] !== '') {
+                echo ' <span class="description">' . sprintf(
+                    /* translators: %s: expiry date */
+                    esc_html__('(renews / expires %s)', $this->textDomain),
+                    esc_html($state['expires_at'])
+                ) . '</span>';
+            }
+        } else {
+            echo '<span style="color:#b32d2e;font-weight:600;">● ' . esc_html__('Not active', $this->textDomain) . '</span>';
+            echo ' <span class="description">' . esc_html__('Enter your license key to receive updates.', $this->textDomain) . '</span>';
+        }
+        echo '</td></tr>';
+        echo '</tbody></table>';
+
+        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+        echo '<input type="hidden" name="action" value="' . esc_attr($this->action_slug()) . '">';
+        wp_nonce_field($this->action_slug());
+        echo '<table class="form-table" role="presentation"><tbody>';
+        echo '<tr><th scope="row"><label for="pf_license_key">' . esc_html__('License key', $this->textDomain) . '</label></th><td>';
+        echo '<input name="pf_license_key" id="pf_license_key" type="text" class="regular-text" autocomplete="off" placeholder="PFW-XXXX-XXXX-XXXX" value="' . esc_attr($isLicensed ? $masked : $state['key']) . '"' . ($isLicensed ? ' readonly' : '') . '>';
+        echo '</td></tr>';
+        echo '</tbody></table>';
+
+        if ($isLicensed) {
+            submit_button(__('Deactivate on this site', $this->textDomain), 'secondary', 'pf_license_deactivate', false);
+        } else {
+            submit_button(__('Activate license', $this->textDomain), 'primary', 'pf_license_activate', false);
+        }
+        echo '</form>';
+        echo '</div>';
+    }
+
+    public function handle_form(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('Insufficient permissions.', $this->textDomain));
+        }
+        check_admin_referer($this->action_slug());
+
+        $redirect = add_query_arg('page', $this->page_slug(), admin_url($this->menuParent !== '' ? 'admin.php' : 'options-general.php'));
+
+        // Deactivate.
+        if (isset($_POST['pf_license_deactivate'])) {
+            $state = $this->state();
+            if ($state['key'] !== '') {
+                $this->deactivate($state['key']);
+            }
+            update_option($this->optionKey, ['key' => '', 'status' => 'inactive', 'site_match' => false], false);
+            $this->flush_cache();
+            wp_safe_redirect(add_query_arg('pf_lic', 'deactivated', $redirect));
+            exit;
+        }
+
+        // Activate.
+        $key = isset($_POST['pf_license_key']) ? trim(sanitize_text_field((string) wp_unslash($_POST['pf_license_key']))) : '';
+        if ($key === '') {
+            wp_safe_redirect(add_query_arg('pf_lic', 'error', $redirect));
+            exit;
+        }
+
+        $act = $this->activate($key);
+        if (!$act['ok']) {
+            wp_safe_redirect(add_query_arg('pf_lic', 'error', $redirect));
+            exit;
+        }
+
+        // Confirm status + product + site match via verify.
+        $verifyRes = wp_remote_post($this->rest_url('licenses/' . rawurlencode($key) . '/verify'), [
+            'timeout' => 15,
+            'body'    => ['site_fingerprint' => $this->fingerprint()],
+        ]);
+        $verify = $this->parse_raw($verifyRes) ?? [];
+
+        $this->save_state([
+            'key'             => $key,
+            'status'          => (string) ($verify['license_status'] ?? 'active'),
+            'site_match'      => ($verify['site_match'] ?? true) !== false,
+            'expires_at'      => (string) ($verify['expires_at'] ?? ''),
+            'last_activation' => gmdate('c'),
+        ]);
+        $this->flush_cache();
+        $this->check_update(true); // warm the cache so the update row can appear immediately.
+
+        wp_safe_redirect(add_query_arg('pf_lic', 'activated', $redirect));
+        exit;
+    }
+}

@@ -217,7 +217,7 @@
  * - **Base URL**: e.g. `https://api.deepseek.com/v1`.
  * - **API key**: provider-specific. Self-hosted endpoints often
  *   accept any string or `EMPTY`.
- * - **Model identifier**: e.g. `deepseek-chat`, `llama-3.1-70b-instruct`.
+ * - **Model identifier**: e.g. `deepseek-v4-flash`, `llama-3.1-70b-instruct`.
  *
  * Test connection probes `POST {base_url}/chat/completions` with a
  * 1-token request. If it returns a valid choice, you're good.

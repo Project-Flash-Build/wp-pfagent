@@ -105,6 +105,12 @@ require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/Prompts.php';
 require_once WP_PFAGENT_DIR . 'includes/Framework/LlmCompactor.php';
 require_once WP_PFAGENT_DIR . 'includes/FrameworkRuntime.php';
 
+// Shared license + update-checker drop-in. Guarded by class_exists so whichever
+// ProjectFlash plugin loads first defines the class and the rest reuse it.
+if (!class_exists(\ProjectFlash\Licensing\LicenseClient::class)) {
+    require_once WP_PFAGENT_DIR . 'includes/Licensing/LicenseClient.php';
+}
+
 register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\TraceLogger', 'install']);
 register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\DecompileCache', 'activate']);
 register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\TemplateDecompileCache', 'activate']);
@@ -183,6 +189,16 @@ add_action('plugins_loaded', static function (): void {
     (new \ProjectFlash\Agent\RestApi())->init();
     (new \ProjectFlash\Agent\AdminPage())->init();
     (new \ProjectFlash\Agent\DashboardWidget())->init();
+
+    (new \ProjectFlash\Licensing\LicenseClient([
+        'plugin_file' => WP_PFAGENT_FILE,
+        'slug'        => 'wp-pfagent',
+        'name'        => 'WP-PFAgent',
+        'version'     => WP_PFAGENT_VERSION,
+        'option_key'  => 'pfa_license',
+        'text_domain' => 'wp-pfagent',
+        'menu_parent' => 'wp-pfagent',
+    ]))->register();
 
     // One-shot purge of the legacy VFS draft/preview options
     // (pfa_draft_<hash>, pfa_preview_<hash>, pfa_draft_index). The VFS

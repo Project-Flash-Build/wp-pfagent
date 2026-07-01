@@ -1,9 +1,9 @@
 {
   "_comment": "Per-model pricing + caps. USD per million tokens. Adapters use this for cost computation and as caps fallback when the provider does not expose them via /models. Update prices here; no code change needed. Source notes inline.",
-  "_lastReviewed": "2026-05-24",
+  "_lastReviewed": "2026-07-01",
   "_pricingUnit": "usd_per_mtok",
   "models": {
-    "deepseek-chat": {
+    "deepseek-v4-flash": {
       "family": "openai-compatible",
       "providerHints": ["deepseek"],
       "contextLength": 128000,
@@ -15,9 +15,9 @@
         "cacheWrite": 0.27
       },
       "features": ["tools", "stream", "logprobs", "prefix_continuation"],
-      "source": "deepseek.com/pricing (2026-05)"
+      "source": "deepseek.com /v1/models 2026-07 (current id; supersedes deepseek-chat). /models exposes no caps — contextLength/maxOutput/pricing carried from the prior flash tier; wizard live-fetch overrides."
     },
-    "deepseek-reasoner": {
+    "deepseek-v4-pro": {
       "family": "openai-compatible",
       "providerHints": ["deepseek"],
       "contextLength": 128000,
@@ -29,7 +29,7 @@
         "cacheWrite": 0.55
       },
       "features": ["tools", "stream", "thinking"],
-      "source": "deepseek.com/pricing reasoner tier"
+      "source": "deepseek.com /v1/models 2026-07 (current id; supersedes deepseek-reasoner). /models exposes no caps — contextLength/maxOutput/pricing carried from the prior reasoner tier; wizard live-fetch overrides."
     },
     "gpt-5": {
       "family": "openai-compatible",
