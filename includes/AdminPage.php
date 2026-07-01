@@ -1,0 +1,268 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ProjectFlash\Agent;
+
+final class AdminPage
+{
+    private const SCRIPT_HANDLE = 'pfagent-app';
+    private const STYLE_HANDLE  = 'pfagent-app';
+
+    private string $hook_suffix = '';
+
+    public function init(): void
+    {
+        add_action('admin_menu', [$this, 'register_menu']);
+        // Force `type="module"` on our bundle, otherwise the browser refuses
+        // the ES-module imports vite emits.
+        add_filter('script_loader_tag', [$this, 'filter_script_module_tag'], 10, 3);
+        // WP's wp_set_script_translations looks for languages/<domain>-<locale>-<md5(src)>.json
+        // by default. The md5 changes every build because the script URL embeds
+        // the vite content hash. Redirect to our deterministic
+        // <domain>-<locale>-<handle>.json so translations survive rebuilds.
+        add_filter('load_script_translation_file', [$this, 'filter_script_translation_file'], 10, 3);
+    }
+
+    public function filter_script_translation_file(string $file, string $handle, string $domain): string
+    {
+        if ($handle !== self::SCRIPT_HANDLE || $domain !== 'wp-pfagent') {
+            return $file;
+        }
+        $locale = determine_locale();
+        $custom = WP_PFAGENT_DIR . 'languages/' . $domain . '-' . $locale . '-' . $handle . '.json';
+
+        return file_exists($custom) ? $custom : $file;
+    }
+
+    public function register_menu(): void
+    {
+        $this->hook_suffix = add_menu_page(
+            __('WP PFAgent', 'wp-pfagent'),
+            __('PF Agent', 'wp-pfagent'),
+            'manage_options',
+            'wp-pfagent',
+            [$this, 'render_fallback'],
+            'dashicons-format-chat',
+            57
+        );
+
+        // Render the SPA full-screen, outside the standard wp-admin chrome.
+        // Hooking into load-{hook_suffix} fires before any admin output, so we
+        // can emit our own HTML document and exit; this keeps the menu entry
+        // (so the link appears in the sidebar) while replacing the cramped
+        // admin canvas with the full viewport.
+        add_action('load-' . $this->hook_suffix, [$this, 'render_full_screen']);
+    }
+
+    /**
+     * Convert <script src="...pfagent-app..."></script> into
+     * <script type="module" src="..."></script>. Required because vite
+     * emits an ES module entrypoint, which classic <script> tags would
+     * reject (top-level imports throw a SyntaxError).
+     */
+    public function filter_script_module_tag(string $tag, string $handle, string $src): string
+    {
+        if ($handle !== self::SCRIPT_HANDLE) {
+            return $tag;
+        }
+        if (strpos($tag, 'type="module"') !== false) {
+            return $tag;
+        }
+        return '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>' . "\n";
+    }
+
+    public function render_full_screen(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        nocache_headers();
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=' . get_bloginfo('charset'));
+        }
+
+        $entry = $this->asset_entry();
+        $version_qs = WP_PFAGENT_VERSION;
+
+        // Register + enqueue the bundle and its CSS through the official WP
+        // pipeline. The wp-i18n dependency ensures the global wp.i18n is
+        // available BEFORE our bundle runs (we import @wordpress/i18n in
+        // the TSX, which vite externalises to that global). And
+        // wp_set_script_translations is what causes WP to inject the
+        // matching <script>wp.i18n.setLocaleData(...)</script> for the
+        // active locale right before our bundle script tag.
+        if (is_array($entry)) {
+            wp_register_script(
+                self::SCRIPT_HANDLE,
+                WP_PFAGENT_URL . 'dist/' . $entry['file'],
+                ['wp-i18n'],
+                $version_qs,
+                true
+            );
+            wp_set_script_translations(
+                self::SCRIPT_HANDLE,
+                'wp-pfagent',
+                WP_PFAGENT_DIR . 'languages'
+            );
+            wp_enqueue_script(self::SCRIPT_HANDLE);
+
+            foreach (is_array($entry['css'] ?? null) ? $entry['css'] : [] as $index => $css_file) {
+                $style_handle = self::STYLE_HANDLE . ($index === 0 ? '' : '-' . $index);
+                wp_register_style(
+                    $style_handle,
+                    WP_PFAGENT_URL . 'dist/' . $css_file,
+                    [],
+                    $version_qs
+                );
+                wp_enqueue_style($style_handle);
+            }
+        }
+
+        $config_json = (string) wp_json_encode($this->app_config());
+        $admin_url = esc_url(admin_url());
+        $title = esc_html__('WP PFAgent', 'wp-pfagent');
+        $back_label = esc_html__('Back to admin', 'wp-pfagent');
+        $missing_label = esc_html__('WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory.', 'wp-pfagent');
+        ?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+<meta charset="<?php bloginfo('charset'); ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="same-origin">
+<title><?php echo $title; ?></title>
+<style>
+html, body { margin: 0; padding: 0; min-height: 100vh; background: #0c1118; color: #edf4ff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+/* Override the embedded-in-admin layout rules from styles.css when running
+   full-screen. The React layer renders its own top bar (.pfa-fullscreen-bar)
+   so the SPA root only needs to occupy the remaining viewport. */
+body.pfa-fullscreen .pfa-root { min-height: calc(100vh - 40px); margin-left: 0; }
+body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
+.pfa-fullscreen-fallback { padding: 24px; color: #ffd58a; background: #3a2a14; border: 1px solid #5a4214; margin: 16px; border-radius: 6px; }
+.pfa-fullscreen-fallback a { color: #4d8dff; }
+</style>
+<?php
+        // Bring dashicons into the document so the React full-screen bar
+        // can render its arrow + plugin icons without dragging the rest
+        // of the wp-admin stylesheet in. wp_print_styles also flushes any
+        // styles we just enqueued (the pfagent-app bundle CSS).
+        wp_print_styles(['dashicons', self::STYLE_HANDLE]);
+        ?>
+</head>
+<body class="pfa-fullscreen">
+<div id="wp-pfagent-root" class="pfa-root"></div>
+<?php if (!is_array($entry)): ?>
+<div class="pfa-fullscreen-fallback">
+  <strong><?php echo esc_html__('WP PFAgent assets are not built.', 'wp-pfagent'); ?></strong>
+  <p><?php echo $missing_label; ?></p>
+  <p><a href="<?php echo $admin_url; ?>"><?php echo $back_label; ?></a></p>
+</div>
+<?php endif; ?>
+<script>window.ProjectFlashAgent = <?php echo $config_json; ?>;</script>
+<?php
+        // wp_print_scripts emits wp-i18n (dependency) and our pfagent-app
+        // bundle. We then explicitly emit the translations script for our
+        // handle: in this admin_init+exit code path the standard print
+        // pipeline doesn't always invoke print_translations alongside the
+        // bundle, so we force it ourselves AFTER wp-i18n is on the page
+        // (which load_script_textdomain queries via the registered handle).
+        wp_print_scripts([self::SCRIPT_HANDLE]);
+        if (is_array($entry)) {
+            $translations = wp_scripts()->print_translations(self::SCRIPT_HANDLE, false);
+            if (is_string($translations) && $translations !== '') {
+                echo "<script id='" . esc_attr(self::SCRIPT_HANDLE) . "-js-translations'>\n" . $translations . "\n</script>\n";
+            }
+        }
+        ?>
+</body>
+</html>
+<?php
+        exit;
+    }
+
+    /**
+     * Fallback admin renderer for the rare case the load-{hook_suffix} hook
+     * is bypassed (eg. early permission denial). Mirrors the previous
+     * embedded behavior so the user still sees something.
+     */
+    public function render_fallback(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('You do not have permission to manage WP PFAgent.', 'wp-pfagent'));
+        }
+
+        echo '<div id="wp-pfagent-root" class="pfa-root"></div>';
+
+        if ($this->asset_entry() === null) {
+            echo '<div class="notice notice-warning"><p>';
+            echo esc_html__('WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory.', 'wp-pfagent');
+            echo '</p></div>';
+        }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function app_config(): array
+    {
+        $workflow_dependency = WorkflowDependency::status_payload();
+        $workflow_capabilities = is_array($workflow_dependency['capabilities'] ?? null)
+            ? $workflow_dependency['capabilities']
+            : [];
+
+        $active_llm_raw = get_option('wp_pfagent_active_llm', []);
+        if (!is_array($active_llm_raw)) {
+            $active_llm_raw = [];
+        }
+        $active_llm = [
+            'providerId' => (string) ($active_llm_raw['providerId'] ?? ''),
+            'model' => (string) ($active_llm_raw['model'] ?? ''),
+            'sessionId' => isset($active_llm_raw['sessionId']) && $active_llm_raw['sessionId'] !== null
+                ? (int) $active_llm_raw['sessionId']
+                : null,
+            'updatedAt' => (string) ($active_llm_raw['updatedAt'] ?? ''),
+        ];
+
+        return [
+            'restUrl' => esc_url_raw(rest_url('wp-pfagent/v1/')),
+            'workflowRestUrl' => (string) ($workflow_dependency['restUrl'] ?? ''),
+            'nonce' => wp_create_nonce('wp_rest'),
+            'version' => WP_PFAGENT_VERSION,
+            'adminUrl' => esc_url_raw(admin_url()),
+            'iconUrl' => esc_url_raw(WP_PFAGENT_URL . 'assets/static/icon.png'),
+            'workflowDependency' => $workflow_dependency,
+            'managementDependency' => ManagementDependency::status_payload(),
+            'activeLlm' => $active_llm,
+            'capabilities' => [
+                'manageAgent' => Capabilities::can_manage_agent(),
+                'manageCredentials' => Capabilities::can_manage_credentials(),
+                'viewWorkflows' => (bool) ($workflow_capabilities['viewWorkflows'] ?? false),
+                'manageWorkflows' => (bool) ($workflow_capabilities['manageWorkflows'] ?? false),
+                'runWorkflows' => (bool) ($workflow_capabilities['runWorkflows'] ?? false),
+                'viewLogs' => (bool) ($workflow_capabilities['viewLogs'] ?? false),
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function asset_entry(): ?array
+    {
+        $manifest_path = WP_PFAGENT_DIR . 'dist/.vite/manifest.json';
+
+        if (!file_exists($manifest_path)) {
+            return null;
+        }
+
+        $manifest = json_decode((string) file_get_contents($manifest_path), true);
+        if (!is_array($manifest)) {
+            return null;
+        }
+
+        $entry = $manifest['assets/src/main.tsx'] ?? null;
+
+        return is_array($entry) ? $entry : null;
+    }
+}

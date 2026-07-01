@@ -1,0 +1,403 @@
+{
+  "_comment": "Per-model pricing + caps. USD per million tokens. Adapters use this for cost computation and as caps fallback when the provider does not expose them via /models. Update prices here; no code change needed. Source notes inline.",
+  "_lastReviewed": "2026-05-24",
+  "_pricingUnit": "usd_per_mtok",
+  "models": {
+    "deepseek-chat": {
+      "family": "openai-compatible",
+      "providerHints": ["deepseek"],
+      "contextLength": 128000,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.27,
+        "output": 1.10,
+        "cacheRead": 0.027,
+        "cacheWrite": 0.27
+      },
+      "features": ["tools", "stream", "logprobs", "prefix_continuation"],
+      "source": "deepseek.com/pricing (2026-05)"
+    },
+    "deepseek-reasoner": {
+      "family": "openai-compatible",
+      "providerHints": ["deepseek"],
+      "contextLength": 128000,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.55,
+        "output": 2.19,
+        "cacheRead": 0.055,
+        "cacheWrite": 0.55
+      },
+      "features": ["tools", "stream", "thinking"],
+      "source": "deepseek.com/pricing reasoner tier"
+    },
+    "gpt-5": {
+      "family": "openai-compatible",
+      "providerHints": ["openai"],
+      "contextLength": 400000,
+      "maxOutputTokens": 16384,
+      "pricing": {
+        "input": 1.25,
+        "output": 10.00,
+        "cacheRead": 0.125
+      },
+      "features": ["tools", "stream", "logprobs", "response_format", "reasoning_effort", "vision"],
+      "source": "openai.com/pricing GPT-5 (2026-05)"
+    },
+    "gpt-5-mini": {
+      "family": "openai-compatible",
+      "providerHints": ["openai"],
+      "contextLength": 400000,
+      "maxOutputTokens": 16384,
+      "pricing": {
+        "input": 0.25,
+        "output": 2.00,
+        "cacheRead": 0.025
+      },
+      "features": ["tools", "stream", "logprobs", "response_format", "reasoning_effort"],
+      "source": "openai.com/pricing"
+    },
+    "gpt-5-nano": {
+      "family": "openai-compatible",
+      "providerHints": ["openai"],
+      "contextLength": 128000,
+      "maxOutputTokens": 16384,
+      "pricing": {
+        "input": 0.05,
+        "output": 0.40,
+        "cacheRead": 0.005
+      },
+      "features": ["tools", "stream"],
+      "source": "openai.com/pricing"
+    },
+    "o3": {
+      "family": "openai-compatible",
+      "providerHints": ["openai"],
+      "contextLength": 200000,
+      "maxOutputTokens": 100000,
+      "pricing": {
+        "input": 2.00,
+        "output": 8.00,
+        "cacheRead": 0.50
+      },
+      "features": ["tools", "stream", "thinking"],
+      "notes": "Reasoning tokens billed at output rate; visible output_tokens excludes them.",
+      "source": "openai.com/pricing"
+    },
+    "o4-mini": {
+      "family": "openai-compatible",
+      "providerHints": ["openai"],
+      "contextLength": 200000,
+      "maxOutputTokens": 100000,
+      "pricing": {
+        "input": 1.10,
+        "output": 4.40,
+        "cacheRead": 0.275
+      },
+      "features": ["tools", "stream", "thinking"],
+      "source": "openai.com/pricing"
+    },
+    "claude-haiku-3-5": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 8192,
+      "minCacheTokens": 2048,
+      "pricing": {
+        "input": 0.80,
+        "output": 4.00,
+        "cacheRead": 0.08,
+        "cacheWrite": 1.00
+      },
+      "features": ["tools", "stream", "cache_control", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-haiku-4-5": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 64000,
+      "minCacheTokens": 4096,
+      "pricing": {
+        "input": 1.00,
+        "output": 5.00,
+        "cacheRead": 0.10,
+        "cacheWrite": 1.25
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-sonnet-3-7": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 64000,
+      "minCacheTokens": 1024,
+      "pricing": {
+        "input": 3.00,
+        "output": 15.00,
+        "cacheRead": 0.30,
+        "cacheWrite": 3.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-sonnet-4": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 64000,
+      "minCacheTokens": 1024,
+      "pricing": {
+        "input": 3.00,
+        "output": 15.00,
+        "cacheRead": 0.30,
+        "cacheWrite": 3.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-sonnet-4-5": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 64000,
+      "minCacheTokens": 1024,
+      "pricing": {
+        "input": 3.00,
+        "output": 15.00,
+        "cacheRead": 0.30,
+        "cacheWrite": 3.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-sonnet-4-6": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 64000,
+      "minCacheTokens": 2048,
+      "pricing": {
+        "input": 3.00,
+        "output": 15.00,
+        "cacheRead": 0.30,
+        "cacheWrite": 3.75,
+        "tiers": [
+          { "inputUpTo": 200000, "input": 3.00, "output": 15.00, "cacheRead": 0.30, "cacheWrite": 3.75 },
+          { "inputUpTo": 1000000, "input": 6.00, "output": 22.50, "cacheRead": 0.60, "cacheWrite": 7.50 }
+        ]
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision", "context_1m"],
+      "notes": "1M context requires anthropic-beta: context-1m-2024-08-07. Tiered pricing above 200K.",
+      "source": "anthropic.com/pricing"
+    },
+    "claude-opus-4": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 32000,
+      "minCacheTokens": 4096,
+      "pricing": {
+        "input": 15.00,
+        "output": 75.00,
+        "cacheRead": 1.50,
+        "cacheWrite": 18.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-opus-4-5": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 32000,
+      "minCacheTokens": 4096,
+      "pricing": {
+        "input": 15.00,
+        "output": 75.00,
+        "cacheRead": 1.50,
+        "cacheWrite": 18.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-opus-4-6": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 32000,
+      "minCacheTokens": 4096,
+      "pricing": {
+        "input": 15.00,
+        "output": 75.00,
+        "cacheRead": 1.50,
+        "cacheWrite": 18.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "claude-opus-4-7": {
+      "family": "anthropic-compatible",
+      "providerHints": ["anthropic"],
+      "contextLength": 200000,
+      "maxOutputTokens": 32000,
+      "minCacheTokens": 4096,
+      "pricing": {
+        "input": 15.00,
+        "output": 75.00,
+        "cacheRead": 1.50,
+        "cacheWrite": 18.75
+      },
+      "features": ["tools", "stream", "cache_control", "thinking", "vision"],
+      "source": "anthropic.com/pricing"
+    },
+    "gemini-2.5-flash-lite": {
+      "family": "gemini-compatible",
+      "providerHints": ["google-gemini"],
+      "contextLength": 1048576,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.10,
+        "output": 0.40,
+        "cacheRead": 0.025
+      },
+      "features": ["tools", "stream", "implicit_cache", "vision"],
+      "source": "ai.google.dev/pricing"
+    },
+    "gemini-2.5-flash": {
+      "family": "gemini-compatible",
+      "providerHints": ["google-gemini"],
+      "contextLength": 1048576,
+      "maxOutputTokens": 65536,
+      "pricing": {
+        "input": 0.30,
+        "output": 2.50,
+        "cacheRead": 0.075
+      },
+      "features": ["tools", "stream", "implicit_cache", "vision", "thinking", "penalties"],
+      "source": "ai.google.dev/pricing"
+    },
+    "gemini-2.5-flash-thinking": {
+      "family": "gemini-compatible",
+      "providerHints": ["google-gemini"],
+      "contextLength": 1048576,
+      "maxOutputTokens": 65536,
+      "pricing": {
+        "input": 0.30,
+        "output": 3.50,
+        "cacheRead": 0.075
+      },
+      "features": ["tools", "stream", "implicit_cache", "vision", "thinking"],
+      "notes": "Thinking is on by default; thoughtsTokenCount billed at output rate.",
+      "source": "ai.google.dev/pricing"
+    },
+    "gemini-2.5-pro": {
+      "family": "gemini-compatible",
+      "providerHints": ["google-gemini"],
+      "contextLength": 1048576,
+      "maxOutputTokens": 65536,
+      "pricing": {
+        "input": 1.25,
+        "output": 10.00,
+        "cacheRead": 0.31,
+        "tiers": [
+          { "inputUpTo": 200000, "input": 1.25, "output": 10.00, "cacheRead": 0.31 },
+          { "inputUpTo": 1048576, "input": 2.50, "output": 15.00, "cacheRead": 0.625 }
+        ]
+      },
+      "features": ["tools", "stream", "implicit_cache", "explicit_cache", "vision", "thinking", "logprobs", "penalties"],
+      "notes": "Tiered pricing: doubles past 200K input tokens.",
+      "source": "ai.google.dev/pricing"
+    },
+    "qwen-max": {
+      "family": "openai-compatible",
+      "providerHints": ["qwen", "qwen-china"],
+      "contextLength": 32768,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 1.60,
+        "output": 6.40
+      },
+      "features": ["tools", "stream"],
+      "source": "alibabacloud.com/help/dashscope qwen-max"
+    },
+    "qwen-plus": {
+      "family": "openai-compatible",
+      "providerHints": ["qwen", "qwen-china"],
+      "contextLength": 131072,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.40,
+        "output": 1.20
+      },
+      "features": ["tools", "stream"],
+      "source": "alibabacloud.com/help/dashscope qwen-plus"
+    },
+    "qwen-turbo": {
+      "family": "openai-compatible",
+      "providerHints": ["qwen", "qwen-china"],
+      "contextLength": 1000000,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.05,
+        "output": 0.20
+      },
+      "features": ["tools", "stream"],
+      "source": "alibabacloud.com/help/dashscope qwen-turbo"
+    },
+    "grok-3": {
+      "family": "openai-compatible",
+      "providerHints": ["xai"],
+      "contextLength": 131072,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 3.00,
+        "output": 15.00,
+        "cacheRead": 0.75
+      },
+      "features": ["tools", "stream"],
+      "source": "docs.x.ai/pricing"
+    },
+    "grok-3-mini": {
+      "family": "openai-compatible",
+      "providerHints": ["xai"],
+      "contextLength": 131072,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.30,
+        "output": 0.50,
+        "cacheRead": 0.075
+      },
+      "features": ["tools", "stream", "reasoning_effort"],
+      "source": "docs.x.ai/pricing"
+    },
+    "mistral-large-latest": {
+      "family": "openai-compatible",
+      "providerHints": ["mistral"],
+      "contextLength": 131072,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 2.00,
+        "output": 6.00
+      },
+      "features": ["tools", "stream"],
+      "source": "mistral.ai/pricing"
+    },
+    "mistral-small-latest": {
+      "family": "openai-compatible",
+      "providerHints": ["mistral"],
+      "contextLength": 32768,
+      "maxOutputTokens": 8192,
+      "pricing": {
+        "input": 0.20,
+        "output": 0.60
+      },
+      "features": ["tools", "stream"],
+      "source": "mistral.ai/pricing"
+    },
+    "_xiaomi_mimo_ids": {
+      "_comment": "Reference list of model ids returned by xiaomimimo.com /v1/models on 2026-05-24. NOT a catalog entry (leading underscore is ignored by ModelCatalog). Listed here so future-you doesn't have to re-probe to remember which ids exist. Chat-capable: mimo-v2-flash, mimo-v2-pro, mimo-v2-omni, mimo-v2.5, mimo-v2.5-pro. Non-chat (TTS / voice): mimo-v2-tts, mimo-v2.5-tts, mimo-v2.5-tts-voiceclone, mimo-v2.5-tts-voicedesign. xiaomimimo.com /v1/models/{id} returns 404 so caps are NOT exposed by the provider; populate real numbers here only when Xiaomi publishes them or the user supplies them."
+    }
+  }
+}

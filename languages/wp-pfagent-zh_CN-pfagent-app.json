@@ -1,0 +1,1008 @@
+{
+  "translation-revision-date": "2026-06-26 17:37:40+0000",
+  "generator": "pfagent build-translations.py",
+  "source": "wp-pfagent-zh_CN.po",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "zh_CN",
+        "plural-forms": "nplurals=1; plural=0;"
+      },
+      "WP PFAgent": [
+        "WP PFAgent"
+      ],
+      "Agent console for ProjectFlash products.": [
+        "ProjectFlash 产品的代理控制台。"
+      ],
+      "ProjectFlash": [
+        "ProjectFlash"
+      ],
+      "PF Agent": [
+        "PF Agent"
+      ],
+      "Back to admin": [
+        "返回管理后台"
+      ],
+      "WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory.": [
+        "缺少 WP PFAgent 资源。请在插件目录中运行 npm install 和 npm run build。"
+      ],
+      "WP PFAgent assets are not built.": [
+        "WP PFAgent 资源未构建。"
+      ],
+      "You do not have permission to manage WP PFAgent.": [
+        "您没有管理 WP PFAgent 的权限。"
+      ],
+      "Agent capability manifest is missing.": [
+        "缺少代理能力清单。"
+      ],
+      "Agent capability manifest is invalid.": [
+        "代理能力清单无效。"
+      ],
+      "providerId is required.": [
+        "需要 providerId。"
+      ],
+      "message is required.": [
+        "需要 message。"
+      ],
+      "No tool was selected by the model.": [
+        "模型未选择任何工具。"
+      ],
+      "Tools ran but the model returned an empty reply. The data is in the executions panel.": [
+        "工具已运行但模型返回了空回复。数据位于执行面板中。"
+      ],
+      "The model returned a malformed tool call.": [
+        "模型返回了格式错误的工具调用。"
+      ],
+      "The model requested a tool that is not declared or allowed.": [
+        "模型请求了未声明或不允许的工具。"
+      ],
+      "This action has side effects and requires confirmation before execution.": [
+        "此操作具有副作用,执行前需要确认。"
+      ],
+      "I gathered some data but the model did not produce a final reply.": [
+        "我收集了一些数据,但模型未给出最终回复。"
+      ],
+      "confirmationId is required when confirmed=true.": [
+        "当 confirmed=true 时需要 confirmationId。"
+      ],
+      "Pending confirmation was not found or has expired.": [
+        "未找到待确认项,或已过期。"
+      ],
+      "Workflow tool execution completed, but final LLM response failed.": [
+        "Workflow 工具执行已完成,但最终 LLM 响应失败。"
+      ],
+      "The requested tool is not in the declared agent tool registry.": [
+        "请求的工具不在已声明的代理工具注册表中。"
+      ],
+      "Agent tool contract file is missing.": [
+        "缺少代理工具契约文件。"
+      ],
+      "Agent tool contract file is invalid.": [
+        "代理工具契约文件无效。"
+      ],
+      "Agent tool entries must be objects.": [
+        "代理工具条目必须是对象。"
+      ],
+      "A logged-in user is required.": [
+        "需要已登录的用户。"
+      ],
+      "Session %s": [
+        "会话 %s"
+      ],
+      "Chat session not found.": [
+        "未找到聊天会话。"
+      ],
+      "label cannot be empty.": [
+        "label 不能为空。"
+      ],
+      "Failed to delete the chat session.": [
+        "无法删除聊天会话。"
+      ],
+      "messages array is required.": [
+        "需要 messages 数组。"
+      ],
+      "No valid messages were provided.": [
+        "未提供有效消息。"
+      ],
+      "Request body exceeds %1$d bytes (got %2$d).": [
+        "请求体超过 %1$d 字节(收到 %2$d)。"
+      ],
+      "You do not have access to this chat session.": [
+        "您无权访问此聊天会话。"
+      ],
+      "[Summary of prior work — %d turns folded, ~%d tokens reduced past the %d-token threshold]": [
+        "[先前工作摘要 — 折叠了 %d 轮,在 %d-token 阈值之上减少了约 %d 个 token]"
+      ],
+      "Provider preset was not found.": [
+        "未找到提供商预设。"
+      ],
+      "API key is required and must be at least 8 characters.": [
+        "需要 API 密钥,且至少 8 个字符。"
+      ],
+      "Credential encryption is not available on this WordPress runtime.": [
+        "此 WordPress 运行时不可用凭据加密。"
+      ],
+      "Credential stored but connection has not been validated.": [
+        "凭据已存储,但连接尚未验证。"
+      ],
+      "Provider is not configured.": [
+        "提供商未配置。"
+      ],
+      "Provider family does not support connection testing yet.": [
+        "此提供商系列尚不支持连接测试。"
+      ],
+      "Connection failed: %s": [
+        "连接失败:%s"
+      ],
+      "Connection validated through provider model discovery.": [
+        "已通过提供商模型发现验证连接。"
+      ],
+      "Connection test returned HTTP %d without a valid models payload.": [
+        "连接测试返回 HTTP %d,但未包含有效的模型负载。"
+      ],
+      "Provider family is not supported for runtime calls.": [
+        "此提供商系列不支持运行时调用。"
+      ],
+      "Connection validation updated.": [
+        "连接验证已更新。"
+      ],
+      "Credential encryption failed.": [
+        "凭据加密失败。"
+      ],
+      "Stored credential cipher is unsupported.": [
+        "存储的凭据加密算法不受支持。"
+      ],
+      "Stored credential payload is invalid.": [
+        "存储的凭据负载无效。"
+      ],
+      "Credential decryption failed.": [
+        "凭据解密失败。"
+      ],
+      "Provider family does not expose a models endpoint for connection testing.": [
+        "此提供商系列未暴露用于连接测试的模型端点。"
+      ],
+      "Provider requires additional settings before testing connection.": [
+        "在测试连接之前,提供商需要额外设置。"
+      ],
+      "Provider base URL must be an HTTP URL.": [
+        "提供商基础 URL 必须是 HTTP URL。"
+      ],
+      "At least one tool definition is required for toolCall.": [
+        "toolCall 至少需要一个工具定义。"
+      ],
+      "Provider model discovery returned no models.": [
+        "提供商模型发现未返回任何模型。"
+      ],
+      "Provider model discovery returned no text generation model candidate.": [
+        "提供商模型发现未返回任何文本生成模型候选。"
+      ],
+      "PHP stream transport is not available because allow_url_fopen is disabled.": [
+        "由于 allow_url_fopen 已禁用,PHP 流传输不可用。"
+      ],
+      "PHP stream transport could not open provider stream.": [
+        "PHP 流传输无法打开提供商流。"
+      ],
+      "PHP stream transport failed while reading provider stream.": [
+        "PHP 流传输在读取提供商流时失败。"
+      ],
+      "Provider stream timed out.": [
+        "提供商流超时。"
+      ],
+      "Provider does not expose API model discovery. Manual model entries are required for this preset.": [
+        "提供商未公开 API 模型发现。此预设需要手动输入模型。"
+      ],
+      "Manual model entries are not allowed for this provider preset.": [
+        "此提供商预设不允许手动输入模型。"
+      ],
+      "At least one manual model id is required.": [
+        "至少需要一个手动模型 id。"
+      ],
+      "Provider family does not expose the required runtime endpoint.": [
+        "此提供商系列未公开所需的运行时端点。"
+      ],
+      "Provider requires additional settings before runtime call.": [
+        "在运行时调用之前,提供商需要额外设置。"
+      ],
+      "Provider presets file is missing.": [
+        "缺少提供商预设文件。"
+      ],
+      "Provider presets file is not valid JSON.": [
+        "提供商预设文件不是有效的 JSON。"
+      ],
+      "Provider presets schemaVersion must be 1.": [
+        "提供商预设的 schemaVersion 必须为 1。"
+      ],
+      "Provider presets must define families and presets.": [
+        "提供商预设必须定义 families 和 presets。"
+      ],
+      "Provider preset entries must be keyed objects.": [
+        "提供商预设条目必须是带键的对象。"
+      ],
+      "Provider presets require label, family and baseUrl.": [
+        "提供商预设需要 label、family 和 baseUrl。"
+      ],
+      "Provider preset references an unknown family.": [
+        "提供商预设引用了未知的 family。"
+      ],
+      "Provider presets must not define defaultModels.": [
+        "提供商预设不得定义 defaultModels。"
+      ],
+      "Provider modelHints must remain non-authoritative and empty; real models come from discovery, cache or explicit manual entry.": [
+        "提供商 modelHints 必须保持非权威且为空;真实模型来自发现、缓存或显式手动输入。"
+      ],
+      "Provider family is not supported for generation yet.": [
+        "此提供商系列尚不支持生成。"
+      ],
+      "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds.": [
+        "已达到 \"%s\" 的速率限制(每 %d 秒 %d 次)。请在 %d 秒后重试。"
+      ],
+      "oversized request body": [
+        "请求体过大"
+      ],
+      "WP PFWorkflow plugin is not active.": [
+        "WP PFWorkflow 插件未激活。"
+      ],
+      "Tool is not executable by Workflow API bridge.": [
+        "Workflow API 桥接器无法执行此工具。"
+      ],
+      "workflowId is required.": [
+        "需要 workflowId。"
+      ],
+      "payload is required.": [
+        "需要 payload。"
+      ],
+      "wp-pfworkflow agent-ready service is not available.": [
+        "wp-pfworkflow 的 agent-ready 服务不可用。"
+      ],
+      "$0 (no pricing configured)": [
+        "$0 (未配置定价)"
+      ],
+      "%1$d turn(s) · last %2$s": [
+        "%1$d 轮 · 最后 %2$s"
+      ],
+      "%1$s / %2$d nodes / %3$d wires": [
+        "%1$s / %2$d 节点 / %3$d 连接"
+      ],
+      "%1$s tokens, %2$s": [
+        "%1$s 个 token,%2$s"
+      ],
+      "%d execution(s)": [
+        "%d 次执行"
+      ],
+      "%d issue(s)": [
+        "%d 个问题"
+      ],
+      "%d nodes": [
+        "%d 个节点"
+      ],
+      "%d wires": [
+        "%d 个连接"
+      ],
+      "(manual)": [
+        "(手动)"
+      ],
+      "+ Add new credential": [
+        "+ 添加新凭据"
+      ],
+      "+ New": [
+        "+ 新建"
+      ],
+      "1. Pick a credential": [
+        "1. 选择凭据"
+      ],
+      "1b. New credential": [
+        "1b. 新建凭据"
+      ],
+      "2. Model": [
+        "2. 模型"
+      ],
+      "API key": [
+        "API 密钥"
+      ],
+      "Action Inspector": [
+        "操作检查器"
+      ],
+      "Action cancelled by the user.": [
+        "用户取消了操作。"
+      ],
+      "Action failed: %s": [
+        "操作失败:%s"
+      ],
+      "Active (%s)": [
+        "已激活 (%s)"
+      ],
+      "Active LLM: %1$s · %2$s.": [
+        "当前 LLM:%1$s · %2$s。"
+      ],
+      "After": [
+        "后"
+      ],
+      "Agent runtime failed: %s": [
+        "代理运行时失败:%s"
+      ],
+      "All": [
+        "全部"
+      ],
+      "Arguments": [
+        "参数"
+      ],
+      "Ask the agent…": [
+        "向代理提问…"
+      ],
+      "Back": [
+        "返回"
+      ],
+      "Back to WP admin": [
+        "返回 WordPress 管理后台"
+      ],
+      "Before": [
+        "前"
+      ],
+      "Can manage": [
+        "可管理"
+      ],
+      "Can view": [
+        "可查看"
+      ],
+      "Cancel": [
+        "取消"
+      ],
+      "Capability matrix": [
+        "能力矩阵"
+      ],
+      "Change": [
+        "更换"
+      ],
+      "Change provider": [
+        "更换提供商"
+      ],
+      "Chat history is local to this screen. Provider keys are never stored in browser storage.": [
+        "聊天历史仅存在于此屏幕。提供商密钥从不存储在浏览器存储中。"
+      ],
+      "Checking Workflow API endpoints…": [
+        "正在检查 Workflow API 端点…"
+      ],
+      "Clear local history": [
+        "清除本地历史"
+      ],
+      "Close": [
+        "关闭"
+      ],
+      "Configure LLM": [
+        "配置 LLM"
+      ],
+      "Configured providers (%d)": [
+        "已配置的提供商 (%d)"
+      ],
+      "Confirm": [
+        "确认"
+      ],
+      "Confirmation pending:": [
+        "待确认:"
+      ],
+      "Confirmation required": [
+        "需要确认"
+      ],
+      "Continue a previous conversation or proceed to start a new one.": [
+        "继续之前的会话,或继续以开始一个新会话。"
+      ],
+      "Conversation": [
+        "会话"
+      ],
+      "Cost and tokens (last %dh)": [
+        "成本和 token (最近 %d 小时)"
+      ],
+      "Could not capture the resulting state.": [
+        "无法捕获结果状态。"
+      ],
+      "Create draft": [
+        "创建草稿"
+      ],
+      "Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" and loaded it.": [
+        "已从模板 %4$s \"%5$s\" 创建 workflow #%1$d \"%2$s\"(状态:%3$s)并加载。"
+      ],
+      "Current user cannot view workflows. API calls were skipped.": [
+        "当前用户无法查看 workflow。已跳过 API 调用。"
+      ],
+      "Diagnostic": [
+        "诊断"
+      ],
+      "Done.": [
+        "完成。"
+      ],
+      "Error:": [
+        "错误:"
+      ],
+      "Estimated cost": [
+        "预估成本"
+      ],
+      "Events recorded": [
+        "已记录事件"
+      ],
+      "Evidence": [
+        "证据"
+      ],
+      "Executions (%d)": [
+        "执行 (%d)"
+      ],
+      "FAIL": [
+        "未通过"
+      ],
+      "Generated at %s.": [
+        "生成于 %s。"
+      ],
+      "Inactive (fallback in use)": [
+        "未激活(正在使用回退)"
+      ],
+      "LLM error: %1$s — %2$s": [
+        "LLM 错误:%1$s — %2$s"
+      ],
+      "Load a workflow or preview a template.": [
+        "加载一个 workflow 或预览一个模板。"
+      ],
+      "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d).": [
+        "已加载 workflow #%1$d \"%2$s\"(状态:%3$s,节点:%4$d,连接:%5$d)。"
+      ],
+      "Loading beta readiness report…": [
+        "正在加载 beta 就绪报告…"
+      ],
+      "Loading models…": [
+        "正在加载模型…"
+      ],
+      "Message to the agent": [
+        "发送给代理的消息"
+      ],
+      "Model": [
+        "模型"
+      ],
+      "Model (manual)": [
+        "模型 (手动)"
+      ],
+      "Namespace": [
+        "命名空间"
+      ],
+      "New conversation": [
+        "新会话"
+      ],
+      "New conversation.": [
+        "新会话。"
+      ],
+      "No credentials in the store yet. Add one to continue.": [
+        "存储中尚无凭据。添加一个以继续。"
+      ],
+      "No credentials stored yet. Configure one from Settings.": [
+        "尚未存储任何凭据。请从设置中配置一个。"
+      ],
+      "No prior state existed (creation or import).": [
+        "不存在先前状态(创建或导入)。"
+      ],
+      "No response from the runtime.": [
+        "运行时无响应。"
+      ],
+      "No tool was executed in this turn.": [
+        "本轮未执行任何工具。"
+      ],
+      "No workflow loaded": [
+        "未加载 workflow"
+      ],
+      "Open in viewer": [
+        "在查看器中打开"
+      ],
+      "Open menu": [
+        "打开菜单"
+      ],
+      "Open workflow %d in the viewer": [
+        "在查看器中打开 workflow %d"
+      ],
+      "PASS": [
+        "通过"
+      ],
+      "Partial capabilities": [
+        "部分能力"
+      ],
+      "Per provider": [
+        "按提供商"
+      ],
+      "Pick a model or enter the id manually.": [
+        "选择一个模型或手动输入 id。"
+      ],
+      "Pick a provider and paste the API key.": [
+        "选择提供商并粘贴 API 密钥。"
+      ],
+      "Pick an LLM provider to get started. Your credentials live encrypted inside the WordPress store.": [
+        "选择一个 LLM 提供商以开始。您的凭据以加密形式存储在 WordPress 中。"
+      ],
+      "Preview before creating": [
+        "创建前预览"
+      ],
+      "Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No workflow was created yet.": [
+        "已加载模板 %1$s \"%2$s\" 的预览(%3$d 节点,%4$d 连接)。尚未创建 workflow。"
+      ],
+      "Provider": [
+        "提供商"
+      ],
+      "Provider · model": [
+        "提供商 · 模型"
+      ],
+      "Provider:": [
+        "提供商:"
+      ],
+      "Refresh": [
+        "刷新"
+      ],
+      "Refresh diagnostic": [
+        "刷新诊断"
+      ],
+      "Run an action against the agent to see the steps, evidence and diffs here.": [
+        "对代理执行一次操作即可在此处查看步骤、证据和差异。"
+      ],
+      "Save and continue": [
+        "保存并继续"
+      ],
+      "Saving…": [
+        "保存中…"
+      ],
+      "Search…": [
+        "搜索…"
+      ],
+      "Send": [
+        "发送"
+      ],
+      "Session %d is empty.": [
+        "会话 %d 为空。"
+      ],
+      "Session only": [
+        "仅会话"
+      ],
+      "Settings": [
+        "设置"
+      ],
+      "Severe criteria": [
+        "严格条件"
+      ],
+      "Source": [
+        "来源"
+      ],
+      "Start a new conversation with the active LLM": [
+        "使用当前 LLM 开始新会话"
+      ],
+      "Template Preview": [
+        "模板预览"
+      ],
+      "Template categories": [
+        "模板分类"
+      ],
+      "Templates": [
+        "模板"
+      ],
+      "Templates failed: %s": [
+        "模板失败:%s"
+      ],
+      "The action ran but the final response failed.": [
+        "操作已执行但最终响应失败。"
+      ],
+      "The key is encrypted (AES-256-GCM) in the WordPress store and never returned over REST.": [
+        "密钥在 WordPress 存储中加密 (AES-256-GCM),且从不通过 REST 返回。"
+      ],
+      "The runtime rejected this call.": [
+        "运行时拒绝了此调用。"
+      ],
+      "Thinking…": [
+        "思考中…"
+      ],
+      "This action requires confirmation.": [
+        "此操作需要确认。"
+      ],
+      "This provider does not allow manual models; check your credential or retry.": [
+        "此提供商不允许手动模型;请检查凭据或重试。"
+      ],
+      "This tool produces no diff (read-only or without workflow state).": [
+        "此工具不产生差异(只读或无 workflow 状态)。"
+      ],
+      "Timeline (%d)": [
+        "时间线 (%d)"
+      ],
+      "Timeline is empty.": [
+        "时间线为空。"
+      ],
+      "To send messages to the agent you need to pick a provider and a model.": [
+        "向代理发送消息前,请先选择一个提供商和模型。"
+      ],
+      "Tool:": [
+        "工具:"
+      ],
+      "Total tokens": [
+        "总 token 数"
+      ],
+      "Unexpected error.": [
+        "意外错误。"
+      ],
+      "Waiting for the agent response…": [
+        "等待代理响应…"
+      ],
+      "Waiting for the agent…": [
+        "等待代理…"
+      ],
+      "Workflow API": [
+        "Workflow API"
+      ],
+      "Workflow API check failed. See dependency status for the exact endpoint result.": [
+        "Workflow API 检查失败。请查看依赖状态以了解具体端点结果。"
+      ],
+      "Workflow API consumer": [
+        "Workflow API 使用方"
+      ],
+      "Workflow API has not been checked yet.": [
+        "Workflow API 尚未检查。"
+      ],
+      "Workflow API responded for workflows and templates.": [
+        "Workflow API 已为 workflow 和模板返回响应。"
+      ],
+      "Workflow View": [
+        "Workflow 视图"
+      ],
+      "Workflow companion": [
+        "Workflow 助手"
+      ],
+      "Workflow dependency": [
+        "Workflow 依赖"
+      ],
+      "Workflow dependency active": [
+        "Workflow 依赖已激活"
+      ],
+      "Workflow dependency inactive": [
+        "Workflow 依赖未激活"
+      ],
+      "Workflow plugin is not active. API calls were skipped.": [
+        "Workflow 插件未激活。已跳过 API 调用。"
+      ],
+      "Workflow plugin was not detected during page bootstrap. API calls may fail until it is active.": [
+        "页面启动时未检测到 Workflow 插件。在其激活之前 API 调用可能失败。"
+      ],
+      "Workflows": [
+        "Workflow"
+      ],
+      "Workflows failed: %s": [
+        "Workflow 失败:%s"
+      ],
+      "Workspace": [
+        "工作区"
+      ],
+      "beta partial": [
+        "beta 部分"
+      ],
+      "beta ready": [
+        "beta 就绪"
+      ],
+      "diff: %s": [
+        "差异:%s"
+      ],
+      "model-id": [
+        "模型-id"
+      ],
+      "no message": [
+        "无消息"
+      ],
+      "unknown": [
+        "未知"
+      ],
+      "— Pick one —": [
+        "— 选择一个 —"
+      ],
+      "\"%s\" will be permanently deleted along with its messages. This action cannot be undone.": [
+        "「%s」及其消息将被永久删除。此操作无法撤销。"
+      ],
+      "%1$d turn(s) · updated %2$s": [
+        "%1$d 轮 · 更新于 %2$s"
+      ],
+      "All conversations whose last activity is older than %d days will be permanently deleted. This action cannot be undone.": [
+        "所有最近活动早于 %d 天的会话都将被永久删除。此操作无法撤销。"
+      ],
+      "Back to conversations": [
+        "返回会话列表"
+      ],
+      "Base URL": [
+        "基础 URL"
+      ],
+      "Conversation pages": [
+        "会话分页"
+      ],
+      "Conversation title": [
+        "会话标题"
+      ],
+      "Credential": [
+        "凭据"
+      ],
+      "Credentials": [
+        "凭据"
+      ],
+      "Credentials for \"%s\" will be removed from the encrypted store. This action cannot be undone.": [
+        "「%s」的凭据将从加密存储中移除。此操作无法撤销。"
+      ],
+      "Delete": [
+        "删除"
+      ],
+      "Delete all conversations older than %d days": [
+        "删除所有超过 %d 天的会话"
+      ],
+      "Delete conversation": [
+        "删除会话"
+      ],
+      "Delete conversation %s": [
+        "删除会话 %s"
+      ],
+      "Delete conversations": [
+        "删除会话"
+      ],
+      "Delete credential": [
+        "删除凭据"
+      ],
+      "Delete credential %s": [
+        "删除凭据 %s"
+      ],
+      "Deleting…": [
+        "删除中…"
+      ],
+      "Discovery": [
+        "发现方式"
+      ],
+      "Last validation": [
+        "上次验证"
+      ],
+      "Load": [
+        "加载"
+      ],
+      "Manage %s": [
+        "管理 %s"
+      ],
+      "Manage credential": [
+        "管理凭据"
+      ],
+      "Management": [
+        "Management"
+      ],
+      "Manual model IDs": [
+        "手动模型 ID"
+      ],
+      "Models": [
+        "模型"
+      ],
+      "Neither Project Flash Workflow nor Project Flash Management is installed.": [
+        "未安装 Project Flash Workflow 或 Project Flash Management。"
+      ],
+      "New API key": [
+        "新的 API 密钥"
+      ],
+      "New credential": [
+        "新建凭据"
+      ],
+      "Next page": [
+        "下一页"
+      ],
+      "No conversations yet.": [
+        "暂无会话。"
+      ],
+      "No model list loaded yet. Click Load to fetch from the API or Refresh to bypass cache.": [
+        "尚未加载模型列表。点击「加载」从 API 获取,或点击「刷新」绕过缓存。"
+      ],
+      "No models returned.": [
+        "未返回任何模型。"
+      ],
+      "Not configured": [
+        "未配置"
+      ],
+      "Not verified": [
+        "未验证"
+      ],
+      "Page %1$d of %2$d": [
+        "第 %1$d 页,共 %2$d 页"
+      ],
+      "Paste API key to confirm changes": [
+        "粘贴 API 密钥以确认更改"
+      ],
+      "Previous page": [
+        "上一页"
+      ],
+      "Project Flash Management": [
+        "Project Flash Management"
+      ],
+      "Project Flash Workflow": [
+        "Project Flash Workflow"
+      ],
+      "Project Flash views": [
+        "Project Flash 视图"
+      ],
+      "Purge > %dd": [
+        "清除 > %d 天"
+      ],
+      "Purge old conversations": [
+        "清除旧会话"
+      ],
+      "Purging…": [
+        "清除中…"
+      ],
+      "Re-enter the API key to save changes.": [
+        "请重新输入 API 密钥以保存更改。"
+      ],
+      "Rename conversation": [
+        "重命名会话"
+      ],
+      "Save": [
+        "保存"
+      ],
+      "Save manual list": [
+        "保存手动列表"
+      ],
+      "Save title": [
+        "保存标题"
+      ],
+      "Source: %1$s · fetched %2$s · %3$d model(s)": [
+        "来源:%1$s · 获取于 %2$s · %3$d 个模型"
+      ],
+      "Status": [
+        "状态"
+      ],
+      "Stored key": [
+        "已存储的密钥"
+      ],
+      "Test connection": [
+        "测试连接"
+      ],
+      "Test connection for %s": [
+        "测试 %s 的连接"
+      ],
+      "Validation failed": [
+        "验证失败"
+      ],
+      "Verified": [
+        "已验证"
+      ],
+      "Volver al admin de WordPress": [
+        "返回 WordPress 管理后台"
+      ],
+      "Workflow": [
+        "Workflow"
+      ],
+      "not stored": [
+        "未存储"
+      ],
+      "one model id per line": [
+        "每行一个模型 id"
+      ],
+      "Active LLM": [
+        "当前 LLM"
+      ],
+      "Change LLM": [
+        "更换 LLM"
+      ],
+      "Configure": [
+        "配置"
+      ],
+      "No LLM configured.": [
+        "尚未配置 LLM。"
+      ],
+      "A custom rule is in place. Use the advanced editor to change it.": [
+        "已设置自定义规则。请使用高级编辑器进行修改。"
+      ],
+      "Activate a workflow": [
+        "激活 workflow"
+      ],
+      "Allow": [
+        "允许"
+      ],
+      "Ask": [
+        "询问"
+      ],
+      "Browse records (customers, orders, anything you store). Read-only.": [
+        "浏览记录(客户、订单、任何你存储的数据)。只读。"
+      ],
+      "Browse your workflow library": [
+        "浏览你的 workflow 库"
+      ],
+      "Change a specific section of an existing workflow without rewriting the rest.": [
+        "修改现有 workflow 的特定部分,而不重写其余内容。"
+      ],
+      "Change the name of a workflow as it appears in your library.": [
+        "更改 workflow 在库中显示的名称。"
+      ],
+      "Create or change records": [
+        "创建或修改记录"
+      ],
+      "Create or replace a workflow": [
+        "创建或替换 workflow"
+      ],
+      "Custom rule": [
+        "自定义规则"
+      ],
+      "Declare a workflow variable": [
+        "声明一个 workflow 变量"
+      ],
+      "Default for any other action": [
+        "其他所有操作的默认值"
+      ],
+      "Define a new variable that workflows can read or write.": [
+        "定义一个新变量,以便 workflow 读取或写入。"
+      ],
+      "Delete a workflow": [
+        "删除 workflow"
+      ],
+      "Deny": [
+        "拒绝"
+      ],
+      "Discover your data model": [
+        "探索你的数据模型"
+      ],
+      "Edit part of a workflow": [
+        "编辑 workflow 的某一部分"
+      ],
+      "Edit the raw rules JSON. Use this for argument-pattern rules that the simple list above cannot express.": [
+        "直接编辑规则的原始 JSON。用于上方简单列表无法表达的、按参数模式匹配的规则。"
+      ],
+      "For each thing the agent can do, choose whether it runs straight away, asks you first, or is not allowed at all. \"Ask\" is the safe default.": [
+        "针对代理可以执行的每一项操作,选择是直接运行、先询问你,还是完全不允许。\"询问\" 是安全的默认值。"
+      ],
+      "Hide advanced editor": [
+        "隐藏高级编辑器"
+      ],
+      "Last updated: %s": [
+        "上次更新:%s"
+      ],
+      "List records": [
+        "列出记录"
+      ],
+      "Look at which entities, fields and actions you have configured. Read-only.": [
+        "查看你已配置的实体、字段和动作。只读。"
+      ],
+      "Look inside a single workflow without making changes.": [
+        "查看单个 workflow 的内容,不做任何更改。"
+      ],
+      "Open a record": [
+        "打开一条记录"
+      ],
+      "Open a workflow to read it": [
+        "打开一个 workflow 进行阅读"
+      ],
+      "Permission rules": [
+        "权限规则"
+      ],
+      "Read the full content of a single record. Read-only.": [
+        "读取单条记录的完整内容。只读。"
+      ],
+      "Remove a workflow from your library permanently.": [
+        "从你的库中永久删除一个 workflow。"
+      ],
+      "Rename a workflow": [
+        "重命名 workflow"
+      ],
+      "Rules JSON": [
+        "规则 JSON"
+      ],
+      "Save a brand-new workflow or fully replace the contents of an existing one.": [
+        "保存一个全新的 workflow,或完全替换现有 workflow 的内容。"
+      ],
+      "Save advanced JSON": [
+        "保存高级 JSON"
+      ],
+      "Save new records or modify existing ones (customers, orders, configuration, etc.).": [
+        "保存新记录,或修改现有记录(客户、订单、配置等)。"
+      ],
+      "See the workflows that exist on this site. Read-only.": [
+        "查看本站点上存在的 workflow。只读。"
+      ],
+      "Show advanced editor": [
+        "显示高级编辑器"
+      ],
+      "The advanced JSON must be an object.": [
+        "高级 JSON 必须是一个对象。"
+      ],
+      "Turn on a draft workflow so it starts running when its trigger fires.": [
+        "启用一个草稿状态的 workflow,使其在触发器触发时开始运行。"
+      ],
+      "Used when a future capability is added that you have not set up yet.": [
+        "适用于尚未设置的、将来新增的能力。"
+      ]
+    }
+  }
+}

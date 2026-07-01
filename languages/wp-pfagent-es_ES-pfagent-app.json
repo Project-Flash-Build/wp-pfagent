@@ -1,0 +1,1008 @@
+{
+  "translation-revision-date": "2026-06-26 17:37:40+0000",
+  "generator": "pfagent build-translations.py",
+  "source": "wp-pfagent-es_ES.po",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "es_ES",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "WP PFAgent": [
+        "WP PFAgent"
+      ],
+      "Agent console for ProjectFlash products.": [
+        "Consola de agente para los productos ProjectFlash."
+      ],
+      "ProjectFlash": [
+        "ProjectFlash"
+      ],
+      "PF Agent": [
+        "PF Agent"
+      ],
+      "Back to admin": [
+        "Volver a admin"
+      ],
+      "WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory.": [
+        "Faltan los assets de WP PFAgent. Ejecuta npm install y npm run build dentro del directorio del plugin."
+      ],
+      "WP PFAgent assets are not built.": [
+        "Los assets de WP PFAgent no están compilados."
+      ],
+      "You do not have permission to manage WP PFAgent.": [
+        "No tienes permisos para gestionar WP PFAgent."
+      ],
+      "Agent capability manifest is missing.": [
+        "Falta el manifest de capabilities del agente."
+      ],
+      "Agent capability manifest is invalid.": [
+        "El manifest de capabilities del agente no es válido."
+      ],
+      "providerId is required.": [
+        "providerId es obligatorio."
+      ],
+      "message is required.": [
+        "message es obligatorio."
+      ],
+      "No tool was selected by the model.": [
+        "El modelo no seleccionó ninguna herramienta."
+      ],
+      "Tools ran but the model returned an empty reply. The data is in the executions panel.": [
+        "Las herramientas se ejecutaron pero el modelo devolvió una respuesta vacía. Los datos están en el panel de ejecuciones."
+      ],
+      "The model returned a malformed tool call.": [
+        "El modelo devolvió una llamada de herramienta mal formada."
+      ],
+      "The model requested a tool that is not declared or allowed.": [
+        "El modelo solicitó una herramienta que no está declarada o permitida."
+      ],
+      "This action has side effects and requires confirmation before execution.": [
+        "Esta acción tiene efectos secundarios y requiere confirmación antes de ejecutarse."
+      ],
+      "I gathered some data but the model did not produce a final reply.": [
+        "Recopilé algunos datos pero el modelo no produjo una respuesta final."
+      ],
+      "confirmationId is required when confirmed=true.": [
+        "confirmationId es obligatorio cuando confirmed=true."
+      ],
+      "Pending confirmation was not found or has expired.": [
+        "La confirmación pendiente no se encontró o ha caducado."
+      ],
+      "Workflow tool execution completed, but final LLM response failed.": [
+        "La ejecución de la herramienta Workflow se completó, pero la respuesta final del LLM falló."
+      ],
+      "The requested tool is not in the declared agent tool registry.": [
+        "La herramienta solicitada no está en el registro declarado del agente."
+      ],
+      "Agent tool contract file is missing.": [
+        "Falta el archivo de contrato de herramientas del agente."
+      ],
+      "Agent tool contract file is invalid.": [
+        "El archivo de contrato de herramientas del agente no es válido."
+      ],
+      "Agent tool entries must be objects.": [
+        "Las entradas de herramienta deben ser objetos."
+      ],
+      "A logged-in user is required.": [
+        "Se requiere un usuario con sesión iniciada."
+      ],
+      "Session %s": [
+        "Sesión %s"
+      ],
+      "Chat session not found.": [
+        "Sesión de chat no encontrada."
+      ],
+      "label cannot be empty.": [
+        "el label no puede estar vacío."
+      ],
+      "Failed to delete the chat session.": [
+        "No se pudo eliminar la sesión de chat."
+      ],
+      "messages array is required.": [
+        "se requiere el array messages."
+      ],
+      "No valid messages were provided.": [
+        "No se proporcionó ningún mensaje válido."
+      ],
+      "Request body exceeds %1$d bytes (got %2$d).": [
+        "El cuerpo de la solicitud excede %1$d bytes (recibidos %2$d)."
+      ],
+      "You do not have access to this chat session.": [
+        "No tienes acceso a esta sesión de chat."
+      ],
+      "[Summary of prior work — %d turns folded, ~%d tokens reduced past the %d-token threshold]": [
+        "[Resumen de trabajo previo — %d turnos plegados, ~%d tokens reducidos sobre el umbral de %d tokens]"
+      ],
+      "Provider preset was not found.": [
+        "No se encontró el preset del proveedor."
+      ],
+      "API key is required and must be at least 8 characters.": [
+        "La clave API es obligatoria y debe tener al menos 8 caracteres."
+      ],
+      "Credential encryption is not available on this WordPress runtime.": [
+        "El cifrado de credenciales no está disponible en este entorno de WordPress."
+      ],
+      "Credential stored but connection has not been validated.": [
+        "Credencial guardada pero la conexión no ha sido validada."
+      ],
+      "Provider is not configured.": [
+        "El proveedor no está configurado."
+      ],
+      "Provider family does not support connection testing yet.": [
+        "La familia de proveedor todavía no admite la prueba de conexión."
+      ],
+      "Connection failed: %s": [
+        "Conexión fallida: %s"
+      ],
+      "Connection validated through provider model discovery.": [
+        "Conexión validada mediante el descubrimiento de modelos del proveedor."
+      ],
+      "Connection test returned HTTP %d without a valid models payload.": [
+        "La prueba de conexión devolvió HTTP %d sin un payload de modelos válido."
+      ],
+      "Provider family is not supported for runtime calls.": [
+        "La familia de proveedor no es compatible con llamadas en runtime."
+      ],
+      "Connection validation updated.": [
+        "Validación de conexión actualizada."
+      ],
+      "Credential encryption failed.": [
+        "El cifrado de credenciales falló."
+      ],
+      "Stored credential cipher is unsupported.": [
+        "El cifrado de la credencial almacenada no está soportado."
+      ],
+      "Stored credential payload is invalid.": [
+        "El payload de la credencial almacenada no es válido."
+      ],
+      "Credential decryption failed.": [
+        "El descifrado de credenciales falló."
+      ],
+      "Provider family does not expose a models endpoint for connection testing.": [
+        "La familia de proveedor no expone un endpoint de modelos para pruebas de conexión."
+      ],
+      "Provider requires additional settings before testing connection.": [
+        "El proveedor requiere ajustes adicionales antes de probar la conexión."
+      ],
+      "Provider base URL must be an HTTP URL.": [
+        "La URL base del proveedor debe ser una URL HTTP."
+      ],
+      "At least one tool definition is required for toolCall.": [
+        "toolCall requiere al menos una definición de herramienta."
+      ],
+      "Provider model discovery returned no models.": [
+        "El descubrimiento de modelos del proveedor no devolvió modelos."
+      ],
+      "Provider model discovery returned no text generation model candidate.": [
+        "El descubrimiento de modelos no devolvió ningún candidato para generación de texto."
+      ],
+      "PHP stream transport is not available because allow_url_fopen is disabled.": [
+        "El transporte de stream PHP no está disponible porque allow_url_fopen está deshabilitado."
+      ],
+      "PHP stream transport could not open provider stream.": [
+        "El transporte de stream PHP no pudo abrir el stream del proveedor."
+      ],
+      "PHP stream transport failed while reading provider stream.": [
+        "El transporte de stream PHP falló al leer el stream del proveedor."
+      ],
+      "Provider stream timed out.": [
+        "El stream del proveedor agotó el tiempo."
+      ],
+      "Provider does not expose API model discovery. Manual model entries are required for this preset.": [
+        "El proveedor no expone descubrimiento de modelos por API. Se requieren entradas manuales de modelo para este preset."
+      ],
+      "Manual model entries are not allowed for this provider preset.": [
+        "Este preset de proveedor no permite entradas manuales de modelo."
+      ],
+      "At least one manual model id is required.": [
+        "Se requiere al menos un id de modelo manual."
+      ],
+      "Provider family does not expose the required runtime endpoint.": [
+        "La familia de proveedor no expone el endpoint de runtime requerido."
+      ],
+      "Provider requires additional settings before runtime call.": [
+        "El proveedor requiere ajustes adicionales antes de la llamada de runtime."
+      ],
+      "Provider presets file is missing.": [
+        "Falta el archivo de presets del proveedor."
+      ],
+      "Provider presets file is not valid JSON.": [
+        "El archivo de presets del proveedor no es JSON válido."
+      ],
+      "Provider presets schemaVersion must be 1.": [
+        "schemaVersion de los presets del proveedor debe ser 1."
+      ],
+      "Provider presets must define families and presets.": [
+        "Los presets del proveedor deben definir families y presets."
+      ],
+      "Provider preset entries must be keyed objects.": [
+        "Las entradas de preset deben ser objetos con clave."
+      ],
+      "Provider presets require label, family and baseUrl.": [
+        "Los presets del proveedor requieren label, family y baseUrl."
+      ],
+      "Provider preset references an unknown family.": [
+        "El preset del proveedor referencia una family desconocida."
+      ],
+      "Provider presets must not define defaultModels.": [
+        "Los presets del proveedor no deben definir defaultModels."
+      ],
+      "Provider modelHints must remain non-authoritative and empty; real models come from discovery, cache or explicit manual entry.": [
+        "modelHints del proveedor debe permanecer no autoritativo y vacío; los modelos reales provienen del descubrimiento, la caché o la entrada manual explícita."
+      ],
+      "Provider family is not supported for generation yet.": [
+        "La familia de proveedor todavía no es compatible con generación."
+      ],
+      "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds.": [
+        "Límite de uso alcanzado para \"%s\" (%d por %ds). Reintenta en %ds."
+      ],
+      "oversized request body": [
+        "cuerpo de solicitud demasiado grande"
+      ],
+      "WP PFWorkflow plugin is not active.": [
+        "El plugin WP PFWorkflow no está activo."
+      ],
+      "Tool is not executable by Workflow API bridge.": [
+        "El bridge de la API de Workflow no puede ejecutar esta herramienta."
+      ],
+      "workflowId is required.": [
+        "workflowId es obligatorio."
+      ],
+      "payload is required.": [
+        "payload es obligatorio."
+      ],
+      "wp-pfworkflow agent-ready service is not available.": [
+        "El servicio agent-ready de wp-pfworkflow no está disponible."
+      ],
+      "$0 (no pricing configured)": [
+        "$0 (sin pricing configurado)"
+      ],
+      "%1$d turn(s) · last %2$s": [
+        "%1$d turno(s) · último %2$s"
+      ],
+      "%1$s / %2$d nodes / %3$d wires": [
+        "%1$s / %2$d nodos / %3$d conexiones"
+      ],
+      "%1$s tokens, %2$s": [
+        "%1$s tokens, %2$s"
+      ],
+      "%d execution(s)": [
+        "%d ejecución(es)"
+      ],
+      "%d issue(s)": [
+        "%d incidencia(s)"
+      ],
+      "%d nodes": [
+        "%d nodos"
+      ],
+      "%d wires": [
+        "%d conexiones"
+      ],
+      "(manual)": [
+        "(manual)"
+      ],
+      "+ Add new credential": [
+        "+ Añadir nueva credencial"
+      ],
+      "+ New": [
+        "+ Nueva"
+      ],
+      "1. Pick a credential": [
+        "1. Elige una credencial"
+      ],
+      "1b. New credential": [
+        "1b. Nueva credencial"
+      ],
+      "2. Model": [
+        "2. Modelo"
+      ],
+      "API key": [
+        "Clave API"
+      ],
+      "Action Inspector": [
+        "Inspector de acción"
+      ],
+      "Action cancelled by the user.": [
+        "Acción cancelada por el usuario."
+      ],
+      "Action failed: %s": [
+        "Acción fallida: %s"
+      ],
+      "Active (%s)": [
+        "Activo (%s)"
+      ],
+      "Active LLM: %1$s · %2$s.": [
+        "LLM activo: %1$s · %2$s."
+      ],
+      "After": [
+        "Después"
+      ],
+      "Agent runtime failed: %s": [
+        "El runtime del agente falló: %s"
+      ],
+      "All": [
+        "Todas"
+      ],
+      "Arguments": [
+        "Argumentos"
+      ],
+      "Ask the agent…": [
+        "Pregunta al agente…"
+      ],
+      "Back": [
+        "Volver"
+      ],
+      "Back to WP admin": [
+        "Volver al admin de WP"
+      ],
+      "Before": [
+        "Antes"
+      ],
+      "Can manage": [
+        "Puede gestionar"
+      ],
+      "Can view": [
+        "Puede ver"
+      ],
+      "Cancel": [
+        "Cancelar"
+      ],
+      "Capability matrix": [
+        "Matriz de capabilities"
+      ],
+      "Change": [
+        "Cambiar"
+      ],
+      "Change provider": [
+        "Cambiar proveedor"
+      ],
+      "Chat history is local to this screen. Provider keys are never stored in browser storage.": [
+        "El historial del chat es local a esta pantalla. Las claves del proveedor nunca se guardan en el almacenamiento del navegador."
+      ],
+      "Checking Workflow API endpoints…": [
+        "Comprobando endpoints de la API de Workflow…"
+      ],
+      "Clear local history": [
+        "Borrar historial local"
+      ],
+      "Close": [
+        "Cerrar"
+      ],
+      "Configure LLM": [
+        "Configurar LLM"
+      ],
+      "Configured providers (%d)": [
+        "Proveedores configurados (%d)"
+      ],
+      "Confirm": [
+        "Confirmar"
+      ],
+      "Confirmation pending:": [
+        "Confirmación pendiente:"
+      ],
+      "Confirmation required": [
+        "Confirmación requerida"
+      ],
+      "Continue a previous conversation or proceed to start a new one.": [
+        "Continúa una conversación anterior o sigue para empezar una nueva."
+      ],
+      "Conversation": [
+        "Conversación"
+      ],
+      "Cost and tokens (last %dh)": [
+        "Coste y tokens (últimas %dh)"
+      ],
+      "Could not capture the resulting state.": [
+        "No se pudo capturar el estado resultante."
+      ],
+      "Create draft": [
+        "Crear borrador"
+      ],
+      "Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" and loaded it.": [
+        "Workflow #%1$d \"%2$s\" creado (estado: %3$s) desde la plantilla %4$s \"%5$s\" y cargado."
+      ],
+      "Current user cannot view workflows. API calls were skipped.": [
+        "El usuario actual no puede ver workflows. Se omitieron las llamadas a la API."
+      ],
+      "Diagnostic": [
+        "Diagnóstico"
+      ],
+      "Done.": [
+        "Hecho."
+      ],
+      "Error:": [
+        "Error:"
+      ],
+      "Estimated cost": [
+        "Coste estimado"
+      ],
+      "Events recorded": [
+        "Eventos registrados"
+      ],
+      "Evidence": [
+        "Evidencia"
+      ],
+      "Executions (%d)": [
+        "Ejecuciones (%d)"
+      ],
+      "FAIL": [
+        "FALLA"
+      ],
+      "Generated at %s.": [
+        "Generado a las %s."
+      ],
+      "Inactive (fallback in use)": [
+        "Inactivo (fallback en uso)"
+      ],
+      "LLM error: %1$s — %2$s": [
+        "Error de LLM: %1$s — %2$s"
+      ],
+      "Load a workflow or preview a template.": [
+        "Carga un workflow o previsualiza una plantilla."
+      ],
+      "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d).": [
+        "Cargado workflow #%1$d \"%2$s\" (estado: %3$s, nodos: %4$d, conexiones: %5$d)."
+      ],
+      "Loading beta readiness report…": [
+        "Cargando informe de beta readiness…"
+      ],
+      "Loading models…": [
+        "Cargando modelos…"
+      ],
+      "Message to the agent": [
+        "Mensaje al agente"
+      ],
+      "Model": [
+        "Modelo"
+      ],
+      "Model (manual)": [
+        "Modelo (manual)"
+      ],
+      "Namespace": [
+        "Namespace"
+      ],
+      "New conversation": [
+        "Nueva conversación"
+      ],
+      "New conversation.": [
+        "Nueva conversación."
+      ],
+      "No credentials in the store yet. Add one to continue.": [
+        "Aún no hay credenciales en el almacén. Añade una para continuar."
+      ],
+      "No credentials stored yet. Configure one from Settings.": [
+        "Aún no hay credenciales guardadas. Configura una desde Ajustes."
+      ],
+      "No prior state existed (creation or import).": [
+        "No existía estado previo (creación o import)."
+      ],
+      "No response from the runtime.": [
+        "Sin respuesta del runtime."
+      ],
+      "No tool was executed in this turn.": [
+        "No se ejecutó ninguna herramienta en este turno."
+      ],
+      "No workflow loaded": [
+        "Ningún workflow cargado"
+      ],
+      "Open in viewer": [
+        "Abrir en el visor"
+      ],
+      "Open menu": [
+        "Abrir menú"
+      ],
+      "Open workflow %d in the viewer": [
+        "Abrir workflow %d en el visor"
+      ],
+      "PASS": [
+        "PASA"
+      ],
+      "Partial capabilities": [
+        "Capabilities parciales"
+      ],
+      "Per provider": [
+        "Por proveedor"
+      ],
+      "Pick a model or enter the id manually.": [
+        "Elige un modelo o introduce el id manualmente."
+      ],
+      "Pick a provider and paste the API key.": [
+        "Elige un proveedor y pega la clave API."
+      ],
+      "Pick an LLM provider to get started. Your credentials live encrypted inside the WordPress store.": [
+        "Elige un proveedor LLM para empezar. Tus credenciales viven cifradas en el almacén de WordPress."
+      ],
+      "Preview before creating": [
+        "Vista previa antes de crear"
+      ],
+      "Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No workflow was created yet.": [
+        "Vista previa cargada para la plantilla %1$s \"%2$s\" (%3$d nodos, %4$d conexiones). Aún no se creó ningún workflow."
+      ],
+      "Provider": [
+        "Proveedor"
+      ],
+      "Provider · model": [
+        "Proveedor · modelo"
+      ],
+      "Provider:": [
+        "Proveedor:"
+      ],
+      "Refresh": [
+        "Actualizar"
+      ],
+      "Refresh diagnostic": [
+        "Actualizar diagnóstico"
+      ],
+      "Run an action against the agent to see the steps, evidence and diffs here.": [
+        "Ejecuta una acción contra el agente para ver aquí los pasos, evidencias y diffs."
+      ],
+      "Save and continue": [
+        "Guardar y continuar"
+      ],
+      "Saving…": [
+        "Guardando…"
+      ],
+      "Search…": [
+        "Buscar…"
+      ],
+      "Send": [
+        "Enviar"
+      ],
+      "Session %d is empty.": [
+        "La sesión %d está vacía."
+      ],
+      "Session only": [
+        "Solo sesión"
+      ],
+      "Settings": [
+        "Ajustes"
+      ],
+      "Severe criteria": [
+        "Criterios severos"
+      ],
+      "Source": [
+        "Origen"
+      ],
+      "Start a new conversation with the active LLM": [
+        "Inicia una nueva conversación con el LLM activo"
+      ],
+      "Template Preview": [
+        "Vista previa de plantilla"
+      ],
+      "Template categories": [
+        "Categorías de plantilla"
+      ],
+      "Templates": [
+        "Plantillas"
+      ],
+      "Templates failed: %s": [
+        "Plantillas fallaron: %s"
+      ],
+      "The action ran but the final response failed.": [
+        "La acción se ejecutó pero la respuesta final falló."
+      ],
+      "The key is encrypted (AES-256-GCM) in the WordPress store and never returned over REST.": [
+        "La clave se cifra (AES-256-GCM) en el almacén de WordPress y nunca se devuelve por REST."
+      ],
+      "The runtime rejected this call.": [
+        "El runtime rechazó esta llamada."
+      ],
+      "Thinking…": [
+        "Pensando…"
+      ],
+      "This action requires confirmation.": [
+        "Esta acción requiere confirmación."
+      ],
+      "This provider does not allow manual models; check your credential or retry.": [
+        "Este proveedor no permite modelos manuales; revisa tu credencial o reintenta."
+      ],
+      "This tool produces no diff (read-only or without workflow state).": [
+        "Esta herramienta no produce diff (de solo lectura o sin estado de workflow)."
+      ],
+      "Timeline (%d)": [
+        "Cronología (%d)"
+      ],
+      "Timeline is empty.": [
+        "La cronología está vacía."
+      ],
+      "To send messages to the agent you need to pick a provider and a model.": [
+        "Para enviar mensajes al agente necesitas elegir un proveedor y un modelo."
+      ],
+      "Tool:": [
+        "Herramienta:"
+      ],
+      "Total tokens": [
+        "Tokens totales"
+      ],
+      "Unexpected error.": [
+        "Error inesperado."
+      ],
+      "Waiting for the agent response…": [
+        "Esperando respuesta del agente…"
+      ],
+      "Waiting for the agent…": [
+        "Esperando al agente…"
+      ],
+      "Workflow API": [
+        "API de Workflow"
+      ],
+      "Workflow API check failed. See dependency status for the exact endpoint result.": [
+        "Fallo al comprobar la API de Workflow. Revisa el estado de la dependencia para ver el resultado exacto."
+      ],
+      "Workflow API consumer": [
+        "Consumidor de la API de Workflow"
+      ],
+      "Workflow API has not been checked yet.": [
+        "La API de Workflow aún no ha sido comprobada."
+      ],
+      "Workflow API responded for workflows and templates.": [
+        "La API de Workflow respondió para workflows y plantillas."
+      ],
+      "Workflow View": [
+        "Vista de Workflow"
+      ],
+      "Workflow companion": [
+        "Compañero de Workflow"
+      ],
+      "Workflow dependency": [
+        "Dependencia Workflow"
+      ],
+      "Workflow dependency active": [
+        "Dependencia Workflow activa"
+      ],
+      "Workflow dependency inactive": [
+        "Dependencia Workflow inactiva"
+      ],
+      "Workflow plugin is not active. API calls were skipped.": [
+        "El plugin Workflow no está activo. Se omitieron las llamadas a la API."
+      ],
+      "Workflow plugin was not detected during page bootstrap. API calls may fail until it is active.": [
+        "El plugin Workflow no se detectó al cargar la página. Las llamadas a la API pueden fallar hasta que esté activo."
+      ],
+      "Workflows": [
+        "Workflows"
+      ],
+      "Workflows failed: %s": [
+        "Workflows fallaron: %s"
+      ],
+      "Workspace": [
+        "Espacio de trabajo"
+      ],
+      "beta partial": [
+        "beta parcial"
+      ],
+      "beta ready": [
+        "beta listo"
+      ],
+      "diff: %s": [
+        "diff: %s"
+      ],
+      "model-id": [
+        "id-del-modelo"
+      ],
+      "no message": [
+        "sin mensaje"
+      ],
+      "unknown": [
+        "desconocido"
+      ],
+      "— Pick one —": [
+        "— Elige uno —"
+      ],
+      "\"%s\" will be permanently deleted along with its messages. This action cannot be undone.": [
+        "«%s» se borrará permanentemente junto con sus mensajes. Esta acción no se puede deshacer."
+      ],
+      "%1$d turn(s) · updated %2$s": [
+        "%1$d turno(s) · actualizado %2$s"
+      ],
+      "All conversations whose last activity is older than %d days will be permanently deleted. This action cannot be undone.": [
+        "Todas las conversaciones cuya última actividad sea de hace más de %d días se borrarán permanentemente. Esta acción no se puede deshacer."
+      ],
+      "Back to conversations": [
+        "Volver a conversaciones"
+      ],
+      "Base URL": [
+        "URL base"
+      ],
+      "Conversation pages": [
+        "Páginas de conversación"
+      ],
+      "Conversation title": [
+        "Título de la conversación"
+      ],
+      "Credential": [
+        "Credencial"
+      ],
+      "Credentials": [
+        "Credenciales"
+      ],
+      "Credentials for \"%s\" will be removed from the encrypted store. This action cannot be undone.": [
+        "Las credenciales de «%s» se eliminarán del almacén cifrado. Esta acción no se puede deshacer."
+      ],
+      "Delete": [
+        "Borrar"
+      ],
+      "Delete all conversations older than %d days": [
+        "Borrar todas las conversaciones de más de %d días"
+      ],
+      "Delete conversation": [
+        "Borrar conversación"
+      ],
+      "Delete conversation %s": [
+        "Borrar conversación %s"
+      ],
+      "Delete conversations": [
+        "Borrar conversaciones"
+      ],
+      "Delete credential": [
+        "Borrar credencial"
+      ],
+      "Delete credential %s": [
+        "Borrar credencial %s"
+      ],
+      "Deleting…": [
+        "Borrando…"
+      ],
+      "Discovery": [
+        "Descubrimiento"
+      ],
+      "Last validation": [
+        "Última validación"
+      ],
+      "Load": [
+        "Cargar"
+      ],
+      "Manage %s": [
+        "Gestionar %s"
+      ],
+      "Manage credential": [
+        "Gestionar credencial"
+      ],
+      "Management": [
+        "Management"
+      ],
+      "Manual model IDs": [
+        "IDs de modelo manuales"
+      ],
+      "Models": [
+        "Modelos"
+      ],
+      "Neither Project Flash Workflow nor Project Flash Management is installed.": [
+        "Ni Project Flash Workflow ni Project Flash Management están instalados."
+      ],
+      "New API key": [
+        "Nueva clave API"
+      ],
+      "New credential": [
+        "Nueva credencial"
+      ],
+      "Next page": [
+        "Siguiente página"
+      ],
+      "No conversations yet.": [
+        "Aún no hay conversaciones."
+      ],
+      "No model list loaded yet. Click Load to fetch from the API or Refresh to bypass cache.": [
+        "Aún no se cargó la lista de modelos. Pulsa Cargar para obtenerla de la API o Refrescar para saltarse la caché."
+      ],
+      "No models returned.": [
+        "No se devolvió ningún modelo."
+      ],
+      "Not configured": [
+        "No configurada"
+      ],
+      "Not verified": [
+        "Sin validar"
+      ],
+      "Page %1$d of %2$d": [
+        "Página %1$d de %2$d"
+      ],
+      "Paste API key to confirm changes": [
+        "Pega la clave API para confirmar cambios"
+      ],
+      "Previous page": [
+        "Página anterior"
+      ],
+      "Project Flash Management": [
+        "Project Flash Management"
+      ],
+      "Project Flash Workflow": [
+        "Project Flash Workflow"
+      ],
+      "Project Flash views": [
+        "Vistas de Project Flash"
+      ],
+      "Purge > %dd": [
+        "Purgar > %dd"
+      ],
+      "Purge old conversations": [
+        "Purgar conversaciones antiguas"
+      ],
+      "Purging…": [
+        "Purgando…"
+      ],
+      "Re-enter the API key to save changes.": [
+        "Vuelve a introducir la clave API para guardar los cambios."
+      ],
+      "Rename conversation": [
+        "Renombrar conversación"
+      ],
+      "Save": [
+        "Guardar"
+      ],
+      "Save manual list": [
+        "Guardar lista manual"
+      ],
+      "Save title": [
+        "Guardar título"
+      ],
+      "Source: %1$s · fetched %2$s · %3$d model(s)": [
+        "Origen: %1$s · obtenidos %2$s · %3$d modelo(s)"
+      ],
+      "Status": [
+        "Estado"
+      ],
+      "Stored key": [
+        "Clave almacenada"
+      ],
+      "Test connection": [
+        "Probar conexión"
+      ],
+      "Test connection for %s": [
+        "Probar conexión de %s"
+      ],
+      "Validation failed": [
+        "Validación fallida"
+      ],
+      "Verified": [
+        "Validada"
+      ],
+      "Volver al admin de WordPress": [
+        "Volver al admin de WordPress"
+      ],
+      "Workflow": [
+        "Workflow"
+      ],
+      "not stored": [
+        "no almacenada"
+      ],
+      "one model id per line": [
+        "un id de modelo por línea"
+      ],
+      "Active LLM": [
+        "LLM activo"
+      ],
+      "Change LLM": [
+        "Cambiar LLM"
+      ],
+      "Configure": [
+        "Configurar"
+      ],
+      "No LLM configured.": [
+        "Ningún LLM configurado."
+      ],
+      "A custom rule is in place. Use the advanced editor to change it.": [
+        "Hay una regla personalizada configurada. Usa el editor avanzado para modificarla."
+      ],
+      "Activate a workflow": [
+        "Activar un workflow"
+      ],
+      "Allow": [
+        "Permitir"
+      ],
+      "Ask": [
+        "Preguntar"
+      ],
+      "Browse records (customers, orders, anything you store). Read-only.": [
+        "Explorar registros (clientes, pedidos, lo que guardes). Solo lectura."
+      ],
+      "Browse your workflow library": [
+        "Explorar tu biblioteca de workflows"
+      ],
+      "Change a specific section of an existing workflow without rewriting the rest.": [
+        "Cambiar una sección concreta de un workflow existente sin reescribir el resto."
+      ],
+      "Change the name of a workflow as it appears in your library.": [
+        "Cambiar el nombre con el que un workflow aparece en tu biblioteca."
+      ],
+      "Create or change records": [
+        "Crear o modificar registros"
+      ],
+      "Create or replace a workflow": [
+        "Crear o reemplazar un workflow"
+      ],
+      "Custom rule": [
+        "Regla personalizada"
+      ],
+      "Declare a workflow variable": [
+        "Declarar una variable de workflow"
+      ],
+      "Default for any other action": [
+        "Por defecto para cualquier otra acción"
+      ],
+      "Define a new variable that workflows can read or write.": [
+        "Definir una nueva variable que los workflows pueden leer o escribir."
+      ],
+      "Delete a workflow": [
+        "Eliminar un workflow"
+      ],
+      "Deny": [
+        "Denegar"
+      ],
+      "Discover your data model": [
+        "Descubrir tu modelo de datos"
+      ],
+      "Edit part of a workflow": [
+        "Editar parte de un workflow"
+      ],
+      "Edit the raw rules JSON. Use this for argument-pattern rules that the simple list above cannot express.": [
+        "Edita el JSON de reglas directamente. Útil para reglas por patrón de argumentos que la lista simple de arriba no puede expresar."
+      ],
+      "For each thing the agent can do, choose whether it runs straight away, asks you first, or is not allowed at all. \"Ask\" is the safe default.": [
+        "Para cada acción del agente, elige si se ejecuta directamente, te pregunta primero o no se permite. \"Preguntar\" es la opción segura por defecto."
+      ],
+      "Hide advanced editor": [
+        "Ocultar editor avanzado"
+      ],
+      "Last updated: %s": [
+        "Última actualización: %s"
+      ],
+      "List records": [
+        "Listar registros"
+      ],
+      "Look at which entities, fields and actions you have configured. Read-only.": [
+        "Ver qué entidades, campos y acciones tienes configurados. Solo lectura."
+      ],
+      "Look inside a single workflow without making changes.": [
+        "Mirar dentro de un workflow sin hacer cambios."
+      ],
+      "Open a record": [
+        "Abrir un registro"
+      ],
+      "Open a workflow to read it": [
+        "Abrir un workflow para leerlo"
+      ],
+      "Permission rules": [
+        "Reglas de permisos"
+      ],
+      "Read the full content of a single record. Read-only.": [
+        "Leer el contenido completo de un único registro. Solo lectura."
+      ],
+      "Remove a workflow from your library permanently.": [
+        "Eliminar un workflow de tu biblioteca de forma permanente."
+      ],
+      "Rename a workflow": [
+        "Renombrar un workflow"
+      ],
+      "Rules JSON": [
+        "JSON de reglas"
+      ],
+      "Save a brand-new workflow or fully replace the contents of an existing one.": [
+        "Guardar un workflow nuevo o reemplazar por completo el contenido de uno existente."
+      ],
+      "Save advanced JSON": [
+        "Guardar JSON avanzado"
+      ],
+      "Save new records or modify existing ones (customers, orders, configuration, etc.).": [
+        "Guardar registros nuevos o modificar existentes (clientes, pedidos, configuración, etc.)."
+      ],
+      "See the workflows that exist on this site. Read-only.": [
+        "Ver qué workflows existen en este sitio. Solo lectura."
+      ],
+      "Show advanced editor": [
+        "Mostrar editor avanzado"
+      ],
+      "The advanced JSON must be an object.": [
+        "El JSON avanzado debe ser un objeto."
+      ],
+      "Turn on a draft workflow so it starts running when its trigger fires.": [
+        "Activar un workflow en borrador para que empiece a ejecutarse cuando se dispare su trigger."
+      ],
+      "Used when a future capability is added that you have not set up yet.": [
+        "Se aplica cuando se añade una capacidad futura que aún no has configurado."
+      ]
+    }
+  }
+}

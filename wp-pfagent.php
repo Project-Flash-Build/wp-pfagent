@@ -1,0 +1,218 @@
+<?php
+/**
+ * Plugin Name: WP-PFAgent
+ * Description: Open-source AI agent console for the Project Flash suite. Drives WP-PFWorkflow and WP-PFManagement from natural language.
+ * Version: 0.8.1
+ * Author: Project Flash Build
+ * Requires PHP: 8.1
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: wp-pfagent
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+if (!defined('WP_PFAGENT_VERSION')) {
+    define('WP_PFAGENT_VERSION', '0.8.1');
+}
+if (!defined('WP_PFAGENT_FILE')) {
+    define('WP_PFAGENT_FILE', __FILE__);
+}
+if (!defined('WP_PFAGENT_DIR')) {
+    define('WP_PFAGENT_DIR', plugin_dir_path(__FILE__));
+}
+if (!defined('WP_PFAGENT_URL')) {
+    define('WP_PFAGENT_URL', plugin_dir_url(__FILE__));
+}
+
+require_once WP_PFAGENT_DIR . 'includes/Capabilities.php';
+require_once WP_PFAGENT_DIR . 'includes/RateLimiter.php';
+require_once WP_PFAGENT_DIR . 'includes/WorkflowDependency.php';
+require_once WP_PFAGENT_DIR . 'includes/ManagementDependency.php';
+require_once WP_PFAGENT_DIR . 'includes/ProviderPresets.php';
+require_once WP_PFAGENT_DIR . 'includes/CredentialStore.php';
+require_once WP_PFAGENT_DIR . 'includes/ProviderModelDiscovery.php';
+require_once WP_PFAGENT_DIR . 'includes/ProviderHealth.php';
+require_once WP_PFAGENT_DIR . 'includes/PromptCacheHelper.php';
+require_once WP_PFAGENT_DIR . 'includes/ProviderBackoff.php';
+require_once WP_PFAGENT_DIR . 'includes/ProviderRuntime.php';
+require_once WP_PFAGENT_DIR . 'includes/AgentToolRegistry.php';
+require_once WP_PFAGENT_DIR . 'includes/WorkflowApiBridge.php';
+require_once WP_PFAGENT_DIR . 'includes/ManagementApiBridge.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/CompileError.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Lexer.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Parser.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/VerbCatalog.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/LibraryBuilder.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Compiler.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Decompiler.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/DecompileCache.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/TemplateDecompileCache.php';
+require_once WP_PFAGENT_DIR . 'includes/Sourcecode/VirtualFileSystem.php';
+require_once WP_PFAGENT_DIR . 'includes/WorkflowVfsBridge.php';
+require_once WP_PFAGENT_DIR . 'includes/SystemPrompt.php';
+require_once WP_PFAGENT_DIR . 'includes/AgentContract.php';
+require_once WP_PFAGENT_DIR . 'includes/AgentFixAdvisor.php';
+require_once WP_PFAGENT_DIR . 'includes/AgentInternalDocs.php';
+require_once WP_PFAGENT_DIR . 'includes/ChatSessions.php';
+require_once WP_PFAGENT_DIR . 'includes/TraceLogger.php';
+require_once WP_PFAGENT_DIR . 'includes/BetaReadiness.php';
+require_once WP_PFAGENT_DIR . 'includes/RestApi.php';
+require_once WP_PFAGENT_DIR . 'includes/AdminPage.php';
+require_once WP_PFAGENT_DIR . 'includes/DashboardWidget.php';
+
+// Multi-provider LLM framework (ported from pf-agent). Centralises the
+// Gateway adapter pattern (OpenAI-compat / Anthropic / Gemini), token + cache
+// accounting, cost computation via ModelCatalog, and the multi-round Loop
+// with output filter + approval gate. wp-pfagent's REST endpoints can
+// progressively migrate from the inline LlmGateway/AgentRuntime above to
+// this framework as each surface is verified.
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/Gateway.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/CompletionRequest.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/CompletionResponse.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/UnsupportedParameterException.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/ModelCatalog.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/PromptCacheInjector.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/OpenAiCompatibleGateway.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/AnthropicGateway.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/GeminiGateway.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/GatewayFactory.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Message.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Conversation.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Fingerprint.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/JsonSchemaValidator.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/OutputFilter.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/ApprovalGate.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/ApprovalStore.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/PermissionRuleset.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/ToolDefinition.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/ToolResult.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Tools/Tool.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Tools/ClosureTool.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Tools/Registry.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Storage/Store.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Storage/PdoStore.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/WordPress/Storage/WpDbStore.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/WordPress/Tools/FilterBridgeTool.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/WordPress/TransientApprovalStore.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/WordPress/HumanModalApprovalGate.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/LoopOptions.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/LoopResult.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Loop.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/Prompts.php';
+require_once WP_PFAGENT_DIR . 'includes/Framework/LlmCompactor.php';
+require_once WP_PFAGENT_DIR . 'includes/FrameworkRuntime.php';
+
+register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\TraceLogger', 'install']);
+register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\DecompileCache', 'activate']);
+register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\TemplateDecompileCache', 'activate']);
+// Framework Loop tables (wp_pfaf_conversations/messages/tool_calls/traces).
+// dbDelta is safe to re-run, so this also handles upgrades when schema
+// evolves between plugin versions.
+register_activation_hook(WP_PFAGENT_FILE, static function (): void {
+    global $wpdb;
+    if (!$wpdb instanceof \wpdb) {
+        return;
+    }
+    (new \ProjectFlash\Agent\Framework\WordPress\Storage\WpDbStore($wpdb))->migrate();
+});
+
+// Keep each workflow's decompiled source in postmeta so the LLM's
+// virtual filesystem reads are instantaneous. The hook fires whenever
+// any workflow is saved (via designer or via pfagent's apply tool).
+add_action('plugins_loaded', static function (): void {
+    if (class_exists('\\ProjectFlash\\Agent\\Sourcecode\\DecompileCache')) {
+        \ProjectFlash\Agent\Sourcecode\DecompileCache::init();
+    }
+    if (class_exists('\\ProjectFlash\\Agent\\Sourcecode\\TemplateDecompileCache')) {
+        \ProjectFlash\Agent\Sourcecode\TemplateDecompileCache::init();
+    }
+    // Flush the per-request compiler verb-catalog cache when wp-pfworkflow
+    // signals a workflow save (the in-memory cache may have data the LLM
+    // touched in this same request). The .d.ts files themselves are owned
+    // by each plugin's TypingsBuilder and rebuilt by hooks over there.
+    add_action('projectflash_workflow_changed', static function (): void {
+        if (class_exists('\\ProjectFlash\\Agent\\Sourcecode\\VerbCatalog')) {
+            \ProjectFlash\Agent\Sourcecode\VerbCatalog::flush();
+        }
+    }, 30);
+}, 20);
+
+add_action('init', static function (): void {
+    load_plugin_textdomain(
+        'wp-pfagent',
+        false,
+        dirname(plugin_basename(WP_PFAGENT_FILE)) . '/languages'
+    );
+}, 1);
+
+// Make every pfagent REST call honour the logged-in user's locale.
+// Without this, `determine_locale()` in REST context returns the site
+// WPLANG and the user's per-account language preference is ignored —
+// resulting in mixed-locale agent responses (e.g. JP system strings
+// inside a Spanish admin's chat). Confined to /wp-pfagent/v1/* routes
+// so other plugins' REST handlers keep their behaviour.
+add_filter('determine_locale', static function ($locale) {
+    if (!is_user_logged_in()) {
+        return $locale;
+    }
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        $route = isset($GLOBALS['wp']->query_vars['rest_route'])
+            ? (string) $GLOBALS['wp']->query_vars['rest_route']
+            : '';
+        if ($route !== '' && strpos($route, '/wp-pfagent/') === 0) {
+            $user_locale = get_user_locale(wp_get_current_user());
+            if ($user_locale) {
+                return $user_locale;
+            }
+        }
+    }
+    return $locale;
+}, 10, 1);
+
+add_action('plugins_loaded', static function (): void {
+    \ProjectFlash\Agent\TraceLogger::maybe_install();
+
+    $rate_limiter = new \ProjectFlash\Agent\RateLimiter();
+    $chat_sessions = new \ProjectFlash\Agent\ChatSessions($rate_limiter);
+    add_action('init', [$chat_sessions, 'register']);
+    add_action('rest_api_init', [$chat_sessions, 'register_routes']);
+
+    (new \ProjectFlash\Agent\RestApi())->init();
+    (new \ProjectFlash\Agent\AdminPage())->init();
+    (new \ProjectFlash\Agent\DashboardWidget())->init();
+
+    // One-shot purge of the legacy VFS draft/preview options
+    // (pfa_draft_<hash>, pfa_preview_<hash>, pfa_draft_index). The VFS
+    // no longer carries a separate draft layer — write_file persists
+    // directly into wp-pfworkflow as a real draft. Any rows left over
+    // from previous installs are stale data and would only confuse a
+    // future debugger reading wp_options. Gated on a flag option so it
+    // runs once per install.
+    if (!get_option('pfa_legacy_drafts_purged_v1')) {
+        global $wpdb;
+        if ($wpdb instanceof \wpdb) {
+            $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'pfa_draft_%' OR option_name LIKE 'pfa_preview_%'");
+            delete_option('pfa_draft_index');
+        }
+        update_option('pfa_legacy_drafts_purged_v1', gmdate('c'), false);
+    }
+
+    // Publish the local WorkflowVfsBridge to the Framework's tool resolver.
+    // The legacy AgentRuntime (deleted in commit d89b9ab) injected this
+    // bridge by constructor; the new Framework path resolves bridges via
+    // `apply_filters('projectflash_agent_vfs_bridge', null)`, so the
+    // FilterBridgeTool entries registered for list_files / read_file /
+    // write_file / edit_file / move_file / delete_file in agent-tools.json
+    // need a registered handler to call into. Without this filter every VFS
+    // call returns `bridge_unavailable` and the LLM falls back to emitting
+    // tool calls as plain text into the chat.
+    add_filter('projectflash_agent_vfs_bridge', static function ($service) {
+        if (is_object($service)) {
+            return $service;
+        }
+        return new \ProjectFlash\Agent\WorkflowVfsBridge();
+    });
+});

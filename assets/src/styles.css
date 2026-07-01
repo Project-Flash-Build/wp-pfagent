@@ -1,0 +1,2121 @@
+:root {
+  --pfa-bg: #0c1118;
+  --pfa-panel: #111923;
+  --pfa-panel-2: #151f2c;
+  --pfa-panel-3: #1c2a3a;
+  --pfa-border: #243448;
+  --pfa-border-strong: #31506f;
+  --pfa-text: #edf4ff;
+  --pfa-muted: #8da0b8;
+  --pfa-dim: #61728a;
+  --pfa-accent: #12b8a6;
+  --pfa-accent-2: #4d8dff;
+  --pfa-warning: #d09b32;
+  --pfa-danger: #ef6461;
+  --pfa-grid: rgba(97, 128, 170, 0.1);
+  --pfa-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+body.toplevel_page_wp-pfagent #wpcontent,
+body.toplevel_page_wp-pfagent #wpbody-content {
+  padding: 0;
+}
+
+body.toplevel_page_wp-pfagent #wpfooter {
+  display: none;
+}
+
+/* Full-screen mode: AdminPage::render_full_screen replaces the wp-admin
+   chrome with our own document. The React .pfa-fullscreen-bar takes the
+   top 40px; the SPA root fills the rest. */
+.pfa-fullscreen-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 40px;
+  padding: 0 16px;
+  background: #0d141d;
+  color: var(--pfa-text);
+  border-bottom: 1px solid var(--pfa-border);
+}
+
+/* Chevron-only back-to-admin — matches wp-pfworkflow's .pfw-back-to-admin
+   so the family of plugins shares one affordance. !important resets shield
+   us from any stray wp-admin chrome rules. */
+.pfa-back-to-admin {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--pfa-muted) !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  font-size: inherit !important;
+  line-height: 1 !important;
+  transition: background .12s, color .12s;
+}
+.pfa-back-to-admin:hover,
+.pfa-back-to-admin:focus,
+.pfa-back-to-admin:focus-visible {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--pfa-text) !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* The PFA mark: bitmap PNG from project-flash-portal/logos/agent.png when
+   exposed via config.iconUrl, otherwise the lucide Bot fallback. */
+.pfa-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  color: var(--pfa-accent-2);
+}
+.pfa-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.pfa-mark:has(svg) {
+  border: 1px solid rgba(77, 141, 255, 0.38);
+  background: #101e35;
+}
+
+.pfa-fullscreen-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pfa-text);
+}
+
+.pfa-fullscreen-title .pfa-tm {
+  font-size: 0.62em;
+  vertical-align: super;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-left: 1px;
+}
+
+.pfa-fullscreen-version {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--pfa-dim);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.pfa-root {
+  min-height: calc(100vh - 32px);
+  margin-left: -20px;
+  background: var(--pfa-bg);
+  color: var(--pfa-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.pfa-shell {
+  display: grid;
+  grid-template-columns: minmax(360px, 34vw) minmax(720px, 1fr);
+  /* Lock the shell to the viewport so the canvas pane is a real,
+     bounded box. Without this, the chat pane's tall content stretches
+     the document and the canvas pane balloons to the full document
+     height — which breaks the viewer's getBoundingClientRect-based
+     auto-fit (it reads a 2900px-tall rect instead of the visible ~800).
+  */
+  height: calc(100vh - 32px);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pfa-chat-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* CSS Grid gotcha: grid items default to min-height: auto, which
+     refuses to shrink below the children's intrinsic size. The chat
+     pane's message list is 3000+ px tall, so without min-height: 0 the
+     pane overflows the shell's height cap, stretching .pfa-canvas-pane
+     past the viewport and making the Rete viewer auto-fit zoom around
+     a bbox that is half off-screen. */
+  min-height: 0;
+  /* On short viewports the picker (CONVERSACIÓN) + wizard (CREDENCIALES)
+     stacked layout can exceed the pane height. Let the pane scroll as a
+     whole so the operator can reach the credentials section at the
+     bottom. The chat view is unaffected because .pfa-messages keeps its
+     own internal scroll and the bounded pane height never overflows
+     once flex:1 takes effect on it. */
+  overflow-y: auto;
+  border-right: 1px solid var(--pfa-border);
+  background: linear-gradient(180deg, #101720 0%, #0d141d 100%);
+}
+
+.pfa-chat-pane > .pfa-messages { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.pfa-chat-pane > .pfa-composer { flex: 0 0 auto; }
+/* Wizard + picker render at intrinsic height inside the chat pane.
+ * They used to claim `flex: 1 1 auto` with their own `overflow: auto`,
+ * which made each scroll internally and prevented the pane-level
+ * overflow from ever firing — so on short viewports the bottom of the
+ * stacked picker+wizard layout (CREDENCIALES + footer buttons) was
+ * unreachable. Now both contribute their natural height to the pane
+ * and .pfa-chat-pane's overflow-y handles the combined scroll. */
+.pfa-chat-pane > .pfa-wizard,
+.pfa-chat-pane > .pfa-conversation-picker { flex: 0 0 auto; }
+
+.pfa-message-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pfa-message-body > p { margin: 0; white-space: pre-wrap; }
+.pfa-message-error-code { color: var(--pfa-warning); font-size: 11px; }
+.pfa-message--thinking { opacity: 0.9; }
+.pfa-message--thinking p { display: inline-flex; align-items: center; gap: 8px; color: var(--pfa-text); font-weight: 500; }
+
+.pfa-md-paragraph { margin: 0; }
+.pfa-md-paragraph + .pfa-md-paragraph,
+.pfa-md-paragraph + .pfa-md-list,
+.pfa-md-list + .pfa-md-paragraph,
+.pfa-md-paragraph + .pfa-md-code,
+.pfa-md-code + .pfa-md-paragraph { margin-top: 8px; }
+.pfa-md-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.pfa-md-list li { line-height: 1.5; }
+.pfa-md-paragraph code,
+.pfa-md-list code { background: var(--pfa-panel-3); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+.pfa-md-code { background: var(--pfa-panel-2); border: 1px solid var(--pfa-border); padding: 8px 10px; border-radius: 4px; margin: 0; overflow: auto; font-size: 12px; max-width: 100%; }
+.pfa-md-code code { background: transparent; padding: 0; }
+.pfa-md-paragraph strong { color: var(--pfa-text); }
+.pfa-md-paragraph em { color: var(--pfa-muted); }
+
+.pfa-pending-confirmation {
+  border: 1px solid var(--pfa-panel-3);
+  background: var(--pfa-panel-2);
+  padding: 14px 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+  border-left: 3px solid var(--pfa-warning);
+}
+.pfa-pending-summary {
+  margin: 0;
+  color: var(--pfa-text);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+.pfa-pending-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+/* Both buttons share global classes whose defaults disagree on
+ * margin-top (.pfa-secondary-action has 12px, .pfa-primary-action
+ * has 0) and on display mode (only the primary is inline-flex).
+ * Inside the pending card we want them perfectly aligned: same
+ * height, same vertical position, same min-width. */
+.pfa-pending-actions .pfa-primary-action,
+.pfa-pending-actions .pfa-secondary-action {
+  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-width: 96px;
+  padding: 0 14px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.pfa-executions {
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.pfa-executions summary { cursor: pointer; color: var(--pfa-muted); }
+.pfa-executions ul { list-style: none; padding: 6px 0 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.pfa-executions li code { background: var(--pfa-panel-3); padding: 1px 5px; border-radius: 3px; }
+.pfa-execution-open-viewer {
+  margin-left: 8px;
+  background: transparent;
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-accent);
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.pfa-execution-open-viewer:hover {
+  background: var(--pfa-panel-3);
+  border-color: var(--pfa-accent);
+}
+
+.pfa-wizard {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--pfa-text);
+}
+.pfa-wizard__step { display: flex; flex-direction: column; gap: 10px; }
+.pfa-wizard__step h3 { margin: 0; font-size: 13px; color: var(--pfa-muted); text-transform: uppercase; letter-spacing: .04em; }
+.pfa-wizard__hint { font-size: 12px; color: var(--pfa-muted); margin: 0; }
+.pfa-wizard__credentials { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+/* Same pattern as session rows: the <li> is the visual card and the inner
+   button + per-row action icons are transparent controls. Icons match
+   the look of .pfa-wizard__session-delete (no frame, hover-tinted). */
+.pfa-wizard__credential-row {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  border-radius: 6px;
+  padding: 0 4px 0 0;
+  transition: border-color .12s ease, background .12s ease;
+}
+.pfa-wizard__credential-row:hover { border-color: var(--pfa-accent-2); }
+.pfa-wizard__credential {
+  flex: 1 1 auto;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--pfa-text);
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.pfa-wizard__credential strong { font-size: 13px; }
+.pfa-wizard__credential-meta { display: inline-flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--pfa-muted); align-items: center; }
+.pfa-wizard__credential-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--pfa-dim);
+  width: 28px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 3px;
+  transition: color .12s ease, background .12s ease;
+}
+.pfa-wizard__credential-action:hover:not(:disabled) {
+  color: var(--pfa-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+.pfa-wizard__credential-action--danger:hover:not(:disabled) {
+  color: var(--pfa-danger);
+  background: rgba(239, 100, 97, 0.10);
+}
+.pfa-wizard__credential-action:disabled { opacity: .4; cursor: not-allowed; }
+.pfa-wizard__credential-meta code { background: var(--pfa-panel-3); padding: 1px 5px; border-radius: 3px; }
+.pfa-wizard__family { background: var(--pfa-panel-3); padding: 1px 6px; border-radius: 3px; }
+.pfa-wizard__status { padding: 1px 6px; border-radius: 3px; }
+.pfa-wizard__status--validated { background: rgba(18, 184, 166, 0.16); color: var(--pfa-accent); }
+.pfa-wizard__status--configured_unvalidated { background: rgba(208, 155, 50, 0.16); color: var(--pfa-warning); }
+.pfa-wizard__status--validation_failed { background: rgba(239, 100, 97, 0.16); color: var(--pfa-danger); }
+.pfa-wizard__field { display: flex; flex-direction: column; gap: 4px; }
+.pfa-wizard__field span { font-size: 11px; color: var(--pfa-muted); text-transform: uppercase; letter-spacing: .04em; }
+.pfa-wizard__field input,
+.pfa-wizard__field select {
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-text);
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.pfa-wizard__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pfa-wizard__primary {
+  background: var(--pfa-accent);
+  color: #0c1118;
+  border: 0;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.pfa-wizard__primary:disabled { opacity: .5; cursor: not-allowed; }
+.pfa-wizard__cancel,
+.pfa-wizard__add {
+  background: transparent;
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-muted);
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.pfa-wizard__cancel:hover,
+.pfa-wizard__add:hover { background: var(--pfa-panel-3); color: var(--pfa-text); }
+
+/* --- Conversation picker (paginated session list + purge + back chevron) ---
+   These pieces all share the same dark/accent vocabulary as the rest of the
+   wizard so the picker stops looking like default browser markup. */
+.pfa-wizard__sessions-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pfa-wizard__sessions-head h3 { margin: 0; }
+.pfa-wizard__purge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-muted);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color .12s ease, border-color .12s ease, background .12s ease;
+}
+.pfa-wizard__purge:hover:not(:disabled) {
+  color: var(--pfa-danger);
+  border-color: var(--pfa-danger);
+  background: rgba(239, 100, 97, 0.08);
+}
+.pfa-wizard__purge:disabled { opacity: .5; cursor: not-allowed; }
+.pfa-wizard__sessions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pfa-wizard__sessions[aria-busy="true"] { opacity: .65; }
+/* The <li> is the visual card. The label/meta button and the trash button
+   live inside it as transparent controls so the card looks like one piece. */
+.pfa-wizard__session-row {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  border-radius: 4px;
+  padding: 0 4px 0 0;
+  transition: border-color .12s ease, background .12s ease;
+}
+.pfa-wizard__session-row:hover { border-color: var(--pfa-accent-2); background: var(--pfa-panel-3); }
+.pfa-wizard__session {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  color: var(--pfa-text);
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+}
+.pfa-wizard__session-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--pfa-dim);
+  width: 28px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 3px;
+  transition: color .12s ease, background .12s ease;
+}
+.pfa-wizard__session-delete:hover:not(:disabled) {
+  color: var(--pfa-danger);
+  background: rgba(239, 100, 97, 0.10);
+}
+.pfa-wizard__session-delete:disabled { opacity: .4; cursor: not-allowed; }
+.pfa-wizard__session strong { font-size: 13px; line-height: 1.2; }
+.pfa-wizard__session-meta { font-size: 11px; color: var(--pfa-muted); }
+.pfa-wizard__empty { font-size: 12px; color: var(--pfa-dim); margin: 0; }
+.pfa-wizard__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.pfa-wizard__pager {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color .12s ease, border-color .12s ease, background .12s ease;
+}
+.pfa-wizard__pager:hover:not(:disabled) {
+  color: var(--pfa-text);
+  border-color: var(--pfa-accent-2);
+  background: var(--pfa-panel-3);
+}
+.pfa-wizard__pager:disabled { opacity: .4; cursor: not-allowed; }
+.pfa-wizard__page-label { font-size: 11px; color: var(--pfa-muted); min-width: 90px; text-align: center; }
+
+/* --- Confirmation modal (purge, etc.) — branded replacement for window.confirm --- */
+.pfa-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(4, 8, 13, 0.62);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.pfa-modal {
+  width: min(420px, 100%);
+  background: var(--pfa-panel);
+  border: 1px solid var(--pfa-border);
+  border-radius: 6px;
+  box-shadow: var(--pfa-shadow);
+  color: var(--pfa-text);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+}
+.pfa-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+.pfa-modal__header h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--pfa-text);
+}
+.pfa-modal__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--pfa-panel-3);
+  color: var(--pfa-muted);
+}
+.pfa-modal__icon--danger {
+  background: rgba(239, 100, 97, 0.14);
+  color: var(--pfa-danger);
+}
+.pfa-modal__body {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--pfa-muted);
+}
+.pfa-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0;
+}
+.pfa-modal__danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--pfa-danger);
+  border: 1px solid var(--pfa-danger);
+  color: #1a0606;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: filter .12s ease, opacity .12s ease;
+}
+.pfa-modal__danger:hover:not(:disabled) { filter: brightness(1.08); }
+.pfa-modal__danger:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Wide variant for the manage-credential modal: scrollable body, X close
+   button in the header so the user can dismiss without scrolling. */
+.pfa-modal--wide {
+  width: min(640px, 100%);
+  max-height: min(86vh, 720px);
+  padding: 0;
+}
+.pfa-modal--wide .pfa-modal__header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--pfa-border);
+}
+.pfa-modal--wide .pfa-modal__header h2 { flex: 1 1 auto; }
+.pfa-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--pfa-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color .12s ease, background .12s ease;
+}
+.pfa-modal__close:hover:not(:disabled) {
+  color: var(--pfa-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+.pfa-modal__close:disabled { opacity: .5; cursor: not-allowed; }
+.pfa-modal--wide .pfa-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px 18px;
+}
+.pfa-modal--wide .pfa-modal__actions {
+  padding: 12px 18px;
+  border-top: 1px solid var(--pfa-border);
+}
+
+.pfa-manage__body { display: flex; flex-direction: column; gap: 16px; }
+.pfa-manage__summary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 0 0 4px;
+  font-size: 12px;
+}
+.pfa-manage__summary dt {
+  color: var(--pfa-dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.pfa-manage__summary dd {
+  margin: 0;
+  color: var(--pfa-text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pfa-manage__summary dd code {
+  background: var(--pfa-panel-3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+.pfa-manage__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 6px;
+  background: var(--pfa-panel);
+}
+.pfa-manage__section h3 {
+  margin: 0;
+  font-size: 12px;
+  color: var(--pfa-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.pfa-manage__section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pfa-manage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pfa-manage__health {
+  padding: 8px 10px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 4px;
+  background: var(--pfa-panel-2);
+  font-size: 11px;
+  color: var(--pfa-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pfa-manage__health strong { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.pfa-manage__health[data-status="connected"] {
+  border-color: rgba(18, 184, 166, 0.36);
+  background: rgba(18, 184, 166, 0.08);
+}
+.pfa-manage__health[data-status="connected"] strong { color: var(--pfa-accent); }
+.pfa-manage__health[data-status="failed"] {
+  border-color: rgba(239, 100, 97, 0.45);
+  background: rgba(239, 100, 97, 0.08);
+}
+.pfa-manage__health[data-status="failed"] strong { color: var(--pfa-danger); }
+.pfa-manage__health em { color: var(--pfa-dim); font-style: normal; }
+.pfa-manage__models {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid var(--pfa-border);
+  border-radius: 4px;
+  background: var(--pfa-panel-2);
+}
+.pfa-manage__models li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--pfa-border);
+  font-size: 12px;
+}
+.pfa-manage__models li:last-child { border-bottom: 0; }
+.pfa-manage__models strong { color: var(--pfa-text); font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pfa-manage__models code { background: var(--pfa-panel-3); padding: 1px 5px; border-radius: 3px; font-size: 11px; color: var(--pfa-muted); }
+.pfa-manage__models em { color: var(--pfa-dim); font-style: normal; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.pfa-manage__manual { display: flex; flex-direction: column; gap: 6px; }
+.pfa-manage__manual textarea {
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-text);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+
+/* Spin animation reused by Loader2 icons (mirrors .pfa-spinner). */
+.pfa-spin { animation: pfa-spin 0.7s linear infinite; }
+
+/* --- Active session header strip (back-to-list chevron) --- */
+.pfa-session-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-bottom: 1px solid var(--pfa-border);
+  background: var(--pfa-panel);
+}
+/* Subtle horizontal progress strip showing how much of the active model's
+ * context window the last turn's prompt occupied. Only rendered when the
+ * credential record carries a contextLength for the active model. */
+.pfa-context-bar {
+  position: relative;
+  height: 2px;
+  background: rgba(255, 255, 255, .04);
+  overflow: hidden;
+}
+.pfa-context-bar__fill {
+  height: 100%;
+  background: var(--pfa-accent, #58a6ff);
+  opacity: .55;
+  transition: width 240ms ease-out;
+}
+.pfa-session-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: var(--pfa-muted);
+  cursor: pointer;
+  line-height: 0;
+  transition: color .12s ease;
+}
+.pfa-session-back:hover,
+.pfa-session-back:focus { color: var(--pfa-text); outline: none; }
+.pfa-session-title {
+  font-size: 12px;
+  color: var(--pfa-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.pfa-session-title-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--pfa-text);
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border-strong);
+  border-radius: 3px;
+  padding: 3px 6px;
+  outline: none;
+}
+.pfa-session-title-input:focus { border-color: var(--pfa-accent-2); }
+.pfa-session-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 2px;
+  margin: 0;
+  color: var(--pfa-dim);
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 3px;
+  transition: color .12s ease, background .12s ease;
+}
+.pfa-session-edit:hover,
+.pfa-session-edit:focus { color: var(--pfa-text); background: var(--pfa-panel-3); outline: none; }
+.pfa-session-edit:disabled { opacity: .5; cursor: not-allowed; }
+
+.pfa-dependency-warning {
+  margin: 14px 16px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(208, 155, 50, 0.45);
+  border-radius: 7px;
+  background: rgba(208, 155, 50, 0.1);
+  color: #f0c87a;
+  font-size: 12px;
+}
+
+/* Plain section (no card border) so it matches the small-caps title
+   pattern used by Conversación / Credentials. */
+.pfa-dependency-status,
+.pfa-active-llm,
+.pfa-conversation-picker {
+  margin: 14px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pfa-dependency-status h3,
+.pfa-active-llm h3,
+.pfa-wizard__sessions-head h3 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--pfa-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.pfa-active-llm__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pfa-active-llm__actions {
+  display: flex;
+  gap: 6px;
+}
+.pfa-active-llm__change {
+  background: transparent;
+  border: 1px solid var(--pfa-border);
+  color: var(--pfa-muted);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color .12s ease, border-color .12s ease, background .12s ease;
+}
+.pfa-active-llm__change:hover {
+  color: var(--pfa-text);
+  border-color: var(--pfa-border-strong);
+  background: var(--pfa-panel-3);
+}
+.pfa-active-llm p code {
+  background: var(--pfa-panel-3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--pfa-text);
+}
+
+.pfa-check-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.pfa-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 7px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 999px;
+  background: #0b141e;
+  color: var(--pfa-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.pfa-status-dot::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--pfa-dim);
+  content: "";
+}
+
+.pfa-status-dot[data-status="ok"]::before { background: var(--pfa-accent); }
+.pfa-status-dot[data-status="failed"]::before { background: var(--pfa-danger); }
+.pfa-status-dot[data-status="checking"]::before { background: var(--pfa-warning); }
+
+.pfa-messages {
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 16px;
+}
+
+/* ---- Session hydration skeleton (shown while an existing conversation
+   loads from the server, in place of a blank panel) ---- */
+.pfa-session-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pfa-skeleton-message {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.pfa-skeleton-message[data-role='user'] {
+  grid-template-columns: minmax(0, 1fr) 32px;
+}
+
+.pfa-skeleton-message[data-role='user'] .pfa-skeleton-avatar {
+  order: 2;
+}
+
+.pfa-skeleton-message[data-role='user'] .pfa-skeleton-lines {
+  order: 1;
+  align-items: flex-end;
+}
+
+.pfa-skeleton-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.pfa-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.pfa-skeleton-line {
+  height: 11px;
+  width: 78%;
+  border-radius: 5px;
+}
+
+.pfa-skeleton-line.is-short {
+  width: 45%;
+}
+
+.pfa-skeleton-avatar,
+.pfa-skeleton-line {
+  background: linear-gradient(
+    90deg,
+    var(--pfa-panel-2) 25%,
+    var(--pfa-panel-3) 50%,
+    var(--pfa-panel-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: pfa-skeleton-shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes pfa-skeleton-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.pfa-message {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pfa-message-avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 7px;
+  background: #0d1621;
+  color: var(--pfa-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pfa-message[data-role="assistant"] .pfa-message-avatar {
+  border-color: rgba(18, 184, 166, 0.4);
+  color: var(--pfa-accent);
+}
+
+.pfa-message p {
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 8px;
+  background: #121c28;
+  color: #dbe8f7;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pfa-message[data-role="user"] p {
+  border-color: rgba(77, 141, 255, 0.38);
+  background: rgba(77, 141, 255, 0.1);
+}
+
+.pfa-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--pfa-border);
+  background: #0d141d;
+}
+
+.pfa-composer input,
+.pfa-search input {
+  min-width: 0;
+  border: 1px solid var(--pfa-border);
+  border-radius: 7px;
+  background: #08111b;
+  color: var(--pfa-text);
+  outline: none;
+}
+
+.pfa-composer input {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.pfa-composer button {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(18, 184, 166, 0.55);
+  border-radius: 7px;
+  background: rgba(18, 184, 166, 0.16);
+  color: #6ff7df;
+  cursor: pointer;
+}
+
+.pfa-composer button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+/* --- Iframe pane: hosts the optional pfm + pfw views as tabs, both
+       iframes stay mounted always so user navigation is preserved when
+       switching tabs (CSS-only show/hide). --- */
+.pfa-iframe-pane {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--pfa-bg);
+}
+.pfa-iframe-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 6px 16px 0;
+  border-bottom: 1px solid var(--pfa-border);
+  background: rgba(7, 16, 26, 0.6);
+}
+.pfa-iframe-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--pfa-muted);
+  font-weight: 500;
+  font-size: 13px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.pfa-iframe-tab:hover { color: var(--pfa-text); background: rgba(255, 255, 255, 0.03); }
+.pfa-iframe-tab[data-active="true"] { color: var(--pfa-text); border-bottom-color: var(--pfa-accent); }
+.pfa-iframe-stack {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.pfa-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--pfa-bg);
+  /* Inactive iframes stay in the DOM (and keep their navigation state)
+     but are hidden so they don't intercept clicks. visibility:hidden
+     keeps the iframe alive without reloading. */
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+.pfa-iframe[data-active="true"] {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  z-index: 1;
+}
+/* Diagnostic view overlays the (still-mounted) iframes in the right pane. */
+.pfa-iframe-diagnostic {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  background: var(--pfa-bg);
+  z-index: 2;
+}
+.pfa-iframe-empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 24px;
+  color: var(--pfa-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.pfa-primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(18, 184, 166, 0.58);
+  border-radius: 7px;
+  background: rgba(18, 184, 166, 0.16);
+  color: #dffff9;
+  cursor: pointer;
+  font-weight: 700;
+}
+.pfa-primary-action:hover { background: rgba(18, 184, 166, 0.22); }
+.pfa-primary-action:disabled { opacity: 0.55; cursor: wait; }
+
+.pfa-secondary-action {
+  margin-top: 12px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 7px;
+  background: #0b141e;
+  color: var(--pfa-text);
+  cursor: pointer;
+}
+
+.pfa-secondary-action:hover {
+  border-color: var(--pfa-border-strong);
+}
+
+.pfa-danger-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(239, 100, 97, 0.38);
+  border-radius: 7px;
+  background: rgba(239, 100, 97, 0.1);
+  color: #ffb1ae;
+  cursor: pointer;
+}
+
+.pfa-secondary-action:disabled,
+.pfa-danger-action:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.pfa-inline-error {
+  margin-top: 12px;
+  padding: 9px 10px;
+  border: 1px solid rgba(239, 100, 97, 0.38);
+  border-radius: 7px;
+  background: rgba(239, 100, 97, 0.1);
+  color: #ffbfbc;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.pfa-provider-settings {
+  display: grid;
+  gap: 12px;
+}
+
+.pfa-provider-search {
+  margin: 0;
+}
+
+.pfa-provider-search > span {
+  color: var(--pfa-muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pfa-provider-layout {
+  display: grid;
+  gap: 12px;
+}
+
+.pfa-provider-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.pfa-provider-card {
+  display: block;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 8px;
+  background: #101a26;
+  color: var(--pfa-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pfa-provider-card[data-active="true"] {
+  border-color: rgba(18, 184, 166, 0.58);
+  background: rgba(18, 184, 166, 0.1);
+}
+
+.pfa-provider-card strong,
+.pfa-provider-card span,
+.pfa-provider-card em {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pfa-provider-card strong {
+  font-size: 12px;
+}
+
+.pfa-provider-card span {
+  margin-top: 5px;
+  color: var(--pfa-muted);
+  font-size: 11px;
+}
+
+.pfa-provider-card em {
+  margin-top: 7px;
+  color: #9eb1c7;
+  font-size: 10px;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.pfa-provider-card[data-status="validated"] em {
+  color: #7ee3d3;
+}
+
+.pfa-provider-card[data-status="validation_failed"] em {
+  color: #ffaaa7;
+}
+
+.pfa-provider-form,
+.pfa-provider-summary {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 8px;
+  background: #121b27;
+}
+
+.pfa-provider-summary {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.pfa-provider-summary strong,
+.pfa-provider-summary span {
+  display: block;
+}
+
+.pfa-provider-summary span:not(.pfa-provider-status) {
+  margin-top: 4px;
+  color: var(--pfa-muted);
+  font-size: 11px;
+}
+
+.pfa-provider-summary dl {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 7px 10px;
+  margin: 0;
+}
+
+.pfa-provider-summary dt {
+  color: var(--pfa-dim);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.pfa-provider-summary dd {
+  min-width: 0;
+  margin: 0;
+  color: #dbe8f7;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.pfa-provider-status {
+  align-self: start;
+  padding: 5px 8px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 999px;
+  background: #0b141e;
+  color: var(--pfa-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.pfa-provider-status[data-status="validated"] {
+  border-color: rgba(18, 184, 166, 0.48);
+  color: #8af0de;
+}
+
+.pfa-provider-status[data-status="validation_failed"] {
+  border-color: rgba(239, 100, 97, 0.42);
+  color: #ffbfbc;
+}
+
+.pfa-provider-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.pfa-provider-form label span {
+  color: #aabbd0;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pfa-provider-form input,
+.pfa-provider-form textarea {
+  min-width: 0;
+  padding: 0 10px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 7px;
+  background: #08111b;
+  color: var(--pfa-text);
+  outline: none;
+}
+
+.pfa-provider-form input {
+  height: 38px;
+}
+
+.pfa-provider-form textarea {
+  padding-top: 9px;
+  resize: vertical;
+}
+
+.pfa-provider-form input:focus,
+.pfa-provider-form textarea:focus {
+  border-color: var(--pfa-border-strong);
+}
+
+.pfa-provider-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.pfa-provider-models {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--pfa-border);
+}
+
+.pfa-provider-models-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.pfa-provider-models-head strong,
+.pfa-provider-models-head span,
+.pfa-provider-health strong,
+.pfa-provider-health span,
+.pfa-provider-health em {
+  display: block;
+}
+
+.pfa-provider-models-head span,
+.pfa-provider-models p,
+.pfa-provider-model-table > span {
+  margin: 4px 0 0;
+  color: var(--pfa-muted);
+  font-size: 11px;
+}
+
+.pfa-provider-models-head > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pfa-provider-health {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border: 1px solid var(--pfa-border);
+  border-radius: 7px;
+  background: #0b141e;
+}
+
+.pfa-provider-health[data-status="connected"] {
+  border-color: rgba(18, 184, 166, 0.42);
+}
+
+.pfa-provider-health[data-status="failed"] {
+  border-color: rgba(239, 100, 97, 0.38);
+}
+
+.pfa-provider-health em {
+  color: #ffbfbc;
+  font-size: 10px;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.pfa-provider-model-table {
+  display: grid;
+  gap: 8px;
+}
+
+.pfa-provider-model-table ul {
+  display: grid;
+  gap: 6px;
+  max-height: 260px;
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.pfa-provider-model-table li {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(140px, 1.3fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid rgba(111, 134, 162, 0.18);
+  border-radius: 6px;
+  background: #0a121d;
+}
+
+.pfa-provider-model-table code {
+  color: #a9c5e6;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.pfa-provider-model-table em {
+  color: var(--pfa-muted);
+  font-size: 10px;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.pfa-provider-manual-models {
+  display: grid;
+  gap: 8px;
+}
+
+.pfa-blueprint-node {
+  width: 286px;
+  border: 1px solid #2f4969;
+  border-radius: 8px;
+  background: #17243a;
+  color: var(--pfa-text);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+}
+
+.pfa-blueprint-node.selected {
+  border-color: #6ca4ff;
+  box-shadow: 0 0 0 2px rgba(108, 164, 255, 0.18), 0 18px 42px rgba(0, 0, 0, 0.42);
+}
+
+.pfa-blueprint-node[data-mode="pure"] {
+  border-color: rgba(177, 127, 255, 0.58);
+  background: #1e1f3d;
+}
+
+.pfa-blueprint-node[data-mode="event"] {
+  border-color: rgba(18, 184, 166, 0.54);
+}
+
+.pfa-blueprint-node[data-mode="branch"] {
+  border-color: rgba(208, 155, 50, 0.62);
+}
+
+.pfa-bp-node-head {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pfa-bp-node-emblem {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--pfa-accent), var(--pfa-accent-2));
+}
+
+.pfa-bp-title {
+  max-width: 210px;
+  overflow: hidden;
+  color: #f7fbff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pfa-bp-subtitle {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  color: #9db0c7;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.pfa-bp-subtitle em {
+  color: #74d8c9;
+  font-style: normal;
+}
+
+.pfa-bp-lane {
+  padding: 10px 11px 12px;
+}
+
+.pfa-bp-lane + .pfa-bp-lane {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pfa-bp-lane-heading,
+.pfa-bp-pin-grid,
+.pfa-bp-port {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pfa-bp-lane-heading {
+  margin-bottom: 8px;
+  color: #91a4bd;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.pfa-bp-lane-heading em,
+.pfa-bp-port em {
+  color: #60748e;
+  font-style: normal;
+}
+
+.pfa-bp-pin-grid {
+  align-items: flex-start;
+}
+
+.pfa-bp-pin-column {
+  display: grid;
+  gap: 7px;
+  width: 50%;
+}
+
+.pfa-bp-pin-column[data-side="output"] {
+  justify-items: end;
+}
+
+.pfa-bp-port {
+  position: relative;
+  min-height: 22px;
+  width: 100%;
+  color: #d8e6f8;
+  font-size: 11px;
+}
+
+.pfa-bp-port-output {
+  text-align: right;
+}
+
+.pfa-bp-socket {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #8eb1d8;
+  border-radius: 999px;
+  background: #0b1420;
+}
+
+.pfa-bp-port[data-kind="exec"] .pfa-bp-socket {
+  border-radius: 4px;
+  border-color: #f0c66e;
+}
+
+.pfa-bp-port[data-kind="boolean"] .pfa-bp-socket {
+  border-color: #d48cff;
+}
+
+.pfa-bp-port[data-kind="string"] .pfa-bp-socket,
+.pfa-bp-port[data-kind="email"] .pfa-bp-socket,
+.pfa-bp-port[data-kind="url"] .pfa-bp-socket {
+  border-color: #6fd9c9;
+}
+
+.pfa-bp-port[data-kind="number"] .pfa-bp-socket {
+  border-color: #8cb8ff;
+}
+
+.pfa-bp-port[data-kind="array"] .pfa-bp-socket {
+  border-color: #ffb86f;
+}
+
+.pfa-bp-connection {
+  overflow: visible !important;
+  pointer-events: none;
+}
+
+.pfa-bp-connection-shadow {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.45);
+  stroke-linecap: round;
+  stroke-width: 7px;
+}
+
+.pfa-bp-connection-path {
+  fill: none;
+  stroke: #64a9ee;
+  stroke-linecap: round;
+  stroke-width: 3px;
+}
+
+.pfa-bp-connection[data-kind="data"] .pfa-bp-connection-path {
+  stroke: #8d77ff;
+  stroke-dasharray: 6 5;
+}
+
+@media (max-width: 1100px) {
+  .pfa-shell {
+    grid-template-columns: 360px minmax(520px, 1fr);
+  }
+
+  .pfa-drawer-backdrop {
+    left: 0;
+  }
+}
+
+/* Sprint 13 - Agent Console + Action Inspector */
+.pfa-agent-console {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 0 16px;
+}
+.pfa-agent-console__header h2 { font-size: 14px; margin: 0 0 4px; }
+.pfa-agent-console__header p { font-size: 12px; color: #6b7280; margin: 0; }
+.pfa-agent-console__form { display: flex; flex-direction: column; gap: 10px; }
+.pfa-agent-console__label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #374151; }
+.pfa-agent-console__label select,
+.pfa-agent-console__label textarea {
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+}
+.pfa-agent-console__actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.pfa-agent-console__actions button {
+  padding: 6px 12px;
+  border: 1px solid #1f2937;
+  background: #1f2937;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.pfa-agent-console__actions button[type="button"] { background: #fff; color: #1f2937; }
+.pfa-agent-console__actions button:disabled { opacity: 0.5; cursor: not-allowed; }
+.pfa-agent-console__empty {
+  padding: 10px;
+  border: 1px dashed #f59e0b;
+  background: #fffbeb;
+  font-size: 12px;
+  color: #78350f;
+  border-radius: 4px;
+}
+
+.pfa-inspector {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12px;
+}
+.pfa-inspector__header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pfa-inspector__header h3 { margin: 0; font-size: 13px; }
+.pfa-inspector__status {
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.pfa-inspector__status--idle { background: #e5e7eb; color: #4b5563; }
+.pfa-inspector__status--running { background: #dbeafe; color: #1d4ed8; }
+.pfa-inspector__status--completed { background: #dcfce7; color: #166534; }
+.pfa-inspector__status--confirmation { background: #fef3c7; color: #92400e; }
+.pfa-inspector__status--rejected { background: #fee2e2; color: #991b1b; }
+.pfa-inspector__status--partial { background: #ede9fe; color: #5b21b6; }
+.pfa-inspector__status--failed { background: #fee2e2; color: #991b1b; }
+.pfa-inspector__message { margin: 0; color: #374151; }
+.pfa-inspector__hint { margin: 0; color: #6b7280; font-size: 11px; }
+.pfa-inspector__confirmation {
+  background: #fef3c7;
+  border-left: 3px solid #f59e0b;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #78350f;
+}
+.pfa-inspector__section h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 6px;
+  letter-spacing: 0.06em;
+}
+.pfa-inspector__executions, .pfa-inspector__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pfa-inspector__execution { border: 1px solid #e5e7eb; border-radius: 4px; background: #fff; }
+.pfa-inspector__execution-header {
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto auto 18px;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 6px 8px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.pfa-inspector__execution-header:hover { background: #f3f4f6; }
+.pfa-inspector__execution-index { font-weight: 600; color: #6b7280; }
+.pfa-inspector__execution-name { font-weight: 600; color: #1f2937; }
+.pfa-inspector__execution-route { font-family: monospace; color: #4b5563; font-size: 11px; }
+.pfa-inspector__execution-status, .pfa-inspector__execution-duration {
+  font-size: 11px; color: #6b7280;
+}
+.pfa-inspector__execution-toggle { font-weight: 700; color: #6b7280; }
+.pfa-inspector__execution-body { padding: 8px 10px 10px; border-top: 1px solid #f3f4f6; display: flex; flex-direction: column; gap: 8px; }
+.pfa-inspector__execution-meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; font-size: 11px; color: #4b5563; }
+.pfa-inspector__execution-meta dt { font-weight: 600; color: #6b7280; }
+.pfa-inspector__execution-meta dd { margin: 0; }
+.pfa-inspector__details summary { cursor: pointer; font-size: 11px; color: #1f2937; padding: 2px 0; }
+.pfa-inspector__details pre, .pfa-inspector__diff pre, .pfa-inspector__event-data {
+  background: #f3f4f6;
+  border-radius: 3px;
+  padding: 6px;
+  font-size: 11px;
+  margin: 4px 0 0;
+  overflow: auto;
+  max-height: 240px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.pfa-inspector__no-diff {
+  font-style: italic;
+  color: #6b7280;
+  margin: 0;
+  font-size: 11px;
+}
+.pfa-inspector__diff { border: 1px solid #d1d5db; border-radius: 4px; background: #fff; padding: 6px 8px; display: flex; flex-direction: column; gap: 6px; }
+.pfa-inspector__diff-header { display: flex; gap: 8px; align-items: center; }
+.pfa-inspector__diff-change {
+  font-size: 10px;
+  text-transform: uppercase;
+  background: #1f2937;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+}
+.pfa-inspector__diff-flag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.pfa-inspector__diff-flag--changed { background: #dcfce7; color: #166534; }
+.pfa-inspector__diff-flag--unchanged { background: #e5e7eb; color: #4b5563; }
+.pfa-inspector__diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pfa-inspector__diff-pane h5 { font-size: 11px; margin: 0 0 4px; color: #374151; }
+.pfa-inspector__timeline-item { display: flex; flex-direction: column; gap: 2px; padding: 4px 6px; background: #fff; border-radius: 3px; border: 1px solid #f3f4f6; }
+.pfa-inspector__timeline-item time { font-size: 10px; color: #6b7280; }
+.pfa-inspector__event { font-weight: 600; font-size: 11px; color: #1f2937; }
+
+/* Sprint 15 - chat sessions */
+.pfa-agent-console__sessions { display: flex; flex-direction: column; gap: 6px; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+.pfa-agent-console__session-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.pfa-agent-console__session-actions button {
+  padding: 4px 10px;
+  font-size: 11px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #1f2937;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.pfa-agent-console__session-actions button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Sprint 16 - UX polish */
+.pfa-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+.pfa-banner--error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.pfa-banner--info { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
+.pfa-banner__close {
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.pfa-banner__close:hover { opacity: 0.7; }
+
+.pfa-spinner {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: pfa-spin 0.7s linear infinite;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+@keyframes pfa-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pfa-agent-console__hint { color: #6b7280; font-size: 10px; display: block; margin-top: 2px; }
+
+.pfa-agent-console__actions button {
+  white-space: nowrap;
+  min-width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+button:focus-visible,
+.pfa-icon-button:focus-visible,
+.pfa-list-item:focus-visible,
+[role="tab"]:focus-visible,
+.pfa-drawer-tabs button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .pfa-shell { grid-template-columns: 1fr; }
+  .pfa-drawer-backdrop { left: 0; }
+  .pfa-agent-console__actions { flex-direction: column; align-items: stretch; }
+  .pfa-agent-console__actions button { min-width: 0; width: 100%; }
+  .pfa-inspector__diff-grid { grid-template-columns: 1fr; }
+  .pfa-inspector__execution-header {
+    grid-template-columns: 24px 1fr auto 18px;
+    grid-row-gap: 4px;
+  }
+  .pfa-inspector__execution-route,
+  .pfa-inspector__execution-status { display: none; }
+}
+
+/* Sprint 20 - Diagnostic */
+/* ---- Diagnostic tab — aligned with PFA's dark design system ---- */
+.pfa-diagnostic { display: flex; flex-direction: column; gap: 14px; padding: 16px; color: var(--pfa-text); }
+.pfa-diagnostic__header { display: flex; align-items: center; gap: 10px; }
+.pfa-diagnostic__header h2 { font-size: 15px; margin: 0 auto 0 0; color: var(--pfa-text); font-weight: 600; }
+
+/* Each section is a PFA card (matches .pfa-executions / the left-panel cards). */
+.pfa-diagnostic__section {
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.pfa-diagnostic__section h4 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--pfa-muted); margin: 0 0 10px;
+}
+
+.pfa-diagnostic__criteria, .pfa-diagnostic__totals, .pfa-diagnostic__partial, .pfa-diagnostic__providers {
+  list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;
+}
+
+/* Criterion cards: inset panel with a status-coloured left rail. */
+.pfa-diagnostic__criterion {
+  border: 1px solid var(--pfa-border);
+  border-left: 3px solid var(--pfa-border-strong);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: var(--pfa-panel);
+  font-size: 12px;
+  color: var(--pfa-text);
+}
+.pfa-diagnostic__criterion strong { color: var(--pfa-text); }
+.pfa-diagnostic__criterion p { margin: 6px 0 0; color: var(--pfa-muted); font-size: 11px; }
+.pfa-diagnostic__criterion--pass { border-left-color: var(--pfa-accent); }
+.pfa-diagnostic__criterion--fail { border-left-color: var(--pfa-danger); }
+
+/* PASS / FAIL pill badges, tinted with the accent / danger tokens. */
+.pfa-diagnostic__criterion-flag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; margin-right: 8px;
+  background: var(--pfa-panel-3); color: var(--pfa-muted);
+  border: 1px solid var(--pfa-border);
+}
+.pfa-diagnostic__criterion--pass .pfa-diagnostic__criterion-flag {
+  background: rgba(18, 184, 166, 0.16); color: var(--pfa-accent); border-color: rgba(18, 184, 166, 0.4);
+}
+.pfa-diagnostic__criterion--fail .pfa-diagnostic__criterion-flag {
+  background: rgba(239, 100, 97, 0.16); color: var(--pfa-danger); border-color: rgba(239, 100, 97, 0.4);
+}
+
+/* Capability matrix as token chips. */
+.pfa-diagnostic__totals { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+.pfa-diagnostic__totals li {
+  font-size: 11px; color: var(--pfa-text);
+  background: var(--pfa-panel-3); border: 1px solid var(--pfa-border);
+  border-radius: 999px; padding: 3px 10px;
+}
+.pfa-diagnostic__totals li strong { color: var(--pfa-muted); font-weight: 600; text-transform: capitalize; }
+
+.pfa-diagnostic__partial-item, .pfa-diagnostic__providers li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--pfa-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: var(--pfa-panel);
+  font-size: 12px;
+  color: var(--pfa-text);
+}
+.pfa-diagnostic__partial-item strong, .pfa-diagnostic__providers li strong { color: var(--pfa-text); }
+.pfa-diagnostic__partial-item span, .pfa-diagnostic__providers li span { color: var(--pfa-muted); font-size: 11px; }
+.pfa-diagnostic__providers code { font-size: 11px; color: var(--pfa-dim); background: var(--pfa-panel-3); padding: 1px 6px; border-radius: 4px; }
+
+/* Refresh — ghost pill button, matches .pfa-execution-open-viewer. */
+.pfa-diagnostic__refresh {
+  padding: 4px 12px;
+  font-size: 11px;
+  border: 1px solid var(--pfa-border);
+  background: transparent;
+  color: var(--pfa-accent);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.pfa-diagnostic__refresh:hover { background: var(--pfa-panel-3); }
+.pfa-diagnostic__refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pfa-diagnostic__cost {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 0; font-size: 12px;
+}
+.pfa-diagnostic__cost li {
+  display: flex; justify-content: space-between; gap: 8px;
+  padding: 6px 0; border-bottom: 1px solid var(--pfa-grid);
+}
+.pfa-diagnostic__cost li:last-child { border-bottom: none; }
+.pfa-diagnostic__cost strong { color: var(--pfa-muted); font-weight: 500; }
+.pfa-diagnostic__cost span { color: var(--pfa-text); font-variant-numeric: tabular-nums; }
+
+/* Collapsibles + inline code inside the diagnostic cards. */
+.pfa-diagnostic__section details { margin-top: 8px; font-size: 11px; }
+.pfa-diagnostic__section summary { cursor: pointer; color: var(--pfa-muted); }
+.pfa-diagnostic__section pre {
+  background: var(--pfa-panel-3); border: 1px solid var(--pfa-border); border-radius: 4px;
+  padding: 8px; margin: 6px 0 0; overflow: auto; font-size: 11px; color: var(--pfa-muted);
+}
+.pfa-diagnostic__section code { background: var(--pfa-panel-3); padding: 1px 5px; border-radius: 3px; color: var(--pfa-text); }
+
+/* Shared inspector classes used inside the diagnostic — re-skinned for the
+   dark theme, scoped so the ActionInspector elsewhere is untouched. */
+.pfa-diagnostic .pfa-inspector__hint { color: var(--pfa-muted); }
+.pfa-diagnostic .pfa-inspector__status { border: 1px solid var(--pfa-border); }
+.pfa-diagnostic .pfa-inspector__status--completed { background: rgba(18, 184, 166, 0.16); color: var(--pfa-accent); border-color: rgba(18, 184, 166, 0.4); }
+.pfa-diagnostic .pfa-inspector__status--confirmation { background: rgba(208, 155, 50, 0.16); color: var(--pfa-warning); border-color: rgba(208, 155, 50, 0.4); }
+.pfa-diagnostic .pfa-inspector__status--failed { background: rgba(239, 100, 97, 0.16); color: var(--pfa-danger); border-color: rgba(239, 100, 97, 0.4); }
+
+/* ---- Permission rules modal (capability list with Allow/Ask/Deny dropdowns) ---- */
+.pfa-perms-default,
+.pfa-perms-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--pfa-border);
+}
+.pfa-perms-default {
+  background: var(--pfa-panel-2);
+  border: 1px solid var(--pfa-border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 6px 0 10px;
+}
+.pfa-perms-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.pfa-perms-list .pfa-perms-row:last-child { border-bottom: 0; }
+.pfa-perms-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.pfa-perms-row__text strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pfa-text);
+  line-height: 1.3;
+}
+.pfa-perms-row__select {
+  flex-shrink: 0;
+  width: 110px;
+  padding: 6px 8px;
+  background: var(--pfa-panel-3);
+  border: 1px solid var(--pfa-border);
+  border-radius: 4px;
+  color: var(--pfa-text);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.pfa-perms-row__select:focus { outline: 1px solid var(--pfa-accent); }
+.pfa-perms-row__chip {
+  flex-shrink: 0;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--pfa-panel-3);
+  border: 1px dashed var(--pfa-border);
+  color: var(--pfa-muted);
+  font-style: italic;
+}
+.pfa-perms-advanced {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--pfa-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pfa-perms-advanced__toggle {
+  align-self: flex-start;
+  background: transparent;
+  border: 0;
+  color: var(--pfa-accent);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.pfa-perms-advanced__toggle:hover { text-decoration: underline; }

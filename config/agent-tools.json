@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "tools": [
+    {
+      "name": "list_files",
+      "description": "List files in the virtual workspace. Pass `prefix` to scope (e.g. '/workflows/' for real workflows, '/templates/' for read-only templates, '/lib/' for reference docs). With no prefix, returns the top-level directory listing. ALWAYS call this once at the start of a conversation to discover what is available, then `read_file('/lib/nodes.d.ts')` to get the full verb library before authoring anything.",
+      "capabilityKeys": ["agent.vfs.list"],
+      "permission": "viewWorkflows",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "list_files"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "prefix": { "type": "string", "description": "Optional path prefix. Defaults to '/'." }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    },
+    {
+      "name": "read_file",
+      "description": "Read a file's current contents. Common targets: '/lib/nodes.d.ts' (the verb library — read this first to learn every available action), '/lib/manage.d.ts' (the pfmanagement model surface — entities, events, actions, plus per-entity virtual CRUD), '/lib/variables.d.ts' (the variables declared in a specific workflow — pass workflow_id), '/workflows/<id>__<slug>.pfflow' (an existing workflow's source), '/templates/<slug>.pfflow' (a built-in template's source). Returns { source, draft, liveSource?, lastError?, workflowId? }; `draft: true` means the user has unsaved changes in this file.",
+      "capabilityKeys": ["agent.vfs.read"],
+      "permission": "viewWorkflows",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "read_file"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "description": "Absolute path inside the virtual workspace (starts with /)." },
+          "workflow_id": { "type": "integer", "minimum": 1, "description": "Required when reading /lib/variables.d.ts (selects which workflow's variables to surface). Ignored for other paths." }
+        },
+        "required": ["path"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    },
+    {
+      "name": "write_file",
+      "description": "Replace a workflow file with new contents. Compiles immediately; on compile error returns a { line, column, reason, hint } error and leaves the previous draft untouched, so you can fix-forward by calling write_file again. ON SUCCESS the customer's preview pane updates to show the new graph (cards + wires) — the underlying workflow in the library is NOT persisted yet (the customer commits by clicking Apply in the UI). For a brand-new workflow use the path /workflows/new__<slug>.pfflow. Do not write to /lib/* or /templates/* (read-only).",
+      "capabilityKeys": ["agent.vfs.write"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "write_file"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "contents": { "type": "string", "description": "The entire new file contents in the workflow source language." }
+        },
+        "required": ["path", "contents"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    },
+    {
+      "name": "edit_file",
+      "description": "Surgical string-replace edit in a workflow file. Provide an `oldStr` that occurs exactly once in the current file, and the `newStr` that replaces it. Use this when you want to change a small region without rewriting the whole file — much cheaper than write_file. Compiles after the substitution; on compile error returns a typed error and you can fix-forward. Like write_file, this updates a draft + preview; it does NOT persist to the customer's library.",
+      "capabilityKeys": ["agent.vfs.edit"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "edit_file"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "oldStr": { "type": "string", "minLength": 1, "description": "Exact snippet to replace (must occur exactly once in the file)." },
+          "newStr": { "type": "string", "description": "Replacement snippet." }
+        },
+        "required": ["path", "oldStr", "newStr"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    },
+    {
+      "name": "move_file",
+      "description": "Rename a workflow file. Side effect: the workflow's name in the customer's library changes immediately and requires user confirmation. Only valid for /workflows/<id>__<slug>.pfflow paths; the id portion does not change, only the slug.",
+      "capabilityKeys": ["agent.vfs.move"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "move_file"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string", "minLength": 1 },
+          "to": { "type": "string", "minLength": 1 }
+        },
+        "required": ["from", "to"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    },
+    {
+      "name": "delete_file",
+      "description": "Delete a workflow. Side effect: the workflow is removed from the customer's library permanently — requires user confirmation. Only valid for /workflows/<id>__<slug>.pfflow paths. Templates and the library are not deletable.",
+      "capabilityKeys": ["agent.vfs.delete"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "delete_file"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1 }
+        },
+        "required": ["path"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    },
+    {
+      "name": "pfm_get_contract",
+      "description": "Bootstrap call to the wp-pfmanagement agent-ready service. Returns the type catalog (field types + accepted config keys), the EQL operator vocabulary, and the supported resource kinds (entity, record, action, application, module, group, role, page) — wrapped as { content, contextForYou }. Read contextForYou for behavioural rules. DO NOT call again if you already have it in this conversation; it is large and stable.",
+      "capabilityKeys": ["management.agent_contract"],
+      "permission": "viewWorkflows",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "projectflash_management_agent_api",
+        "method": "agent_contract"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-pfm-bridge-smoke.php"]
+    },
+    {
+      "name": "pfm_list",
+      "description": "List resources of one kind from wp-pfmanagement as full round-trippable payloads. `kind` must be one of: entity, record, action, application, module, group, role, page, business_rule. `filters` is optional and kind-specific (e.g. record uses { entity, query, limit }; business_rule accepts an entity_slug filter). Outer envelope is { content, contextForYou } and each item carries its own inner envelope. UI Policies are admin-only and not listable through this tool.",
+      "capabilityKeys": ["management.agent_list"],
+      "permission": "viewWorkflows",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "projectflash_management_agent_api",
+        "method": "agent_list",
+        "argMapping": ["kind", "filters"]
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "kind": { "type": "string", "enum": ["entity", "record", "action", "application", "module", "group", "role", "page", "business_rule"] },
+          "filters": { "type": "object", "additionalProperties": true }
+        },
+        "required": ["kind"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-pfm-bridge-smoke.php"]
+    },
+    {
+      "name": "pfm_get",
+      "description": "Load one wp-pfmanagement resource as a full round-trippable payload. `kind` selects the resource type; `ref` is the slug (for entity/action/application/module/group/role), composite \"entity:sys_id\" (for record), the page slug (for page), or the numeric id (for business_rule — also accepts \"id:<n>\"). UI Policies are admin-only and not gettable through this tool.",
+      "capabilityKeys": ["management.agent_get"],
+      "permission": "viewWorkflows",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "projectflash_management_agent_api",
+        "method": "agent_get",
+        "argMapping": ["kind", "ref"]
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "kind": { "type": "string", "enum": ["entity", "record", "action", "application", "module", "group", "role", "page", "business_rule"] },
+          "ref": { "type": "string", "minLength": 1 }
+        },
+        "required": ["kind", "ref"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-pfm-bridge-smoke.php"]
+    },
+    {
+      "name": "pfm_apply",
+      "description": "Persist one wp-pfmanagement resource. `kind` selects the resource type; `payload` is the full shape returned by pfm_get / pfm_list for that kind (round-trippable). Create vs. update is decided by the presence of slug/id in the payload. SIDE EFFECT — requires user confirmation. Construction only; firing actions / running workflows is a separate surface. Business Rules are LIMITED: you may create, update (including activate/deactivate via is_active), list, and get them — but DELETE is refused; to stop a rule, send is_active=false. When you CREATE a business_rule, the platform auto-creates a paired draft workflow and returns its workflow_id in the response; tell the operator they can ask you to edit it (it lives at /workflows/<workflow_id>__<slug>.pfflow). UI Policies are NOT exposed through this tool — they are admin-only.",
+      "capabilityKeys": ["management.agent_apply"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_management_agent_api",
+        "method": "agent_apply",
+        "argMapping": ["kind", "payload"]
+      },
+      "parameters": {
+        "type": "object",
+        "description": "Canonical shape: { kind: '<entity|record|action|application|module|group|role|page|business_rule>', payload: { <kind>: {...} } }. The bridge also accepts flat shapes (top-level kind-named keys without an explicit `payload` wrapper) and auto-infers kind from a unique top-level resource key — useful when the LLM forgets the wrapper.",
+        "properties": {
+          "kind": { "type": "string", "enum": ["entity", "record", "action", "application", "module", "group", "role", "page", "business_rule"] },
+          "payload": { "type": "object", "additionalProperties": true },
+          "entity": { "type": "object", "additionalProperties": true },
+          "record": { "type": "object", "additionalProperties": true },
+          "action": { "type": "object", "additionalProperties": true },
+          "application": { "type": "object", "additionalProperties": true },
+          "module": { "type": "object", "additionalProperties": true },
+          "group": { "type": "object", "additionalProperties": true },
+          "role": { "type": "object", "additionalProperties": true },
+          "page": { "type": "object", "additionalProperties": true },
+          "business_rule": { "type": "object", "additionalProperties": true },
+          "values": { "type": "object", "additionalProperties": true },
+          "sys_id": { "type": "string" },
+          "numberSequence": { "type": "object", "additionalProperties": true },
+          "formLayout": { "type": "object", "additionalProperties": true },
+          "fields": { "type": "array", "items": { "type": "object" } }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-pfm-bridge-smoke.php"]
+    },
+    {
+      "name": "create_variable",
+      "description": "Declare a workflow variable so you can read or write it from the .pfflow source. Variables are the LAST RESORT — before reaching for one, exhaust every other source: a field already on the trigger event (`event.<field>`), a field on a record you Get from the data model, the output pin of an upstream node, a value the customer's request already contains. Only when none of these can produce the value (e.g. a fixed template string, a threshold the customer wants you to use, an EQL filter literal, a hardcoded email) do you declare a variable. Pass `name` in any human form — \"Estado buscado\", \"estadoBuscado\", \"estado_buscado\" all normalise to the same slug. Pick `type` from the enriched type system: string/text, number, integer, boolean, date, datetime, url, email, phone, currency, user, group, media, post, secret, file. Optional `value` becomes the default. ON SUCCESS the response includes `identifier` (e.g. `Estado_buscado`) and the exact getter/setter you must type in the .pfflow (`Estado_buscado$Variable$Get` / `...$Set`). The new variable lands in /lib/variables.d.ts automatically; call read_file('/lib/variables.d.ts', workflow_id) once after creating to refresh your view, then wire it.",
+      "capabilityKeys": ["agent.vfs.write"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "create_variable"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "workflow_id": { "type": "integer", "minimum": 1, "description": "Id of the workflow this variable belongs to (the one you wrote with write_file)." },
+          "name": { "type": "string", "minLength": 1, "description": "Human-readable variable name (any form: spaces, camelCase, snake_case). Normalised to a stable slug on storage." },
+          "type": { "type": "string", "enum": ["string", "text", "number", "integer", "boolean", "date", "datetime", "url", "email", "phone", "currency", "user", "group", "media", "post", "secret", "file"], "description": "Enriched type. Must match the Pin type wherever the variable will be wired." },
+          "value": { "description": "Optional default value (string/number/boolean). Becomes the variable's `defaultValue` so the workflow has a sensible value on first read." }
+        },
+        "required": ["workflow_id", "name", "type"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-pfm-bridge-smoke.php"]
+    },
+    {
+      "name": "activate_workflow",
+      "description": "Activate a workflow that is currently in draft so it starts firing on its trigger. Use this once the workflow is fully wired (you have already called write_file and compile succeeded) and the customer has confirmed they want it live. Side effect: future trigger events will execute the workflow — requires user confirmation. Pass the same path you used for write_file (e.g. /workflows/new__<slug>.pfflow or /workflows/<id>__<slug>.pfflow).",
+      "capabilityKeys": ["agent.vfs.write"],
+      "permission": "manageWorkflows",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "projectflash_agent_vfs_bridge",
+        "method": "activate_workflow"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "description": "Path of the workflow to activate (the one you wrote)." }
+        },
+        "required": ["path"],
+        "additionalProperties": false
+      },
+      "tests": ["tests/runtime-variables-vfs-smoke.php"]
+    }
+  ]
+}

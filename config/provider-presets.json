@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "families": {
+    "openai-compatible": {
+      "label": "OpenAI compatible",
+      "auth": "bearer",
+      "defaultHeaders": {
+        "Authorization": "Bearer {{api_key}}",
+        "Content-Type": "application/json"
+      },
+      "endpoints": {
+        "models": "/models",
+        "chatCompletions": "/chat/completions",
+        "responses": "/responses",
+        "embeddings": "/embeddings"
+      },
+      "discovery": [
+        { "path": "/models", "shape": "openai_models_list" }
+      ],
+      "versions": ["v1"]
+    },
+    "anthropic-compatible": {
+      "label": "Anthropic compatible",
+      "auth": "x-api-key",
+      "defaultHeaders": {
+        "x-api-key": "{{api_key}}",
+        "anthropic-version": "{{anthropic_version}}",
+        "Content-Type": "application/json"
+      },
+      "defaults": {
+        "anthropic_version": "2023-06-01"
+      },
+      "endpoints": {
+        "messages": "/messages",
+        "models": "/models"
+      },
+      "discovery": [
+        { "path": "/models", "shape": "anthropic_models_list" }
+      ],
+      "versions": ["v1"]
+    },
+    "gemini-compatible": {
+      "label": "Gemini native compatible",
+      "auth": "x-goog-api-key",
+      "defaultHeaders": {
+        "x-goog-api-key": "{{api_key}}",
+        "Content-Type": "application/json"
+      },
+      "endpoints": {
+        "models": "/models",
+        "generateContent": "/models/{{model}}:generateContent",
+        "streamGenerateContent": "/models/{{model}}:streamGenerateContent",
+        "embedContent": "/models/{{model}}:embedContent"
+      },
+      "discovery": [
+        { "path": "/models", "shape": "gemini_models_list" }
+      ],
+      "versions": ["v1beta", "v1"]
+    }
+  },
+  "presets": {
+    "openai": {
+      "label": "OpenAI",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.openai.com/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "direct_api"
+    },
+    "anthropic": {
+      "label": "Anthropic Claude",
+      "family": "anthropic-compatible",
+      "baseUrl": "https://api.anthropic.com/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "direct_api"
+    },
+    "google-gemini": {
+      "label": "Google Gemini",
+      "family": "gemini-compatible",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "direct_api"
+    },
+    "google-gemini-openai": {
+      "label": "Google Gemini OpenAI-compatible",
+      "family": "openai-compatible",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "deepseek": {
+      "label": "DeepSeek",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.deepseek.com/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut",
+      "extraDiscoveryEndpoints": [
+        { "url": "https://api.deepseek.com/v1/user/balance", "shape": "openai_balance", "authHeader": "Authorization", "authPrefix": "Bearer " }
+      ]
+    },
+    "deepseek-anthropic": {
+      "label": "DeepSeek Anthropic-compatible",
+      "family": "anthropic-compatible",
+      "baseUrl": "https://api.deepseek.com/anthropic",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "qwen": {
+      "label": "Qwen DashScope International",
+      "family": "openai-compatible",
+      "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut",
+      "extraDiscoveryEndpoints": [
+        { "url": "https://dashscope-intl.aliyuncs.com/api/v1/models", "shape": "dashscope_models_list", "authHeader": "Authorization", "authPrefix": "Bearer ", "paginate": { "param": "page_no", "pageSize": "page_size", "pageSizeValue": 50 } }
+      ]
+    },
+    "qwen-china": {
+      "label": "Qwen DashScope China",
+      "family": "openai-compatible",
+      "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut",
+      "extraDiscoveryEndpoints": [
+        { "url": "https://dashscope.aliyuncs.com/api/v1/models", "shape": "dashscope_models_list", "authHeader": "Authorization", "authPrefix": "Bearer ", "paginate": { "param": "page_no", "pageSize": "page_size", "pageSizeValue": 50 } }
+      ]
+    },
+    "xiaomi-mimo": {
+      "label": "Xiaomi MiMo",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.xiaomimimo.com/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "xai": {
+      "label": "xAI Grok",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.x.ai/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "mistral": {
+      "label": "Mistral AI",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.mistral.ai/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "groq": {
+      "label": "Groq",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.groq.com/openai/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "perplexity": {
+      "label": "Perplexity",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.perplexity.ai/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "openrouter": {
+      "label": "OpenRouter",
+      "family": "openai-compatible",
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "gateway"
+    },
+    "together": {
+      "label": "Together AI",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.together.xyz/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "fireworks": {
+      "label": "Fireworks AI",
+      "family": "openai-compatible",
+      "baseUrl": "https://api.fireworks.ai/inference/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "shortcut"
+    },
+    "cohere": {
+      "label": "Cohere",
+      "family": "custom",
+      "baseUrl": "https://api.cohere.com/v2",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "direct_api_later"
+    },
+    "azure-openai": {
+      "label": "Azure OpenAI",
+      "family": "openai-compatible",
+      "baseUrl": "{{azure_resource_endpoint}}/openai/deployments/{{deployment}}",
+      "modelDiscovery": "deployment_config",
+      "modelHints": [],
+      "status": "advanced_shortcut"
+    },
+    "amazon-bedrock": {
+      "label": "Amazon Bedrock",
+      "family": "custom",
+      "baseUrl": "aws-bedrock-runtime",
+      "modelDiscovery": "provider_specific",
+      "modelHints": [],
+      "status": "direct_api_later"
+    },
+    "ollama": {
+      "label": "Ollama local",
+      "family": "openai-compatible",
+      "baseUrl": "http://localhost:11434/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "local_api"
+    },
+    "lm-studio": {
+      "label": "LM Studio local",
+      "family": "openai-compatible",
+      "baseUrl": "http://localhost:1234/v1",
+      "modelDiscovery": "api",
+      "modelHints": [],
+      "status": "local_api"
+    },
+    "custom-openai-compatible": {
+      "label": "Custom OpenAI-compatible",
+      "family": "openai-compatible",
+      "baseUrl": "{{base_url}}",
+      "modelDiscovery": "api_or_manual",
+      "modelHints": [],
+      "status": "generic"
+    },
+    "custom-anthropic-compatible": {
+      "label": "Custom Anthropic-compatible",
+      "family": "anthropic-compatible",
+      "baseUrl": "{{base_url}}",
+      "modelDiscovery": "api_or_manual",
+      "modelHints": [],
+      "status": "generic"
+    },
+    "custom-gemini-compatible": {
+      "label": "Custom Gemini-compatible",
+      "family": "gemini-compatible",
+      "baseUrl": "{{base_url}}",
+      "modelDiscovery": "api_or_manual",
+      "modelHints": [],
+      "status": "generic"
+    }
+  }
+}
