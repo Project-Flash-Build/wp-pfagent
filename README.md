@@ -20,4 +20,4 @@ WP-PFWorkflow and WP-PFManagement are available for evaluation, purchase and lic
 
 ---
 
-© 2026 Project Flash Build. Project Flash™, WP-PFWorkflow™, WP-PFManagement™ and WP-PFAgent™ are trademarks of Project Flash Build. WP-PFAgent's source code is licensed under GPL-2.0-or-later.
+Project Flash™, WP-PFWorkflow™, WP-PFManagement™ and WP-PFAgent™ are trademarks of Project Flash. WP-PFAgent's source code is licensed under GPL-2.0-or-later.
