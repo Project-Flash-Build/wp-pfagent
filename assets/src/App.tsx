@@ -139,8 +139,8 @@ function loadIframeState(): Partial<IframeState> {
       // iframes on the bare landing pages of pfm / pfw instead of
       // restoring whatever workflow / entity the LLM had focused
       // before. Restoring those produced the operator's reported
-      // surprise — "nada más entrar a wp-pfagent veo un workflow
-      // cargado, esto no es correcto". The agent's next tool call
+      // surprise — "the moment I open wp-pfagent I see a workflow
+      // loaded, this is not right". The agent's next tool call
       // will repopulate the URL via the iframe controller when it
       // does something focusable.
       pfmUrl: typeof parsed.pfmUrl === 'string' ? stripFocusParams(parsed.pfmUrl) : null,
@@ -637,8 +637,8 @@ export function App() {
       } else if (result.status === 'needs_confirmation' && !result.message && pending) {
         // Tool-only round that paused for confirmation: no narration
         // anywhere, just a pending modal. Splice it onto the previous
-        // assistant bubble so we don't push a bare "esta acción
-        // requiere confirmación" bubble.
+        // assistant bubble so we don't push a bare "this action
+        // requires confirmation" bubble.
         setMessages((items) => attachPendingToLastAssistant(items, pending, executions));
       } else {
         // Fallback (no narrations at all, plain reply): render the
@@ -1083,8 +1083,8 @@ export function App() {
         </section>
 
         {/* Provider + model picker AND conversation picker. The pre-part-2
-            layout stacked both lists in a single view (CONVERSACIÓN above,
-            CREDENCIALES below) — restoring that here so the operator never
+            layout stacked both lists in a single view (CONVERSATION above,
+            CREDENTIALS below) — restoring that here so the operator never
             loses sight of the credentials section when the wizard opens.
             Mutually exclusive only with the active-chat view. */}
         {active?.providerId && active.model && active.sessionId && !showWizard && !showSessionsInWizard ? (

@@ -158,7 +158,7 @@ body.toplevel_page_wp-pfagent #wpfooter {
      past the viewport and making the Rete viewer auto-fit zoom around
      a bbox that is half off-screen. */
   min-height: 0;
-  /* On short viewports the picker (CONVERSACIÓN) + wizard (CREDENCIALES)
+  /* On short viewports the picker (CONVERSATION) + wizard (CREDENTIALS)
      stacked layout can exceed the pane height. Let the pane scroll as a
      whole so the operator can reach the credentials section at the
      bottom. The chat view is unaffected because .pfa-messages keeps its
@@ -175,7 +175,7 @@ body.toplevel_page_wp-pfagent #wpfooter {
  * They used to claim `flex: 1 1 auto` with their own `overflow: auto`,
  * which made each scroll internally and prevented the pane-level
  * overflow from ever firing — so on short viewports the bottom of the
- * stacked picker+wizard layout (CREDENCIALES + footer buttons) was
+ * stacked picker+wizard layout (CREDENTIALS + footer buttons) was
  * unreachable. Now both contribute their natural height to the pane
  * and .pfa-chat-pane's overflow-y handles the combined scroll. */
 .pfa-chat-pane > .pfa-wizard,
@@ -816,7 +816,7 @@ body.toplevel_page_wp-pfagent #wpfooter {
 }
 
 /* Plain section (no card border) so it matches the small-caps title
-   pattern used by Conversación / Credentials. */
+   pattern used by Conversation / Credentials. */
 .pfa-dependency-status,
 .pfa-active-llm,
 .pfa-conversation-picker {
