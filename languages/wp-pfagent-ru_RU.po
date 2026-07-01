@@ -1,0 +1,1368 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP PFAgent 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-pfagent\n"
+"POT-Creation-Date: 2026-05-17T16:38:13+00:00\n"
+"PO-Revision-Date: 2026-05-28 11:58+0200\n"
+"Last-Translator: Project Flash Build <build@project-flash.com>\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Domain: wp-pfagent\n"
+"X-Generator: WP-CLI 2.12.0\n"
+
+#. Plugin Name of the plugin
+#: wp-pfagent.php includes/AdminPage.php:25 includes/AdminPage.php:109
+msgid "WP PFAgent"
+msgstr "WP PFAgent"
+
+#. Description of the plugin
+#: wp-pfagent.php
+msgid "Agent console for ProjectFlash products."
+msgstr "Консоль агента для продуктов ProjectFlash."
+
+#. Author of the plugin
+#: wp-pfagent.php
+msgid "ProjectFlash"
+msgstr "ProjectFlash"
+
+#: includes/AdminPage.php:26
+msgid "PF Agent"
+msgstr "PF Agent"
+
+#: includes/AdminPage.php:110
+msgid "Back to admin"
+msgstr "Вернуться в админку"
+
+#: includes/AdminPage.php:111 includes/AdminPage.php:176
+msgid ""
+"WP PFAgent assets are missing. Run npm install and npm run build inside the "
+"plugin directory."
+msgstr ""
+"Отсутствуют ассеты WP PFAgent. Запустите npm install и npm run build в "
+"каталоге плагина."
+
+#: includes/AdminPage.php:141
+msgid "WP PFAgent assets are not built."
+msgstr "Ассеты WP PFAgent не собраны."
+
+#: includes/AdminPage.php:169
+msgid "You do not have permission to manage WP PFAgent."
+msgstr "У вас нет прав на управление WP PFAgent."
+
+#: includes/AgentContract.php:168
+msgid "Agent capability manifest is missing."
+msgstr "Манифест возможностей агента отсутствует."
+
+#: includes/AgentContract.php:173
+msgid "Agent capability manifest is invalid."
+msgstr "Манифест возможностей агента недействителен."
+
+#: includes/AgentRuntime.php:40
+msgid "providerId is required."
+msgstr "providerId обязателен."
+
+#: includes/AgentRuntime.php:59
+msgid "message is required."
+msgstr "message обязателен."
+
+#: includes/AgentRuntime.php:145
+msgid "No tool was selected by the model."
+msgstr "Модель не выбрала инструмент."
+
+#: includes/AgentRuntime.php:146
+msgid ""
+"Tools ran but the model returned an empty reply. The data is in the "
+"executions panel."
+msgstr ""
+"Инструменты выполнены, но модель вернула пустой ответ. Данные находятся в "
+"панели исполнения."
+
+#: includes/AgentRuntime.php:161
+msgid "The model returned a malformed tool call."
+msgstr "Модель вернула некорректный вызов инструмента."
+
+#: includes/AgentRuntime.php:184
+msgid "The model requested a tool that is not declared or allowed."
+msgstr "Модель запросила инструмент, который не объявлен или не разрешён."
+
+#: includes/AgentRuntime.php:260
+msgid ""
+"This action has side effects and requires confirmation before execution."
+msgstr ""
+"Это действие имеет побочные эффекты и требует подтверждения перед "
+"выполнением."
+
+#: includes/AgentRuntime.php:364
+msgid "I gathered some data but the model did not produce a final reply."
+msgstr "Я собрал некоторые данные, но модель не сформировала итоговый ответ."
+
+#: includes/AgentRuntime.php:379
+msgid "confirmationId is required when confirmed=true."
+msgstr "confirmationId обязателен при confirmed=true."
+
+#: includes/AgentRuntime.php:384
+msgid "Pending confirmation was not found or has expired."
+msgstr "Ожидающее подтверждение не найдено или истекло."
+
+#: includes/AgentRuntime.php:703
+msgid "Workflow tool execution completed, but final LLM response failed."
+msgstr ""
+"Выполнение инструмента workflow завершено, но итоговый ответ LLM не удался."
+
+#: includes/AgentToolRegistry.php:42
+msgid "The requested tool is not in the declared agent tool registry."
+msgstr "Запрошенный инструмент отсутствует в реестре инструментов агента."
+
+#: includes/AgentToolRegistry.php:52
+msgid "Agent tool contract file is missing."
+msgstr "Файл контракта инструмента агента отсутствует."
+
+#: includes/AgentToolRegistry.php:57
+msgid "Agent tool contract file is invalid."
+msgstr "Файл контракта инструмента агента недействителен."
+
+#: includes/AgentToolRegistry.php:148
+msgid "Agent tool entries must be objects."
+msgstr "Записи инструментов агента должны быть объектами."
+
+#: includes/ChatSessions.php:136
+msgid "A logged-in user is required."
+msgstr "Требуется авторизованный пользователь."
+
+#. translators: %s: UTC timestamp used as default chat session title
+#: includes/ChatSessions.php:145
+#, php-format
+msgid "Session %s"
+msgstr "Сессия %s"
+
+#: includes/ChatSessions.php:176 includes/ChatSessions.php:223
+#: includes/ChatSessions.php:310 includes/ChatSessions.php:365
+msgid "Chat session not found."
+msgstr "Сессия чата не найдена."
+
+#: includes/ChatSessions.php:200
+msgid "label cannot be empty."
+msgstr "label не может быть пустым."
+
+#: includes/ChatSessions.php:242
+msgid "Failed to delete the chat session."
+msgstr "Не удалось удалить сессию чата."
+
+#: includes/ChatSessions.php:264
+msgid "messages array is required."
+msgstr "массив messages обязателен."
+
+#: includes/ChatSessions.php:289
+msgid "No valid messages were provided."
+msgstr "Корректные сообщения не предоставлены."
+
+#. translators: 1: maximum bytes allowed, 2: actual bytes received
+#: includes/ChatSessions.php:350 includes/RestApi.php:78
+#, php-format
+msgid "Request body exceeds %1$d bytes (got %2$d)."
+msgstr "Тело запроса превышает %1$d байт (получено: %2$d)."
+
+#: includes/ChatSessions.php:374
+msgid "You do not have access to this chat session."
+msgstr "У вас нет доступа к этой сессии чата."
+
+#: includes/ConversationCompactor.php:132
+#, php-format
+msgid ""
+"[Summary of prior work — %d turns folded, ~%d tokens reduced past the "
+"%d-token threshold]"
+msgstr ""
+"[Резюме предыдущей работы — %d ходов сжато, ~%d токенов уменьшено сверх "
+"порога в %d токенов]"
+
+#: includes/CredentialStore.php:50 includes/CredentialStore.php:67
+#: includes/CredentialStore.php:117 includes/CredentialStore.php:135
+#: includes/CredentialStore.php:228 includes/CredentialStore.php:266
+#: includes/ProviderHealth.php:37 includes/ProviderModelDiscovery.php:28
+#: includes/ProviderModelDiscovery.php:86
+msgid "Provider preset was not found."
+msgstr "Предустановка провайдера не найдена."
+
+#: includes/CredentialStore.php:72
+msgid "API key is required and must be at least 8 characters."
+msgstr "Ключ API обязателен и должен содержать не менее 8 символов."
+
+#: includes/CredentialStore.php:76
+msgid "Credential encryption is not available on this WordPress runtime."
+msgstr "Шифрование учётных данных недоступно в этом окружении WordPress."
+
+#: includes/CredentialStore.php:99
+msgid "Credential stored but connection has not been validated."
+msgstr "Учётные данные сохранены, но соединение не проверено."
+
+#: includes/CredentialStore.php:141 includes/CredentialStore.php:234
+#: includes/CredentialStore.php:272 includes/CredentialStore.php:309
+msgid "Provider is not configured."
+msgstr "Провайдер не настроен."
+
+#: includes/CredentialStore.php:151
+msgid "Provider family does not support connection testing yet."
+msgstr "Семейство провайдеров пока не поддерживает проверку соединения."
+
+#. translators: %s: redacted underlying error message
+#: includes/CredentialStore.php:172
+#, php-format
+msgid "Connection failed: %s"
+msgstr "Соединение не удалось: %s"
+
+#: includes/CredentialStore.php:186
+msgid "Connection validated through provider model discovery."
+msgstr "Соединение проверено через обнаружение моделей провайдера."
+
+#. translators: %d: HTTP status code
+#: includes/CredentialStore.php:194
+#, php-format
+msgid "Connection test returned HTTP %d without a valid models payload."
+msgstr "Тест соединения вернул HTTP %d без корректного payload моделей."
+
+#: includes/CredentialStore.php:239
+msgid "Provider family is not supported for runtime calls."
+msgstr "Семейство провайдеров не поддерживается для runtime-вызовов."
+
+#: includes/CredentialStore.php:278
+msgid "Connection validation updated."
+msgstr "Проверка соединения обновлена."
+
+#: includes/CredentialStore.php:347
+msgid "Credential encryption failed."
+msgstr "Не удалось зашифровать учётные данные."
+
+#: includes/CredentialStore.php:364
+msgid "Stored credential cipher is unsupported."
+msgstr "Шифр сохранённых учётных данных не поддерживается."
+
+#: includes/CredentialStore.php:371
+msgid "Stored credential payload is invalid."
+msgstr "Payload сохранённых учётных данных недействителен."
+
+#: includes/CredentialStore.php:381
+msgid "Credential decryption failed."
+msgstr "Не удалось расшифровать учётные данные."
+
+#: includes/CredentialStore.php:448
+msgid ""
+"Provider family does not expose a models endpoint for connection testing."
+msgstr ""
+"Семейство провайдеров не предоставляет endpoint моделей для проверки "
+"соединения."
+
+#: includes/CredentialStore.php:482
+msgid "Provider requires additional settings before testing connection."
+msgstr "Провайдер требует дополнительных настроек перед проверкой соединения."
+
+#: includes/CredentialStore.php:486 includes/ProviderModelDiscovery.php:430
+#: includes/ProviderRuntime.php:431
+msgid "Provider base URL must be an HTTP URL."
+msgstr "Базовый URL провайдера должен быть HTTP-URL."
+
+#: includes/LlmGateway.php:124
+msgid "At least one tool definition is required for toolCall."
+msgstr "Для toolCall требуется хотя бы одно определение инструмента."
+
+#: includes/LlmGateway.php:761 includes/ProviderModelDiscovery.php:68
+#: includes/ProviderRuntime.php:132
+msgid "Provider model discovery returned no models."
+msgstr "Обнаружение моделей провайдера не вернуло моделей."
+
+#: includes/LlmGateway.php:784 includes/ProviderRuntime.php:163
+msgid "Provider model discovery returned no text generation model candidate."
+msgstr ""
+"Обнаружение моделей провайдера не вернуло кандидата модели для генерации "
+"текста."
+
+#: includes/PhpStreamTransport.php:26
+msgid ""
+"PHP stream transport is not available because allow_url_fopen is disabled."
+msgstr "Транспорт PHP-потоков недоступен, так как allow_url_fopen отключён."
+
+#: includes/PhpStreamTransport.php:45
+msgid "PHP stream transport could not open provider stream."
+msgstr "Транспорт PHP-потоков не смог открыть поток провайдера."
+
+#: includes/PhpStreamTransport.php:74
+msgid "PHP stream transport failed while reading provider stream."
+msgstr "Транспорт PHP-потоков не смог прочитать поток провайдера."
+
+#: includes/PhpStreamTransport.php:81
+msgid "Provider stream timed out."
+msgstr "Поток провайдера завершился по таймауту."
+
+#: includes/ProviderModelDiscovery.php:40
+msgid ""
+"Provider does not expose API model discovery. Manual model entries are "
+"required for this preset."
+msgstr ""
+"Провайдер не предоставляет обнаружение моделей через API. Для этой "
+"предустановки требуются ручные записи моделей."
+
+#: includes/ProviderModelDiscovery.php:91
+msgid "Manual model entries are not allowed for this provider preset."
+msgstr "Ручные записи моделей не разрешены для этой предустановки провайдера."
+
+#: includes/ProviderModelDiscovery.php:116
+msgid "At least one manual model id is required."
+msgstr "Требуется хотя бы один ручной id модели."
+
+#: includes/ProviderModelDiscovery.php:139 includes/ProviderRuntime.php:321
+msgid "Provider family does not expose the required runtime endpoint."
+msgstr "Семейство провайдеров не предоставляет требуемый runtime-endpoint."
+
+#: includes/ProviderModelDiscovery.php:426 includes/ProviderRuntime.php:427
+msgid "Provider requires additional settings before runtime call."
+msgstr "Провайдер требует дополнительных настроек перед runtime-вызовом."
+
+#: includes/ProviderPresets.php:18
+msgid "Provider presets file is missing."
+msgstr "Файл предустановок провайдера отсутствует."
+
+#: includes/ProviderPresets.php:23
+msgid "Provider presets file is not valid JSON."
+msgstr "Файл предустановок провайдера не является корректным JSON."
+
+#: includes/ProviderPresets.php:70
+msgid "Provider presets schemaVersion must be 1."
+msgstr "schemaVersion предустановок провайдера должен быть равен 1."
+
+#: includes/ProviderPresets.php:74
+msgid "Provider presets must define families and presets."
+msgstr "Предустановки провайдера должны определять families и presets."
+
+#: includes/ProviderPresets.php:79
+msgid "Provider preset entries must be keyed objects."
+msgstr "Записи предустановки провайдера должны быть объектами с ключами."
+
+#: includes/ProviderPresets.php:83
+msgid "Provider presets require label, family and baseUrl."
+msgstr "Предустановки провайдера требуют label, family и baseUrl."
+
+#: includes/ProviderPresets.php:87
+msgid "Provider preset references an unknown family."
+msgstr "Предустановка провайдера ссылается на неизвестную family."
+
+#: includes/ProviderPresets.php:91
+msgid "Provider presets must not define defaultModels."
+msgstr "Предустановки провайдера не должны определять defaultModels."
+
+#: includes/ProviderPresets.php:95
+msgid ""
+"Provider modelHints must remain non-authoritative and empty; real models "
+"come from discovery, cache or explicit manual entry."
+msgstr ""
+"modelHints провайдера должны оставаться не авторитетными и пустыми; реальные"
+" модели приходят из discovery, кэша или явного ручного ввода."
+
+#: includes/ProviderRuntime.php:45
+msgid "Provider family is not supported for generation yet."
+msgstr "Семейство провайдеров пока не поддерживается для генерации."
+
+#: includes/RateLimiter.php:65
+#, php-format
+msgid "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds."
+msgstr "Достигнут лимит частоты для «%s» (%d за %dс). Повторите через %dс."
+
+#: includes/RestApi.php:90
+msgid "oversized request body"
+msgstr "слишком большое тело запроса"
+
+#: includes/TraceLogger.php:88
+#, php-format
+msgid "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
+msgstr "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
+
+#: includes/WorkflowApiBridge.php:31
+msgid "WP PFWorkflow plugin is not active."
+msgstr "Плагин WP PFWorkflow не активирован."
+
+#: includes/WorkflowApiBridge.php:44
+msgid "Tool is not executable by Workflow API bridge."
+msgstr "Инструмент нельзя выполнить через мост Workflow API."
+
+#: includes/WorkflowApiBridge.php:56
+msgid "workflowId is required."
+msgstr "workflowId обязателен."
+
+#: includes/WorkflowApiBridge.php:70
+msgid "payload is required."
+msgstr "payload обязателен."
+
+#: includes/WorkflowApiBridge.php:135
+msgid "wp-pfworkflow agent-ready service is not available."
+msgstr "Сервис agent-ready плагина wp-pfworkflow недоступен."
+
+#: assets/src/Diagnostic.tsx:194
+msgid "$0 (no pricing configured)"
+msgstr "$0 (тарификация не настроена)"
+
+#: assets/src/ProviderWizard.tsx:186
+#, javascript-format
+msgid "%1$d turn(s) · last %2$s"
+msgstr "%1$d ход(ов) · последний %2$s"
+
+#: assets/src/App.tsx:849 assets/src/App.tsx:882
+#, javascript-format
+msgid "%1$s / %2$d nodes / %3$d wires"
+msgstr "%1$s / %2$d узлов / %3$d связей"
+
+#: assets/src/Diagnostic.tsx:108
+#, javascript-format
+msgid "%1$s tokens, %2$s"
+msgstr "%1$s токенов, %2$s"
+
+#: assets/src/App.tsx:709
+#, javascript-format
+msgid "%d execution(s)"
+msgstr "%d исполнение(й)"
+
+#: assets/src/Diagnostic.tsx:128
+#, javascript-format
+msgid "%d issue(s)"
+msgstr "%d проблема(ы)"
+
+#: assets/src/App.tsx:785
+#, javascript-format
+msgid "%d nodes"
+msgstr "%d узлов"
+
+#: assets/src/App.tsx:786
+#, javascript-format
+msgid "%d wires"
+msgstr "%d связей"
+
+#: assets/src/ProviderWizard.tsx:289
+msgid "(manual)"
+msgstr "(вручную)"
+
+#: assets/src/ProviderWizard.tsx:218
+msgid "+ Add new credential"
+msgstr "+ Добавить новые учётные данные"
+
+#: assets/src/App.tsx:638
+msgid "+ New"
+msgstr "+ Новое"
+
+#: assets/src/ProviderWizard.tsx:197
+msgid "1. Pick a credential"
+msgstr "1. Выберите учётные данные"
+
+#: assets/src/ProviderWizard.tsx:231
+msgid "1b. New credential"
+msgstr "1b. Новые учётные данные"
+
+#: assets/src/ProviderWizard.tsx:277
+msgid "2. Model"
+msgstr "2. Модель"
+
+#: assets/src/ProviderWizard.tsx:251
+msgid "API key"
+msgstr "Ключ API"
+
+#: assets/src/ActionInspector.tsx:22 assets/src/ActionInspector.tsx:34
+#: assets/src/ActionInspector.tsx:46 assets/src/ActionInspector.tsx:60
+msgid "Action Inspector"
+msgstr "Инспектор действий"
+
+#: assets/src/App.tsx:511
+msgid "Action cancelled by the user."
+msgstr "Действие отменено пользователем."
+
+#: assets/src/App.tsx:368 assets/src/App.tsx:410
+#, javascript-format
+msgid "Action failed: %s"
+msgstr "Действие не удалось: %s"
+
+#: assets/src/Diagnostic.tsx:167
+#, javascript-format
+msgid "Active (%s)"
+msgstr "Активен (%s)"
+
+#: assets/src/App.tsx:537
+#, javascript-format
+msgid "Active LLM: %1$s · %2$s."
+msgstr "Активный LLM: %1$s · %2$s."
+
+#: assets/src/ActionInspector.tsx:206
+msgid "After"
+msgstr "После"
+
+#: assets/src/App.tsx:475
+#, javascript-format
+msgid "Agent runtime failed: %s"
+msgstr "Сбой среды выполнения агента: %s"
+
+#: assets/src/App.tsx:858
+msgid "All"
+msgstr "Все"
+
+#: assets/src/ActionInspector.tsx:163 assets/src/App.tsx:694
+msgid "Arguments"
+msgstr "Аргументы"
+
+#: assets/src/App.tsx:765
+msgid "Ask the agent…"
+msgstr "Спросите агента…"
+
+#: assets/src/ProviderWizard.tsx:269
+msgid "Back"
+msgstr "Назад"
+
+#: assets/src/App.tsx:602
+msgid "Back to WP admin"
+msgstr "Назад в админку WP"
+
+#: assets/src/ActionInspector.tsx:198
+msgid "Before"
+msgstr "До"
+
+#: assets/src/App.tsx:912
+msgid "Can manage"
+msgstr "Может управлять"
+
+#: assets/src/App.tsx:910
+msgid "Can view"
+msgstr "Может просматривать"
+
+#: assets/src/App.tsx:702 assets/src/ProviderWizard.tsx:222
+#: assets/src/ProviderWizard.tsx:333
+msgid "Cancel"
+msgstr "Отмена"
+
+#: assets/src/Diagnostic.tsx:138
+msgid "Capability matrix"
+msgstr "Матрица возможностей"
+
+#: assets/src/App.tsx:629
+msgid "Change"
+msgstr "Изменить"
+
+#: assets/src/ProviderWizard.tsx:329
+msgid "Change provider"
+msgstr "Сменить провайдера"
+
+#: assets/src/App.tsx:899
+msgid ""
+"Chat history is local to this screen. Provider keys are never stored in "
+"browser storage."
+msgstr ""
+"История чата локальна для этого экрана. Ключи провайдера никогда не "
+"сохраняются в хранилище браузера."
+
+#: assets/src/App.tsx:302
+msgid "Checking Workflow API endpoints…"
+msgstr "Проверка endpoint'ов Workflow API…"
+
+#: assets/src/App.tsx:901
+msgid "Clear local history"
+msgstr "Очистить локальную историю"
+
+#: assets/src/App.tsx:815
+msgid "Close"
+msgstr "Закрыть"
+
+#: assets/src/ProviderWizard.tsx:166
+msgid "Configure LLM"
+msgstr "Настроить LLM"
+
+#: assets/src/Diagnostic.tsx:173
+#, javascript-format
+msgid "Configured providers (%d)"
+msgstr "Настроенные провайдеры (%d)"
+
+#: assets/src/App.tsx:699 assets/src/ProviderWizard.tsx:317
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: assets/src/ActionInspector.tsx:68
+msgid "Confirmation pending:"
+msgstr "Ожидает подтверждения:"
+
+#: assets/src/App.tsx:689
+msgid "Confirmation required"
+msgstr "Требуется подтверждение"
+
+#: assets/src/ProviderWizard.tsx:179
+msgid "Continue a previous conversation or proceed to start a new one."
+msgstr "Продолжите предыдущий диалог или начните новый."
+
+#: assets/src/ProviderWizard.tsx:178
+msgid "Conversation"
+msgstr "Диалог"
+
+#: assets/src/Diagnostic.tsx:88
+#, javascript-format
+msgid "Cost and tokens (last %dh)"
+msgstr "Стоимость и токены (последние %d ч)"
+
+#: assets/src/ActionInspector.tsx:208
+msgid "Could not capture the resulting state."
+msgstr "Не удалось захватить результирующее состояние."
+
+#: assets/src/App.tsx:799
+msgid "Create draft"
+msgstr "Создать черновик"
+
+#: assets/src/App.tsx:400
+#, javascript-format
+msgid ""
+"Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" "
+"and loaded it."
+msgstr ""
+"Workflow #%1$d «%2$s» создан (статус: %3$s) из шаблона %4$s «%5$s» и "
+"загружен."
+
+#: assets/src/App.tsx:287
+msgid "Current user cannot view workflows. API calls were skipped."
+msgstr ""
+"Текущий пользователь не может просматривать workflow. API-вызовы пропущены."
+
+#: assets/src/App.tsx:827 assets/src/Diagnostic.tsx:35
+#: assets/src/Diagnostic.tsx:46 assets/src/Diagnostic.tsx:66
+msgid "Diagnostic"
+msgstr "Диагностика"
+
+#: assets/src/App.tsx:1000
+msgid "Done."
+msgstr "Готово."
+
+#: assets/src/App.tsx:756 assets/src/Diagnostic.tsx:50
+#: assets/src/ProviderWizard.tsx:172
+msgid "Error:"
+msgstr "Ошибка:"
+
+#: assets/src/Diagnostic.tsx:94
+msgid "Estimated cost"
+msgstr "Оценочная стоимость"
+
+#: assets/src/Diagnostic.tsx:97
+msgid "Events recorded"
+msgstr "Зарегистрировано событий"
+
+#: assets/src/ActionInspector.tsx:168
+msgid "Evidence"
+msgstr "Доказательства"
+
+#: assets/src/ActionInspector.tsx:73
+#, javascript-format
+msgid "Executions (%d)"
+msgstr "Исполнения (%d)"
+
+#: assets/src/Diagnostic.tsx:123
+msgid "FAIL"
+msgstr "ОШИБКА"
+
+#: assets/src/Diagnostic.tsx:83
+#, javascript-format
+msgid "Generated at %s."
+msgstr "Сгенерировано в %s."
+
+#: assets/src/Diagnostic.tsx:168
+msgid "Inactive (fallback in use)"
+msgstr "Неактивен (используется fallback)"
+
+#: assets/src/App.tsx:442
+#, javascript-format
+msgid "LLM error: %1$s — %2$s"
+msgstr "Ошибка LLM: %1$s — %2$s"
+
+#: assets/src/App.tsx:804
+msgid "Load a workflow or preview a template."
+msgstr "Загрузите workflow или предпросмотрите шаблон."
+
+#: assets/src/App.tsx:358
+#, javascript-format
+msgid "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d)."
+msgstr ""
+"Workflow #%1$d «%2$s» загружен (статус: %3$s, узлов: %4$d, связей: %5$d)."
+
+#: assets/src/Diagnostic.tsx:37
+msgid "Loading beta readiness report…"
+msgstr "Загрузка отчёта о бета-готовности…"
+
+#: assets/src/ProviderWizard.tsx:282
+msgid "Loading models…"
+msgstr "Загрузка моделей…"
+
+#: assets/src/App.tsx:767
+msgid "Message to the agent"
+msgstr "Сообщение агенту"
+
+#: assets/src/ProviderWizard.tsx:285
+msgid "Model"
+msgstr "Модель"
+
+#: assets/src/ProviderWizard.tsx:296
+msgid "Model (manual)"
+msgstr "Модель (вручную)"
+
+#: assets/src/App.tsx:906
+msgid "Namespace"
+msgstr "Namespace"
+
+#: assets/src/App.tsx:526 assets/src/App.tsx:573
+msgid "New conversation"
+msgstr "Новый диалог"
+
+#: assets/src/App.tsx:579
+msgid "New conversation."
+msgstr "Новый диалог."
+
+#: assets/src/ProviderWizard.tsx:199
+msgid "No credentials in the store yet. Add one to continue."
+msgstr "В хранилище пока нет учётных данных. Добавьте, чтобы продолжить."
+
+#: assets/src/Diagnostic.tsx:175
+msgid "No credentials stored yet. Configure one from Settings."
+msgstr "Учётные данные пока не сохранены. Настройте в разделе «Настройки»."
+
+#: assets/src/ActionInspector.tsx:200
+msgid "No prior state existed (creation or import)."
+msgstr "Предыдущего состояния не было (создание или импорт)."
+
+#: assets/src/App.tsx:1008
+msgid "No response from the runtime."
+msgstr "Нет ответа от runtime."
+
+#: assets/src/ActionInspector.tsx:75
+msgid "No tool was executed in this turn."
+msgstr "В этом ходе ни один инструмент не был выполнен."
+
+#: assets/src/App.tsx:595
+msgid "No workflow loaded"
+msgstr "Workflow не загружен"
+
+#: assets/src/App.tsx:731
+msgid "Open in viewer"
+msgstr "Открыть в просмотрщике"
+
+#: assets/src/App.tsx:615
+msgid "Open menu"
+msgstr "Открыть меню"
+
+#: assets/src/App.tsx:729
+#, javascript-format
+msgid "Open workflow %d in the viewer"
+msgstr "Открыть workflow %d в просмотрщике"
+
+#: assets/src/Diagnostic.tsx:123
+msgid "PASS"
+msgstr "ОК"
+
+#: assets/src/Diagnostic.tsx:150
+msgid "Partial capabilities"
+msgstr "Частичные возможности"
+
+#: assets/src/Diagnostic.tsx:102
+msgid "Per provider"
+msgstr "По провайдерам"
+
+#: assets/src/ProviderWizard.tsx:157
+msgid "Pick a model or enter the id manually."
+msgstr "Выберите модель или введите id вручную."
+
+#: assets/src/ProviderWizard.tsx:129
+msgid "Pick a provider and paste the API key."
+msgstr "Выберите провайдера и вставьте ключ API."
+
+#: assets/src/App.tsx:941
+msgid ""
+"Pick an LLM provider to get started. Your credentials live encrypted inside "
+"the WordPress store."
+msgstr ""
+"Выберите провайдера LLM, чтобы начать. Ваши учётные данные хранятся в "
+"WordPress в зашифрованном виде."
+
+#: assets/src/App.tsx:886
+msgid "Preview before creating"
+msgstr "Просмотреть перед созданием"
+
+#: assets/src/App.tsx:381
+#, javascript-format
+msgid ""
+"Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No "
+"workflow was created yet."
+msgstr ""
+"Загружен предпросмотр шаблона %1$s «%2$s» (%3$d узлов, %4$d связей). "
+"Workflow пока не создан."
+
+#: assets/src/ProviderWizard.tsx:233
+msgid "Provider"
+msgstr "Провайдер"
+
+#: assets/src/App.tsx:621
+msgid "Provider · model"
+msgstr "Провайдер · модель"
+
+#: assets/src/ProviderWizard.tsx:279
+msgid "Provider:"
+msgstr "Провайдер:"
+
+#: assets/src/App.tsx:645 assets/src/Diagnostic.tsx:78
+msgid "Refresh"
+msgstr "Обновить"
+
+#: assets/src/Diagnostic.tsx:76
+msgid "Refresh diagnostic"
+msgstr "Обновить диагностику"
+
+#: assets/src/ActionInspector.tsx:49
+msgid ""
+"Run an action against the agent to see the steps, evidence and diffs here."
+msgstr ""
+"Запустите действие в агенте, чтобы увидеть шаги, доказательства и diff'ы "
+"здесь."
+
+#: assets/src/ProviderWizard.tsx:266
+msgid "Save and continue"
+msgstr "Сохранить и продолжить"
+
+#: assets/src/ProviderWizard.tsx:266
+msgid "Saving…"
+msgstr "Сохранение…"
+
+#: assets/src/App.tsx:835
+msgid "Search…"
+msgstr "Поиск…"
+
+#: assets/src/App.tsx:769
+msgid "Send"
+msgstr "Отправить"
+
+#: assets/src/App.tsx:555
+#, javascript-format
+msgid "Session %d is empty."
+msgstr "Сессия %d пуста."
+
+#: assets/src/App.tsx:898
+msgid "Session only"
+msgstr "Только в сессии"
+
+#: assets/src/App.tsx:830
+msgid "Settings"
+msgstr "Настройки"
+
+#: assets/src/Diagnostic.tsx:119
+msgid "Severe criteria"
+msgstr "Серьёзные критерии"
+
+#: assets/src/App.tsx:908
+msgid "Source"
+msgstr "Источник"
+
+#: assets/src/App.tsx:636
+msgid "Start a new conversation with the active LLM"
+msgstr "Начать новый диалог с активным LLM"
+
+#: assets/src/App.tsx:594
+msgid "Template Preview"
+msgstr "Предпросмотр шаблона"
+
+#: assets/src/App.tsx:856
+msgid "Template categories"
+msgstr "Категории шаблонов"
+
+#: assets/src/App.tsx:824
+msgid "Templates"
+msgstr "Шаблоны"
+
+#: assets/src/App.tsx:321
+#, javascript-format
+msgid "Templates failed: %s"
+msgstr "Не удалось получить шаблоны: %s"
+
+#: assets/src/App.tsx:1006
+msgid "The action ran but the final response failed."
+msgstr "Действие выполнено, но итоговый ответ не удался."
+
+#: assets/src/ProviderWizard.tsx:263
+msgid ""
+"The key is encrypted (AES-256-GCM) in the WordPress store and never returned"
+" over REST."
+msgstr ""
+"Ключ зашифрован (AES-256-GCM) в хранилище WordPress и никогда не "
+"возвращается через REST."
+
+#: assets/src/App.tsx:1004
+msgid "The runtime rejected this call."
+msgstr "Среда выполнения отклонила этот вызов."
+
+#: assets/src/App.tsx:747
+msgid "Thinking…"
+msgstr "Думаю…"
+
+#: assets/src/App.tsx:1002
+msgid "This action requires confirmation."
+msgstr "Это действие требует подтверждения."
+
+#: assets/src/ProviderWizard.tsx:305
+msgid ""
+"This provider does not allow manual models; check your credential or retry."
+msgstr ""
+"Этот провайдер не разрешает ручные модели; проверьте учётные данные или "
+"повторите попытку."
+
+#: assets/src/ActionInspector.tsx:175
+msgid "This tool produces no diff (read-only or without workflow state)."
+msgstr ""
+"Этот инструмент не создаёт diff (только чтение или нет состояния workflow)."
+
+#: assets/src/ActionInspector.tsx:86
+#, javascript-format
+msgid "Timeline (%d)"
+msgstr "Хронология (%d)"
+
+#: assets/src/ActionInspector.tsx:88
+msgid "Timeline is empty."
+msgstr "Хронология пуста."
+
+#: assets/src/ProviderWizard.tsx:167
+msgid "To send messages to the agent you need to pick a provider and a model."
+msgstr "Чтобы отправлять сообщения агенту, нужно выбрать провайдера и модель."
+
+#: assets/src/App.tsx:691
+msgid "Tool:"
+msgstr "Инструмент:"
+
+#: assets/src/Diagnostic.tsx:91
+msgid "Total tokens"
+msgstr "Всего токенов"
+
+#: assets/src/App.tsx:983
+msgid "Unexpected error."
+msgstr "Непредвиденная ошибка."
+
+#: assets/src/ActionInspector.tsx:25
+msgid "Waiting for the agent response…"
+msgstr "Ожидание ответа агента…"
+
+#: assets/src/App.tsx:765
+msgid "Waiting for the agent…"
+msgstr "Ожидание агента…"
+
+#: assets/src/App.tsx:904
+msgid "Workflow API"
+msgstr "Workflow API"
+
+#: assets/src/App.tsx:334
+msgid ""
+"Workflow API check failed. See dependency status for the exact endpoint "
+"result."
+msgstr ""
+"Проверка Workflow API не удалась. См. статус зависимостей для точного "
+"результата endpoint."
+
+#: assets/src/App.tsx:813
+msgid "Workflow API consumer"
+msgstr "Потребитель Workflow API"
+
+#: assets/src/App.tsx:174
+msgid "Workflow API has not been checked yet."
+msgstr "Workflow API ещё не проверялся."
+
+#: assets/src/App.tsx:318
+msgid "Workflow API responded for workflows and templates."
+msgstr "Workflow API ответил для workflows и templates."
+
+#: assets/src/App.tsx:594
+msgid "Workflow View"
+msgstr "Просмотр Workflow"
+
+#: assets/src/App.tsx:642
+msgid "Workflow companion"
+msgstr "Компаньон workflow"
+
+#: assets/src/Diagnostic.tsx:164
+msgid "Workflow dependency"
+msgstr "Зависимость workflow"
+
+#: assets/src/App.tsx:658
+msgid "Workflow dependency active"
+msgstr "Зависимость workflow активна"
+
+#: assets/src/App.tsx:658
+msgid "Workflow dependency inactive"
+msgstr "Зависимость workflow неактивна"
+
+#: assets/src/App.tsx:276
+msgid "Workflow plugin is not active. API calls were skipped."
+msgstr "Плагин Workflow не активирован. API-вызовы пропущены."
+
+#: assets/src/App.tsx:652
+msgid ""
+"Workflow plugin was not detected during page bootstrap. API calls may fail "
+"until it is active."
+msgstr ""
+"Плагин Workflow не был обнаружен при загрузке страницы. API-вызовы могут не "
+"работать, пока он не активирован."
+
+#: assets/src/App.tsx:821
+msgid "Workflows"
+msgstr "Workflows"
+
+#: assets/src/App.tsx:320
+#, javascript-format
+msgid "Workflows failed: %s"
+msgstr "Не удалось получить workflows: %s"
+
+#: assets/src/App.tsx:812
+msgid "Workspace"
+msgstr "Рабочее пространство"
+
+#: assets/src/Diagnostic.tsx:61
+msgid "beta partial"
+msgstr "бета частично"
+
+#: assets/src/Diagnostic.tsx:61
+msgid "beta ready"
+msgstr "готов к бете"
+
+#: assets/src/App.tsx:717
+#, javascript-format
+msgid "diff: %s"
+msgstr "diff: %s"
+
+#: assets/src/ProviderWizard.tsx:301
+msgid "model-id"
+msgstr "model-id"
+
+#: assets/src/App.tsx:444
+msgid "no message"
+msgstr "нет сообщения"
+
+#: assets/src/App.tsx:443
+msgid "unknown"
+msgstr "неизвестно"
+
+#: assets/src/ProviderWizard.tsx:240
+msgid "— Pick one —"
+msgstr "— Выберите —"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"«%s» будет окончательно удалён вместе со своими сообщениями. Это действие "
+"нельзя отменить."
+
+#: assets/src/ProviderWizard.tsx:429
+#, javascript-format
+msgid "%1$d turn(s) · updated %2$s"
+msgstr "%1$d ход(ов) · обновлено %2$s"
+
+#: assets/src/ProviderWizard.tsx:1005
+#, javascript-format
+msgid ""
+"All conversations whose last activity is older than %d days will be "
+"permanently deleted. This action cannot be undone."
+msgstr ""
+"Все диалоги, чья последняя активность старше %d дней, будут окончательно "
+"удалены. Это действие нельзя отменить."
+
+#: assets/src/App.tsx:629 assets/src/App.tsx:630
+msgid "Back to conversations"
+msgstr "Назад к диалогам"
+
+#: assets/src/ProviderWizard.tsx:811
+msgid "Base URL"
+msgstr "Базовый URL"
+
+#: assets/src/ProviderWizard.tsx:447
+msgid "Conversation pages"
+msgstr "Страницы диалога"
+
+#: assets/src/App.tsx:655
+msgid "Conversation title"
+msgstr "Название диалога"
+
+#: assets/src/ProviderWizard.tsx:830
+msgid "Credential"
+msgstr "Учётные данные"
+
+#: assets/src/ProviderWizard.tsx:476
+msgid "Credentials"
+msgstr "Учётные данные"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"Учётные данные для «%s» будут удалены из зашифрованного хранилища. Это "
+"действие нельзя отменить."
+
+#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
+msgid "Delete"
+msgstr "Удалить"
+
+#: assets/src/ProviderWizard.tsx:413
+#, javascript-format
+msgid "Delete all conversations older than %d days"
+msgstr "Удалить все диалоги старше %d дней"
+
+#: assets/src/ProviderWizard.tsx:438 assets/src/ProviderWizard.tsx:689
+msgid "Delete conversation"
+msgstr "Удалить диалог"
+
+#: assets/src/ProviderWizard.tsx:437
+#, javascript-format
+msgid "Delete conversation %s"
+msgstr "Удалить диалог %s"
+
+#: assets/src/ProviderWizard.tsx:1026
+msgid "Delete conversations"
+msgstr "Удалить диалоги"
+
+#: assets/src/ProviderWizard.tsx:519 assets/src/ProviderWizard.tsx:737
+msgid "Delete credential"
+msgstr "Удалить учётные данные"
+
+#: assets/src/ProviderWizard.tsx:518
+#, javascript-format
+msgid "Delete credential %s"
+msgstr "Удалить учётные данные %s"
+
+#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
+msgid "Deleting…"
+msgstr "Удаление…"
+
+#: assets/src/ProviderWizard.tsx:813
+msgid "Discovery"
+msgstr "Discovery"
+
+#: assets/src/ProviderWizard.tsx:819
+msgid "Last validation"
+msgstr "Последняя проверка"
+
+#: assets/src/ProviderWizard.tsx:895
+msgid "Load"
+msgstr "Загрузить"
+
+#: assets/src/ProviderWizard.tsx:508 assets/src/ProviderWizard.tsx:785
+#, javascript-format
+msgid "Manage %s"
+msgstr "Управлять %s"
+
+#: assets/src/ProviderWizard.tsx:509
+msgid "Manage credential"
+msgstr "Управлять учётными данными"
+
+#: assets/src/App.tsx:779
+msgid "Management"
+msgstr "Управление"
+
+#: assets/src/ProviderWizard.tsx:941
+msgid "Manual model IDs"
+msgstr "Ручные ID моделей"
+
+#: assets/src/ProviderWizard.tsx:887
+msgid "Models"
+msgstr "Модели"
+
+#: assets/src/App.tsx:816
+msgid ""
+"Neither Project Flash Workflow nor Project Flash Management is installed."
+msgstr ""
+"Ни Project Flash Workflow, ни Project Flash Management не установлены."
+
+#: assets/src/ProviderWizard.tsx:832
+msgid "New API key"
+msgstr "Новый ключ API"
+
+#: assets/src/ProviderWizard.tsx:543
+msgid "New credential"
+msgstr "Новые учётные данные"
+
+#: assets/src/ProviderWizard.tsx:465
+msgid "Next page"
+msgstr "Следующая страница"
+
+#: assets/src/ProviderWizard.tsx:421
+msgid "No conversations yet."
+msgstr "Пока нет диалогов."
+
+#: assets/src/ProviderWizard.tsx:934
+msgid ""
+"No model list loaded yet. Click Load to fetch from the API or Refresh to "
+"bypass cache."
+msgstr ""
+"Список моделей ещё не загружен. Нажмите «Загрузить», чтобы получить из API, "
+"или «Обновить», чтобы обойти кэш."
+
+#: assets/src/ProviderWizard.tsx:929
+msgid "No models returned."
+msgstr "Модели не возвращены."
+
+#: assets/src/ProviderWizard.tsx:1049
+msgid "Not configured"
+msgstr "Не настроено"
+
+#: assets/src/ProviderWizard.tsx:1045
+msgid "Not verified"
+msgstr "Не проверено"
+
+#: assets/src/ProviderWizard.tsx:458
+#, javascript-format
+msgid "Page %1$d of %2$d"
+msgstr "Страница %1$d из %2$d"
+
+#: assets/src/ProviderWizard.tsx:837
+msgid "Paste API key to confirm changes"
+msgstr "Вставьте ключ API, чтобы подтвердить изменения"
+
+#: assets/src/ProviderWizard.tsx:453
+msgid "Previous page"
+msgstr "Предыдущая страница"
+
+#: assets/src/App.tsx:800
+msgid "Project Flash Management"
+msgstr "Project Flash Management"
+
+#: assets/src/App.tsx:808
+msgid "Project Flash Workflow"
+msgstr "Project Flash Workflow"
+
+#: assets/src/App.tsx:769
+msgid "Project Flash views"
+msgstr "Представления Project Flash"
+
+#: assets/src/ProviderWizard.tsx:416
+#, javascript-format
+msgid "Purge > %dd"
+msgstr "Очистить > %dd"
+
+#: assets/src/ProviderWizard.tsx:1000
+msgid "Purge old conversations"
+msgstr "Очистить старые диалоги"
+
+#: assets/src/ProviderWizard.tsx:416 assets/src/ProviderWizard.tsx:1026
+msgid "Purging…"
+msgstr "Очистка…"
+
+#: assets/src/ProviderWizard.tsx:253
+msgid "Re-enter the API key to save changes."
+msgstr "Введите ключ API повторно, чтобы сохранить изменения."
+
+#: assets/src/App.tsx:676 assets/src/App.tsx:677
+msgid "Rename conversation"
+msgstr "Переименовать диалог"
+
+#: assets/src/ProviderWizard.tsx:863
+msgid "Save"
+msgstr "Сохранить"
+
+#: assets/src/ProviderWizard.tsx:957
+msgid "Save manual list"
+msgstr "Сохранить ручной список"
+
+#: assets/src/App.tsx:663 assets/src/App.tsx:664
+msgid "Save title"
+msgstr "Сохранить название"
+
+#: assets/src/ProviderWizard.tsx:912
+#, javascript-format
+msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
+msgstr "Источник: %1$s · получено %2$s · %3$d модель(и)"
+
+#: assets/src/ProviderWizard.tsx:801
+msgid "Status"
+msgstr "Статус"
+
+#: assets/src/ProviderWizard.tsx:807
+msgid "Stored key"
+msgstr "Сохранённый ключ"
+
+#: assets/src/ProviderWizard.tsx:499 assets/src/ProviderWizard.tsx:871
+msgid "Test connection"
+msgstr "Проверить соединение"
+
+#: assets/src/ProviderWizard.tsx:498
+#, javascript-format
+msgid "Test connection for %s"
+msgstr "Проверить соединение для %s"
+
+#: assets/src/ProviderWizard.tsx:1047
+msgid "Validation failed"
+msgstr "Проверка не пройдена"
+
+#: assets/src/ProviderWizard.tsx:1043
+msgid "Verified"
+msgstr "Проверено"
+
+#: assets/src/App.tsx:579 assets/src/App.tsx:580
+msgid "Volver al admin de WordPress"
+msgstr "Назад в админку WordPress"
+
+#: assets/src/App.tsx:791
+msgid "Workflow"
+msgstr "Workflow"
+
+#: assets/src/ProviderWizard.tsx:808
+msgid "not stored"
+msgstr "не сохранён"
+
+#: assets/src/ProviderWizard.tsx:945
+msgid "one model id per line"
+msgstr "по одному id модели на строку"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"«%s» будет окончательно удалён вместе со своими сообщениями. Это действие "
+"нельзя отменить."
+
+#: assets/src/App.tsx:611
+msgid "Active LLM"
+msgstr "Активный LLM"
+
+#: assets/src/App.tsx:618
+msgid "Change LLM"
+msgstr "Сменить LLM"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"Учётные данные для «%s» будут удалены из зашифрованного хранилища. Это "
+"действие нельзя отменить."
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"«%s» будет окончательно удалён вместе со своими сообщениями. Это действие "
+"нельзя отменить."
+
+#: assets/src/App.tsx:625
+msgid "Configure"
+msgstr "Настроить"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"Учётные данные для «%s» будут удалены из зашифрованного хранилища. Это "
+"действие нельзя отменить."
+
+#: assets/src/App.tsx:635
+msgid "No LLM configured."
+msgstr "LLM не настроен."

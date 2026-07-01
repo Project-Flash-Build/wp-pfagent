@@ -57,7 +57,7 @@ final class DashboardWidget
             WP_PFAGENT_URL . 'assets/img/logo.png',
             $accent,
             __('Tu copiloto en lenguaje natural', 'wp-pfagent'),
-            __('Pídele que cree entidades, dibuje workflows o explore tus datos. El agente conoce el modelo PFM y el catálogo PFW — te construye lo que describas.', 'wp-pfagent')
+            __('Ask it to create entities, draw workflows or explore your data. The agent knows the PFM model and the PFW catalog — it builds whatever you describe.', 'wp-pfagent')
         );
 
         echo '<div class="pf-dw-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#e0e0e0;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;">';
@@ -72,7 +72,7 @@ final class DashboardWidget
             esc_url($admin_url),
             esc_attr($accent),
             esc_attr($accent),
-            esc_html__('Abrir agente', 'wp-pfagent')
+            esc_html__('Open agent', 'wp-pfagent')
         );
         echo '</div>';
 

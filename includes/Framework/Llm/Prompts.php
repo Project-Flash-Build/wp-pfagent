@@ -13,8 +13,8 @@ namespace ProjectFlash\Agent\Framework\Llm;
  *   - SUMMARY: produce a 2-3 sentence PR-description-style recap, used
  *     to label finished conversations / generate post-turn summaries.
  *   - TITLE: generate a ≤50-char thread title from the first user message
- *     so the session list shows something meaningful instead of "Nueva
- *     conversación".
+ *     so the session list shows something meaningful instead of "New
+ *     conversation".
  *
  * The texts are ports from Kilo Code's `agent/prompt/*.txt`
  * (github.com/Kilo-Org/kilocode, Apache 2.0). Kept verbatim so the

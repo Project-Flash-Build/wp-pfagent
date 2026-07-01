@@ -1,0 +1,1355 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP PFAgent 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-pfagent\n"
+"POT-Creation-Date: 2026-05-17T16:38:13+00:00\n"
+"PO-Revision-Date: 2026-05-28 11:58+0200\n"
+"Last-Translator: Project Flash Build <build@project-flash.com>\n"
+"Language-Team: Hindi\n"
+"Language: hi_IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: wp-pfagent\n"
+"X-Generator: WP-CLI 2.12.0\n"
+
+#. Plugin Name of the plugin
+#: wp-pfagent.php includes/AdminPage.php:25 includes/AdminPage.php:109
+msgid "WP PFAgent"
+msgstr "WP PFAgent"
+
+#. Description of the plugin
+#: wp-pfagent.php
+msgid "Agent console for ProjectFlash products."
+msgstr "ProjectFlash उत्पादों के लिए एजेंट कंसोल।"
+
+#. Author of the plugin
+#: wp-pfagent.php
+msgid "ProjectFlash"
+msgstr "ProjectFlash"
+
+#: includes/AdminPage.php:26
+msgid "PF Agent"
+msgstr "PF Agent"
+
+#: includes/AdminPage.php:110
+msgid "Back to admin"
+msgstr "एडमिन पर वापस"
+
+#: includes/AdminPage.php:111 includes/AdminPage.php:176
+msgid ""
+"WP PFAgent assets are missing. Run npm install and npm run build inside the "
+"plugin directory."
+msgstr ""
+"WP PFAgent एसेट्स गायब हैं। प्लगइन डायरेक्टरी में npm install और npm run "
+"build चलाएँ।"
+
+#: includes/AdminPage.php:141
+msgid "WP PFAgent assets are not built."
+msgstr "WP PFAgent एसेट्स बिल्ड नहीं हुए हैं।"
+
+#: includes/AdminPage.php:169
+msgid "You do not have permission to manage WP PFAgent."
+msgstr "आपके पास WP PFAgent प्रबंधित करने की अनुमति नहीं है।"
+
+#: includes/AgentContract.php:168
+msgid "Agent capability manifest is missing."
+msgstr "एजेंट capability manifest गायब है।"
+
+#: includes/AgentContract.php:173
+msgid "Agent capability manifest is invalid."
+msgstr "एजेंट capability manifest अमान्य है।"
+
+#: includes/AgentRuntime.php:40
+msgid "providerId is required."
+msgstr "providerId आवश्यक है।"
+
+#: includes/AgentRuntime.php:59
+msgid "message is required."
+msgstr "message आवश्यक है।"
+
+#: includes/AgentRuntime.php:145
+msgid "No tool was selected by the model."
+msgstr "मॉडल ने कोई टूल चयनित नहीं किया।"
+
+#: includes/AgentRuntime.php:146
+msgid ""
+"Tools ran but the model returned an empty reply. The data is in the "
+"executions panel."
+msgstr "टूल चले लेकिन मॉडल ने खाली उत्तर लौटाया। डेटा executions पैनल में है।"
+
+#: includes/AgentRuntime.php:161
+msgid "The model returned a malformed tool call."
+msgstr "मॉडल ने त्रुटिपूर्ण tool call लौटाया।"
+
+#: includes/AgentRuntime.php:184
+msgid "The model requested a tool that is not declared or allowed."
+msgstr "मॉडल ने ऐसा टूल माँगा जो घोषित या अनुमत नहीं है।"
+
+#: includes/AgentRuntime.php:260
+msgid ""
+"This action has side effects and requires confirmation before execution."
+msgstr ""
+"इस क्रिया के साइड इफेक्ट हैं और निष्पादन से पहले पुष्टि की आवश्यकता है।"
+
+#: includes/AgentRuntime.php:364
+msgid "I gathered some data but the model did not produce a final reply."
+msgstr "मैंने कुछ डेटा इकट्ठा किया लेकिन मॉडल ने अंतिम उत्तर नहीं दिया।"
+
+#: includes/AgentRuntime.php:379
+msgid "confirmationId is required when confirmed=true."
+msgstr "जब confirmed=true हो तो confirmationId आवश्यक है।"
+
+#: includes/AgentRuntime.php:384
+msgid "Pending confirmation was not found or has expired."
+msgstr "लंबित पुष्टि नहीं मिली या समाप्त हो गई।"
+
+#: includes/AgentRuntime.php:703
+msgid "Workflow tool execution completed, but final LLM response failed."
+msgstr "Workflow टूल निष्पादन पूरा हुआ, लेकिन अंतिम LLM प्रतिक्रिया विफल रही।"
+
+#: includes/AgentToolRegistry.php:42
+msgid "The requested tool is not in the declared agent tool registry."
+msgstr "अनुरोधित टूल घोषित agent tool रजिस्ट्री में नहीं है।"
+
+#: includes/AgentToolRegistry.php:52
+msgid "Agent tool contract file is missing."
+msgstr "एजेंट टूल contract फ़ाइल गायब है।"
+
+#: includes/AgentToolRegistry.php:57
+msgid "Agent tool contract file is invalid."
+msgstr "एजेंट टूल contract फ़ाइल अमान्य है।"
+
+#: includes/AgentToolRegistry.php:148
+msgid "Agent tool entries must be objects."
+msgstr "एजेंट टूल प्रविष्टियाँ ऑब्जेक्ट होनी चाहिए।"
+
+#: includes/ChatSessions.php:136
+msgid "A logged-in user is required."
+msgstr "लॉग-इन उपयोगकर्ता आवश्यक है।"
+
+#. translators: %s: UTC timestamp used as default chat session title
+#: includes/ChatSessions.php:145
+#, php-format
+msgid "Session %s"
+msgstr "सत्र %s"
+
+#: includes/ChatSessions.php:176 includes/ChatSessions.php:223
+#: includes/ChatSessions.php:310 includes/ChatSessions.php:365
+msgid "Chat session not found."
+msgstr "चैट सत्र नहीं मिला।"
+
+#: includes/ChatSessions.php:200
+msgid "label cannot be empty."
+msgstr "label खाली नहीं हो सकता।"
+
+#: includes/ChatSessions.php:242
+msgid "Failed to delete the chat session."
+msgstr "चैट सत्र हटाने में विफल।"
+
+#: includes/ChatSessions.php:264
+msgid "messages array is required."
+msgstr "messages सरणी आवश्यक है।"
+
+#: includes/ChatSessions.php:289
+msgid "No valid messages were provided."
+msgstr "कोई वैध संदेश नहीं दिया गया।"
+
+#. translators: 1: maximum bytes allowed, 2: actual bytes received
+#: includes/ChatSessions.php:350 includes/RestApi.php:78
+#, php-format
+msgid "Request body exceeds %1$d bytes (got %2$d)."
+msgstr "अनुरोध बॉडी %1$d बाइट्स से अधिक है (मिले %2$d)।"
+
+#: includes/ChatSessions.php:374
+msgid "You do not have access to this chat session."
+msgstr "आपको इस चैट सत्र तक पहुँच नहीं है।"
+
+#: includes/ConversationCompactor.php:132
+#, php-format
+msgid ""
+"[Summary of prior work — %d turns folded, ~%d tokens reduced past the "
+"%d-token threshold]"
+msgstr ""
+"[पूर्व कार्य का सारांश — %d बारी संक्षिप्त, ~%d टोकन %d-टोकन सीमा से अधिक "
+"कम]"
+
+#: includes/CredentialStore.php:50 includes/CredentialStore.php:67
+#: includes/CredentialStore.php:117 includes/CredentialStore.php:135
+#: includes/CredentialStore.php:228 includes/CredentialStore.php:266
+#: includes/ProviderHealth.php:37 includes/ProviderModelDiscovery.php:28
+#: includes/ProviderModelDiscovery.php:86
+msgid "Provider preset was not found."
+msgstr "प्रोवाइडर प्रीसेट नहीं मिला।"
+
+#: includes/CredentialStore.php:72
+msgid "API key is required and must be at least 8 characters."
+msgstr "API कुंजी आवश्यक है और कम से कम 8 वर्ण की होनी चाहिए।"
+
+#: includes/CredentialStore.php:76
+msgid "Credential encryption is not available on this WordPress runtime."
+msgstr "इस WordPress रनटाइम पर credential encryption उपलब्ध नहीं है।"
+
+#: includes/CredentialStore.php:99
+msgid "Credential stored but connection has not been validated."
+msgstr "क्रेडेंशियल सहेजा गया लेकिन कनेक्शन सत्यापित नहीं किया गया।"
+
+#: includes/CredentialStore.php:141 includes/CredentialStore.php:234
+#: includes/CredentialStore.php:272 includes/CredentialStore.php:309
+msgid "Provider is not configured."
+msgstr "प्रोवाइडर कॉन्फ़िगर नहीं है।"
+
+#: includes/CredentialStore.php:151
+msgid "Provider family does not support connection testing yet."
+msgstr "प्रोवाइडर फ़ैमिली अभी तक कनेक्शन परीक्षण समर्थित नहीं करती।"
+
+#. translators: %s: redacted underlying error message
+#: includes/CredentialStore.php:172
+#, php-format
+msgid "Connection failed: %s"
+msgstr "कनेक्शन विफल: %s"
+
+#: includes/CredentialStore.php:186
+msgid "Connection validated through provider model discovery."
+msgstr "कनेक्शन प्रोवाइडर मॉडल discovery के माध्यम से सत्यापित।"
+
+#. translators: %d: HTTP status code
+#: includes/CredentialStore.php:194
+#, php-format
+msgid "Connection test returned HTTP %d without a valid models payload."
+msgstr "कनेक्शन परीक्षण ने वैध models payload के बिना HTTP %d लौटाया।"
+
+#: includes/CredentialStore.php:239
+msgid "Provider family is not supported for runtime calls."
+msgstr "रनटाइम कॉल के लिए प्रोवाइडर फ़ैमिली समर्थित नहीं है।"
+
+#: includes/CredentialStore.php:278
+msgid "Connection validation updated."
+msgstr "कनेक्शन सत्यापन अद्यतन।"
+
+#: includes/CredentialStore.php:347
+msgid "Credential encryption failed."
+msgstr "क्रेडेंशियल एन्क्रिप्शन विफल।"
+
+#: includes/CredentialStore.php:364
+msgid "Stored credential cipher is unsupported."
+msgstr "सहेजा गया credential cipher समर्थित नहीं है।"
+
+#: includes/CredentialStore.php:371
+msgid "Stored credential payload is invalid."
+msgstr "सहेजा गया credential payload अमान्य है।"
+
+#: includes/CredentialStore.php:381
+msgid "Credential decryption failed."
+msgstr "क्रेडेंशियल डिक्रिप्शन विफल।"
+
+#: includes/CredentialStore.php:448
+msgid ""
+"Provider family does not expose a models endpoint for connection testing."
+msgstr ""
+"प्रोवाइडर फ़ैमिली कनेक्शन परीक्षण के लिए models endpoint एक्सपोज़ नहीं करती।"
+
+#: includes/CredentialStore.php:482
+msgid "Provider requires additional settings before testing connection."
+msgstr "कनेक्शन परीक्षण से पहले प्रोवाइडर को अतिरिक्त सेटिंग्स चाहिए।"
+
+#: includes/CredentialStore.php:486 includes/ProviderModelDiscovery.php:430
+#: includes/ProviderRuntime.php:431
+msgid "Provider base URL must be an HTTP URL."
+msgstr "प्रोवाइडर बेस URL एक HTTP URL होना चाहिए।"
+
+#: includes/LlmGateway.php:124
+msgid "At least one tool definition is required for toolCall."
+msgstr "toolCall के लिए कम से कम एक टूल परिभाषा आवश्यक है।"
+
+#: includes/LlmGateway.php:761 includes/ProviderModelDiscovery.php:68
+#: includes/ProviderRuntime.php:132
+msgid "Provider model discovery returned no models."
+msgstr "प्रोवाइडर मॉडल discovery ने कोई मॉडल नहीं लौटाया।"
+
+#: includes/LlmGateway.php:784 includes/ProviderRuntime.php:163
+msgid "Provider model discovery returned no text generation model candidate."
+msgstr ""
+"प्रोवाइडर मॉडल discovery ने कोई text generation मॉडल उम्मीदवार नहीं लौटाया।"
+
+#: includes/PhpStreamTransport.php:26
+msgid ""
+"PHP stream transport is not available because allow_url_fopen is disabled."
+msgstr "PHP stream transport उपलब्ध नहीं है क्योंकि allow_url_fopen अक्षम है।"
+
+#: includes/PhpStreamTransport.php:45
+msgid "PHP stream transport could not open provider stream."
+msgstr "PHP stream transport प्रोवाइडर स्ट्रीम नहीं खोल सका।"
+
+#: includes/PhpStreamTransport.php:74
+msgid "PHP stream transport failed while reading provider stream."
+msgstr "PHP stream transport प्रोवाइडर स्ट्रीम पढ़ते समय विफल।"
+
+#: includes/PhpStreamTransport.php:81
+msgid "Provider stream timed out."
+msgstr "प्रोवाइडर स्ट्रीम का समय समाप्त हो गया।"
+
+#: includes/ProviderModelDiscovery.php:40
+msgid ""
+"Provider does not expose API model discovery. Manual model entries are "
+"required for this preset."
+msgstr ""
+"प्रोवाइडर API मॉडल discovery एक्सपोज़ नहीं करता। इस प्रीसेट के लिए मैनुअल "
+"मॉडल प्रविष्टियाँ आवश्यक हैं।"
+
+#: includes/ProviderModelDiscovery.php:91
+msgid "Manual model entries are not allowed for this provider preset."
+msgstr "इस प्रोवाइडर प्रीसेट के लिए मैनुअल मॉडल प्रविष्टियाँ अनुमत नहीं हैं।"
+
+#: includes/ProviderModelDiscovery.php:116
+msgid "At least one manual model id is required."
+msgstr "कम से कम एक मैनुअल मॉडल id आवश्यक है।"
+
+#: includes/ProviderModelDiscovery.php:139 includes/ProviderRuntime.php:321
+msgid "Provider family does not expose the required runtime endpoint."
+msgstr "प्रोवाइडर फ़ैमिली आवश्यक रनटाइम endpoint एक्सपोज़ नहीं करती।"
+
+#: includes/ProviderModelDiscovery.php:426 includes/ProviderRuntime.php:427
+msgid "Provider requires additional settings before runtime call."
+msgstr "रनटाइम कॉल से पहले प्रोवाइडर को अतिरिक्त सेटिंग्स चाहिए।"
+
+#: includes/ProviderPresets.php:18
+msgid "Provider presets file is missing."
+msgstr "प्रोवाइडर प्रीसेट फ़ाइल गायब है।"
+
+#: includes/ProviderPresets.php:23
+msgid "Provider presets file is not valid JSON."
+msgstr "प्रोवाइडर प्रीसेट फ़ाइल वैध JSON नहीं है।"
+
+#: includes/ProviderPresets.php:70
+msgid "Provider presets schemaVersion must be 1."
+msgstr "प्रोवाइडर प्रीसेट का schemaVersion 1 होना चाहिए।"
+
+#: includes/ProviderPresets.php:74
+msgid "Provider presets must define families and presets."
+msgstr "प्रोवाइडर प्रीसेट को families और presets परिभाषित करना चाहिए।"
+
+#: includes/ProviderPresets.php:79
+msgid "Provider preset entries must be keyed objects."
+msgstr "प्रोवाइडर प्रीसेट प्रविष्टियाँ keyed ऑब्जेक्ट होनी चाहिए।"
+
+#: includes/ProviderPresets.php:83
+msgid "Provider presets require label, family and baseUrl."
+msgstr "प्रोवाइडर प्रीसेट को label, family और baseUrl चाहिए।"
+
+#: includes/ProviderPresets.php:87
+msgid "Provider preset references an unknown family."
+msgstr "प्रोवाइडर प्रीसेट किसी अज्ञात family का संदर्भ देता है।"
+
+#: includes/ProviderPresets.php:91
+msgid "Provider presets must not define defaultModels."
+msgstr "प्रोवाइडर प्रीसेट defaultModels परिभाषित नहीं करने चाहिए।"
+
+#: includes/ProviderPresets.php:95
+msgid ""
+"Provider modelHints must remain non-authoritative and empty; real models "
+"come from discovery, cache or explicit manual entry."
+msgstr ""
+"प्रोवाइडर modelHints गैर-अधिकारिक और खाली रहने चाहिए; वास्तविक मॉडल "
+"discovery, cache या स्पष्ट मैनुअल प्रविष्टि से आते हैं।"
+
+#: includes/ProviderRuntime.php:45
+msgid "Provider family is not supported for generation yet."
+msgstr "जनरेशन के लिए प्रोवाइडर फ़ैमिली अभी तक समर्थित नहीं है।"
+
+#: includes/RateLimiter.php:65
+#, php-format
+msgid "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds."
+msgstr "\"%s\" के लिए दर सीमा पहुँची (%d प्रति %ds)। %ds में पुनः प्रयास करें।"
+
+#: includes/RestApi.php:90
+msgid "oversized request body"
+msgstr "अत्यधिक बड़ा अनुरोध बॉडी"
+
+#: includes/TraceLogger.php:88
+#, php-format
+msgid "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
+msgstr "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
+
+#: includes/WorkflowApiBridge.php:31
+msgid "WP PFWorkflow plugin is not active."
+msgstr "WP PFWorkflow प्लगइन सक्रिय नहीं है।"
+
+#: includes/WorkflowApiBridge.php:44
+msgid "Tool is not executable by Workflow API bridge."
+msgstr "Workflow API bridge द्वारा टूल निष्पादन योग्य नहीं है।"
+
+#: includes/WorkflowApiBridge.php:56
+msgid "workflowId is required."
+msgstr "workflowId आवश्यक है।"
+
+#: includes/WorkflowApiBridge.php:70
+msgid "payload is required."
+msgstr "payload आवश्यक है।"
+
+#: includes/WorkflowApiBridge.php:135
+msgid "wp-pfworkflow agent-ready service is not available."
+msgstr "wp-pfworkflow agent-ready सेवा उपलब्ध नहीं है।"
+
+#: assets/src/Diagnostic.tsx:194
+msgid "$0 (no pricing configured)"
+msgstr "$0 (कोई मूल्य कॉन्फ़िगर नहीं)"
+
+#: assets/src/ProviderWizard.tsx:186
+#, javascript-format
+msgid "%1$d turn(s) · last %2$s"
+msgstr "%1$d बारी · अंतिम %2$s"
+
+#: assets/src/App.tsx:849 assets/src/App.tsx:882
+#, javascript-format
+msgid "%1$s / %2$d nodes / %3$d wires"
+msgstr "%1$s / %2$d नोड्स / %3$d वायर"
+
+#: assets/src/Diagnostic.tsx:108
+#, javascript-format
+msgid "%1$s tokens, %2$s"
+msgstr "%1$s टोकन, %2$s"
+
+#: assets/src/App.tsx:709
+#, javascript-format
+msgid "%d execution(s)"
+msgstr "%d निष्पादन"
+
+#: assets/src/Diagnostic.tsx:128
+#, javascript-format
+msgid "%d issue(s)"
+msgstr "%d समस्या(एँ)"
+
+#: assets/src/App.tsx:785
+#, javascript-format
+msgid "%d nodes"
+msgstr "%d नोड्स"
+
+#: assets/src/App.tsx:786
+#, javascript-format
+msgid "%d wires"
+msgstr "%d वायर"
+
+#: assets/src/ProviderWizard.tsx:289
+msgid "(manual)"
+msgstr "(मैनुअल)"
+
+#: assets/src/ProviderWizard.tsx:218
+msgid "+ Add new credential"
+msgstr "+ नया क्रेडेंशियल जोड़ें"
+
+#: assets/src/App.tsx:638
+msgid "+ New"
+msgstr "+ नया"
+
+#: assets/src/ProviderWizard.tsx:197
+msgid "1. Pick a credential"
+msgstr "1. क्रेडेंशियल चुनें"
+
+#: assets/src/ProviderWizard.tsx:231
+msgid "1b. New credential"
+msgstr "1b. नया क्रेडेंशियल"
+
+#: assets/src/ProviderWizard.tsx:277
+msgid "2. Model"
+msgstr "2. मॉडल"
+
+#: assets/src/ProviderWizard.tsx:251
+msgid "API key"
+msgstr "API कुंजी"
+
+#: assets/src/ActionInspector.tsx:22 assets/src/ActionInspector.tsx:34
+#: assets/src/ActionInspector.tsx:46 assets/src/ActionInspector.tsx:60
+msgid "Action Inspector"
+msgstr "एक्शन इंस्पेक्टर"
+
+#: assets/src/App.tsx:511
+msgid "Action cancelled by the user."
+msgstr "उपयोगकर्ता द्वारा क्रिया रद्द।"
+
+#: assets/src/App.tsx:368 assets/src/App.tsx:410
+#, javascript-format
+msgid "Action failed: %s"
+msgstr "क्रिया विफल: %s"
+
+#: assets/src/Diagnostic.tsx:167
+#, javascript-format
+msgid "Active (%s)"
+msgstr "सक्रिय (%s)"
+
+#: assets/src/App.tsx:537
+#, javascript-format
+msgid "Active LLM: %1$s · %2$s."
+msgstr "सक्रिय LLM: %1$s · %2$s।"
+
+#: assets/src/ActionInspector.tsx:206
+msgid "After"
+msgstr "बाद में"
+
+#: assets/src/App.tsx:475
+#, javascript-format
+msgid "Agent runtime failed: %s"
+msgstr "एजेंट रनटाइम विफल: %s"
+
+#: assets/src/App.tsx:858
+msgid "All"
+msgstr "सभी"
+
+#: assets/src/ActionInspector.tsx:163 assets/src/App.tsx:694
+msgid "Arguments"
+msgstr "तर्क"
+
+#: assets/src/App.tsx:765
+msgid "Ask the agent…"
+msgstr "एजेंट से पूछें…"
+
+#: assets/src/ProviderWizard.tsx:269
+msgid "Back"
+msgstr "वापस"
+
+#: assets/src/App.tsx:602
+msgid "Back to WP admin"
+msgstr "WP एडमिन पर वापस"
+
+#: assets/src/ActionInspector.tsx:198
+msgid "Before"
+msgstr "पहले"
+
+#: assets/src/App.tsx:912
+msgid "Can manage"
+msgstr "प्रबंधित कर सकता है"
+
+#: assets/src/App.tsx:910
+msgid "Can view"
+msgstr "देख सकता है"
+
+#: assets/src/App.tsx:702 assets/src/ProviderWizard.tsx:222
+#: assets/src/ProviderWizard.tsx:333
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: assets/src/Diagnostic.tsx:138
+msgid "Capability matrix"
+msgstr "क्षमता मैट्रिक्स"
+
+#: assets/src/App.tsx:629
+msgid "Change"
+msgstr "बदलें"
+
+#: assets/src/ProviderWizard.tsx:329
+msgid "Change provider"
+msgstr "प्रोवाइडर बदलें"
+
+#: assets/src/App.tsx:899
+msgid ""
+"Chat history is local to this screen. Provider keys are never stored in "
+"browser storage."
+msgstr ""
+"चैट इतिहास इस स्क्रीन तक स्थानीय है। प्रोवाइडर कुंजियाँ कभी भी ब्राउज़र "
+"स्टोरेज में सहेजी नहीं जातीं।"
+
+#: assets/src/App.tsx:302
+msgid "Checking Workflow API endpoints…"
+msgstr "Workflow API endpoints की जाँच…"
+
+#: assets/src/App.tsx:901
+msgid "Clear local history"
+msgstr "स्थानीय इतिहास साफ़ करें"
+
+#: assets/src/App.tsx:815
+msgid "Close"
+msgstr "बंद करें"
+
+#: assets/src/ProviderWizard.tsx:166
+msgid "Configure LLM"
+msgstr "LLM कॉन्फ़िगर करें"
+
+#: assets/src/Diagnostic.tsx:173
+#, javascript-format
+msgid "Configured providers (%d)"
+msgstr "कॉन्फ़िगर किए गए प्रोवाइडर (%d)"
+
+#: assets/src/App.tsx:699 assets/src/ProviderWizard.tsx:317
+msgid "Confirm"
+msgstr "पुष्टि करें"
+
+#: assets/src/ActionInspector.tsx:68
+msgid "Confirmation pending:"
+msgstr "पुष्टि लंबित:"
+
+#: assets/src/App.tsx:689
+msgid "Confirmation required"
+msgstr "पुष्टि आवश्यक"
+
+#: assets/src/ProviderWizard.tsx:179
+msgid "Continue a previous conversation or proceed to start a new one."
+msgstr "पिछली बातचीत जारी रखें या नई शुरू करें।"
+
+#: assets/src/ProviderWizard.tsx:178
+msgid "Conversation"
+msgstr "बातचीत"
+
+#: assets/src/Diagnostic.tsx:88
+#, javascript-format
+msgid "Cost and tokens (last %dh)"
+msgstr "लागत और टोकन (पिछले %dh)"
+
+#: assets/src/ActionInspector.tsx:208
+msgid "Could not capture the resulting state."
+msgstr "परिणामी स्थिति कैप्चर नहीं हो सकी।"
+
+#: assets/src/App.tsx:799
+msgid "Create draft"
+msgstr "ड्राफ्ट बनाएँ"
+
+#: assets/src/App.tsx:400
+#, javascript-format
+msgid ""
+"Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" "
+"and loaded it."
+msgstr ""
+"टेम्प्लेट %4$s \"%5$s\" से workflow #%1$d \"%2$s\" बनाया (स्थिति: %3$s) और "
+"लोड किया।"
+
+#: assets/src/App.tsx:287
+msgid "Current user cannot view workflows. API calls were skipped."
+msgstr "वर्तमान उपयोगकर्ता workflows नहीं देख सकता। API कॉल छोड़ दिए गए।"
+
+#: assets/src/App.tsx:827 assets/src/Diagnostic.tsx:35
+#: assets/src/Diagnostic.tsx:46 assets/src/Diagnostic.tsx:66
+msgid "Diagnostic"
+msgstr "डायग्नॉस्टिक"
+
+#: assets/src/App.tsx:1000
+msgid "Done."
+msgstr "हो गया।"
+
+#: assets/src/App.tsx:756 assets/src/Diagnostic.tsx:50
+#: assets/src/ProviderWizard.tsx:172
+msgid "Error:"
+msgstr "त्रुटि:"
+
+#: assets/src/Diagnostic.tsx:94
+msgid "Estimated cost"
+msgstr "अनुमानित लागत"
+
+#: assets/src/Diagnostic.tsx:97
+msgid "Events recorded"
+msgstr "रिकॉर्ड किए गए इवेंट"
+
+#: assets/src/ActionInspector.tsx:168
+msgid "Evidence"
+msgstr "साक्ष्य"
+
+#: assets/src/ActionInspector.tsx:73
+#, javascript-format
+msgid "Executions (%d)"
+msgstr "निष्पादन (%d)"
+
+#: assets/src/Diagnostic.tsx:123
+msgid "FAIL"
+msgstr "विफल"
+
+#: assets/src/Diagnostic.tsx:83
+#, javascript-format
+msgid "Generated at %s."
+msgstr "%s पर उत्पन्न।"
+
+#: assets/src/Diagnostic.tsx:168
+msgid "Inactive (fallback in use)"
+msgstr "निष्क्रिय (फ़ॉलबैक उपयोग में)"
+
+#: assets/src/App.tsx:442
+#, javascript-format
+msgid "LLM error: %1$s — %2$s"
+msgstr "LLM त्रुटि: %1$s — %2$s"
+
+#: assets/src/App.tsx:804
+msgid "Load a workflow or preview a template."
+msgstr "एक workflow लोड करें या एक टेम्प्लेट का पूर्वावलोकन करें।"
+
+#: assets/src/App.tsx:358
+#, javascript-format
+msgid "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d)."
+msgstr "Workflow #%1$d \"%2$s\" लोड (स्थिति: %3$s, नोड्स: %4$d, वायर: %5$d)।"
+
+#: assets/src/Diagnostic.tsx:37
+msgid "Loading beta readiness report…"
+msgstr "बीटा तत्परता रिपोर्ट लोड हो रही है…"
+
+#: assets/src/ProviderWizard.tsx:282
+msgid "Loading models…"
+msgstr "मॉडल लोड हो रहे हैं…"
+
+#: assets/src/App.tsx:767
+msgid "Message to the agent"
+msgstr "एजेंट को संदेश"
+
+#: assets/src/ProviderWizard.tsx:285
+msgid "Model"
+msgstr "मॉडल"
+
+#: assets/src/ProviderWizard.tsx:296
+msgid "Model (manual)"
+msgstr "मॉडल (मैनुअल)"
+
+#: assets/src/App.tsx:906
+msgid "Namespace"
+msgstr "Namespace"
+
+#: assets/src/App.tsx:526 assets/src/App.tsx:573
+msgid "New conversation"
+msgstr "नई बातचीत"
+
+#: assets/src/App.tsx:579
+msgid "New conversation."
+msgstr "नई बातचीत।"
+
+#: assets/src/ProviderWizard.tsx:199
+msgid "No credentials in the store yet. Add one to continue."
+msgstr "स्टोर में अभी कोई क्रेडेंशियल नहीं। जारी रखने के लिए एक जोड़ें।"
+
+#: assets/src/Diagnostic.tsx:175
+msgid "No credentials stored yet. Configure one from Settings."
+msgstr "अभी कोई क्रेडेंशियल सहेजा नहीं। सेटिंग्स से एक कॉन्फ़िगर करें।"
+
+#: assets/src/ActionInspector.tsx:200
+msgid "No prior state existed (creation or import)."
+msgstr "कोई पूर्व स्थिति मौजूद नहीं थी (निर्माण या आयात)।"
+
+#: assets/src/App.tsx:1008
+msgid "No response from the runtime."
+msgstr "रनटाइम से कोई प्रतिक्रिया नहीं।"
+
+#: assets/src/ActionInspector.tsx:75
+msgid "No tool was executed in this turn."
+msgstr "इस बारी में कोई टूल निष्पादित नहीं हुआ।"
+
+#: assets/src/App.tsx:595
+msgid "No workflow loaded"
+msgstr "कोई workflow लोड नहीं"
+
+#: assets/src/App.tsx:731
+msgid "Open in viewer"
+msgstr "व्यूअर में खोलें"
+
+#: assets/src/App.tsx:615
+msgid "Open menu"
+msgstr "मेनू खोलें"
+
+#: assets/src/App.tsx:729
+#, javascript-format
+msgid "Open workflow %d in the viewer"
+msgstr "व्यूअर में workflow %d खोलें"
+
+#: assets/src/Diagnostic.tsx:123
+msgid "PASS"
+msgstr "पास"
+
+#: assets/src/Diagnostic.tsx:150
+msgid "Partial capabilities"
+msgstr "आंशिक क्षमताएँ"
+
+#: assets/src/Diagnostic.tsx:102
+msgid "Per provider"
+msgstr "प्रोवाइडर के अनुसार"
+
+#: assets/src/ProviderWizard.tsx:157
+msgid "Pick a model or enter the id manually."
+msgstr "एक मॉडल चुनें या id मैनुअल रूप से दर्ज करें।"
+
+#: assets/src/ProviderWizard.tsx:129
+msgid "Pick a provider and paste the API key."
+msgstr "एक प्रोवाइडर चुनें और API कुंजी पेस्ट करें।"
+
+#: assets/src/App.tsx:941
+msgid ""
+"Pick an LLM provider to get started. Your credentials live encrypted inside "
+"the WordPress store."
+msgstr ""
+"शुरू करने के लिए LLM प्रोवाइडर चुनें। आपके क्रेडेंशियल WordPress स्टोर में "
+"एन्क्रिप्टेड रहते हैं।"
+
+#: assets/src/App.tsx:886
+msgid "Preview before creating"
+msgstr "बनाने से पहले पूर्वावलोकन"
+
+#: assets/src/App.tsx:381
+#, javascript-format
+msgid ""
+"Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No "
+"workflow was created yet."
+msgstr ""
+"टेम्प्लेट %1$s \"%2$s\" का पूर्वावलोकन लोड (%3$d नोड्स, %4$d वायर)। अभी कोई "
+"workflow नहीं बना।"
+
+#: assets/src/ProviderWizard.tsx:233
+msgid "Provider"
+msgstr "प्रोवाइडर"
+
+#: assets/src/App.tsx:621
+msgid "Provider · model"
+msgstr "प्रोवाइडर · मॉडल"
+
+#: assets/src/ProviderWizard.tsx:279
+msgid "Provider:"
+msgstr "प्रोवाइडर:"
+
+#: assets/src/App.tsx:645 assets/src/Diagnostic.tsx:78
+msgid "Refresh"
+msgstr "रिफ्रेश"
+
+#: assets/src/Diagnostic.tsx:76
+msgid "Refresh diagnostic"
+msgstr "डायग्नॉस्टिक रिफ्रेश करें"
+
+#: assets/src/ActionInspector.tsx:49
+msgid ""
+"Run an action against the agent to see the steps, evidence and diffs here."
+msgstr "एजेंट पर एक क्रिया चलाएँ ताकि यहाँ कदम, साक्ष्य और diff दिखें।"
+
+#: assets/src/ProviderWizard.tsx:266
+msgid "Save and continue"
+msgstr "सहेजें और जारी रखें"
+
+#: assets/src/ProviderWizard.tsx:266
+msgid "Saving…"
+msgstr "सहेजा जा रहा है…"
+
+#: assets/src/App.tsx:835
+msgid "Search…"
+msgstr "खोजें…"
+
+#: assets/src/App.tsx:769
+msgid "Send"
+msgstr "भेजें"
+
+#: assets/src/App.tsx:555
+#, javascript-format
+msgid "Session %d is empty."
+msgstr "सत्र %d खाली है।"
+
+#: assets/src/App.tsx:898
+msgid "Session only"
+msgstr "केवल सत्र"
+
+#: assets/src/App.tsx:830
+msgid "Settings"
+msgstr "सेटिंग्स"
+
+#: assets/src/Diagnostic.tsx:119
+msgid "Severe criteria"
+msgstr "गंभीर मानदंड"
+
+#: assets/src/App.tsx:908
+msgid "Source"
+msgstr "स्रोत"
+
+#: assets/src/App.tsx:636
+msgid "Start a new conversation with the active LLM"
+msgstr "सक्रिय LLM के साथ नई बातचीत शुरू करें"
+
+#: assets/src/App.tsx:594
+msgid "Template Preview"
+msgstr "टेम्प्लेट पूर्वावलोकन"
+
+#: assets/src/App.tsx:856
+msgid "Template categories"
+msgstr "टेम्प्लेट श्रेणियाँ"
+
+#: assets/src/App.tsx:824
+msgid "Templates"
+msgstr "टेम्प्लेट"
+
+#: assets/src/App.tsx:321
+#, javascript-format
+msgid "Templates failed: %s"
+msgstr "टेम्प्लेट विफल: %s"
+
+#: assets/src/App.tsx:1006
+msgid "The action ran but the final response failed."
+msgstr "क्रिया चली लेकिन अंतिम प्रतिक्रिया विफल हुई।"
+
+#: assets/src/ProviderWizard.tsx:263
+msgid ""
+"The key is encrypted (AES-256-GCM) in the WordPress store and never returned"
+" over REST."
+msgstr ""
+"कुंजी WordPress स्टोर में (AES-256-GCM) एन्क्रिप्टेड है और कभी भी REST के "
+"माध्यम से नहीं लौटाई जाती।"
+
+#: assets/src/App.tsx:1004
+msgid "The runtime rejected this call."
+msgstr "रनटाइम ने इस कॉल को अस्वीकार किया।"
+
+#: assets/src/App.tsx:747
+msgid "Thinking…"
+msgstr "सोच रहे हैं…"
+
+#: assets/src/App.tsx:1002
+msgid "This action requires confirmation."
+msgstr "इस क्रिया के लिए पुष्टि आवश्यक है।"
+
+#: assets/src/ProviderWizard.tsx:305
+msgid ""
+"This provider does not allow manual models; check your credential or retry."
+msgstr ""
+"यह प्रोवाइडर मैनुअल मॉडल की अनुमति नहीं देता; अपना क्रेडेंशियल जाँचें या "
+"पुनः प्रयास करें।"
+
+#: assets/src/ActionInspector.tsx:175
+msgid "This tool produces no diff (read-only or without workflow state)."
+msgstr "यह टूल कोई diff नहीं बनाता (केवल-पठन या workflow स्थिति के बिना)।"
+
+#: assets/src/ActionInspector.tsx:86
+#, javascript-format
+msgid "Timeline (%d)"
+msgstr "टाइमलाइन (%d)"
+
+#: assets/src/ActionInspector.tsx:88
+msgid "Timeline is empty."
+msgstr "टाइमलाइन खाली है।"
+
+#: assets/src/ProviderWizard.tsx:167
+msgid "To send messages to the agent you need to pick a provider and a model."
+msgstr "एजेंट को संदेश भेजने के लिए आपको एक प्रोवाइडर और मॉडल चुनना होगा।"
+
+#: assets/src/App.tsx:691
+msgid "Tool:"
+msgstr "टूल:"
+
+#: assets/src/Diagnostic.tsx:91
+msgid "Total tokens"
+msgstr "कुल टोकन"
+
+#: assets/src/App.tsx:983
+msgid "Unexpected error."
+msgstr "अनपेक्षित त्रुटि।"
+
+#: assets/src/ActionInspector.tsx:25
+msgid "Waiting for the agent response…"
+msgstr "एजेंट प्रतिक्रिया की प्रतीक्षा…"
+
+#: assets/src/App.tsx:765
+msgid "Waiting for the agent…"
+msgstr "एजेंट की प्रतीक्षा…"
+
+#: assets/src/App.tsx:904
+msgid "Workflow API"
+msgstr "Workflow API"
+
+#: assets/src/App.tsx:334
+msgid ""
+"Workflow API check failed. See dependency status for the exact endpoint "
+"result."
+msgstr ""
+"Workflow API जाँच विफल। सटीक endpoint परिणाम के लिए dependency स्थिति देखें।"
+
+#: assets/src/App.tsx:813
+msgid "Workflow API consumer"
+msgstr "Workflow API उपभोक्ता"
+
+#: assets/src/App.tsx:174
+msgid "Workflow API has not been checked yet."
+msgstr "Workflow API की जाँच अभी नहीं हुई।"
+
+#: assets/src/App.tsx:318
+msgid "Workflow API responded for workflows and templates."
+msgstr "Workflow API ने workflows और templates के लिए प्रतिक्रिया दी।"
+
+#: assets/src/App.tsx:594
+msgid "Workflow View"
+msgstr "Workflow व्यू"
+
+#: assets/src/App.tsx:642
+msgid "Workflow companion"
+msgstr "Workflow कम्पैनियन"
+
+#: assets/src/Diagnostic.tsx:164
+msgid "Workflow dependency"
+msgstr "Workflow निर्भरता"
+
+#: assets/src/App.tsx:658
+msgid "Workflow dependency active"
+msgstr "Workflow निर्भरता सक्रिय"
+
+#: assets/src/App.tsx:658
+msgid "Workflow dependency inactive"
+msgstr "Workflow निर्भरता निष्क्रिय"
+
+#: assets/src/App.tsx:276
+msgid "Workflow plugin is not active. API calls were skipped."
+msgstr "Workflow प्लगइन सक्रिय नहीं है। API कॉल छोड़ दिए गए।"
+
+#: assets/src/App.tsx:652
+msgid ""
+"Workflow plugin was not detected during page bootstrap. API calls may fail "
+"until it is active."
+msgstr ""
+"पेज बूटस्ट्रैप के दौरान Workflow प्लगइन का पता नहीं चला। जब तक यह सक्रिय "
+"नहीं हो, API कॉल विफल हो सकते हैं।"
+
+#: assets/src/App.tsx:821
+msgid "Workflows"
+msgstr "Workflows"
+
+#: assets/src/App.tsx:320
+#, javascript-format
+msgid "Workflows failed: %s"
+msgstr "Workflows विफल: %s"
+
+#: assets/src/App.tsx:812
+msgid "Workspace"
+msgstr "वर्कस्पेस"
+
+#: assets/src/Diagnostic.tsx:61
+msgid "beta partial"
+msgstr "बीटा आंशिक"
+
+#: assets/src/Diagnostic.tsx:61
+msgid "beta ready"
+msgstr "बीटा-तैयार"
+
+#: assets/src/App.tsx:717
+#, javascript-format
+msgid "diff: %s"
+msgstr "diff: %s"
+
+#: assets/src/ProviderWizard.tsx:301
+msgid "model-id"
+msgstr "model-id"
+
+#: assets/src/App.tsx:444
+msgid "no message"
+msgstr "कोई संदेश नहीं"
+
+#: assets/src/App.tsx:443
+msgid "unknown"
+msgstr "अज्ञात"
+
+#: assets/src/ProviderWizard.tsx:240
+msgid "— Pick one —"
+msgstr "— चुनें —"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"\"%s\" को इसके संदेशों के साथ स्थायी रूप से हटा दिया जाएगा। यह क्रिया "
+"पूर्ववत नहीं हो सकती।"
+
+#: assets/src/ProviderWizard.tsx:429
+#, javascript-format
+msgid "%1$d turn(s) · updated %2$s"
+msgstr "%1$d बारी · अद्यतन %2$s"
+
+#: assets/src/ProviderWizard.tsx:1005
+#, javascript-format
+msgid ""
+"All conversations whose last activity is older than %d days will be "
+"permanently deleted. This action cannot be undone."
+msgstr ""
+"जिन सभी बातचीतों की अंतिम गतिविधि %d दिनों से अधिक पुरानी है, उन्हें स्थायी "
+"रूप से हटा दिया जाएगा। यह क्रिया पूर्ववत नहीं हो सकती।"
+
+#: assets/src/App.tsx:629 assets/src/App.tsx:630
+msgid "Back to conversations"
+msgstr "बातचीतों पर वापस"
+
+#: assets/src/ProviderWizard.tsx:811
+msgid "Base URL"
+msgstr "बेस URL"
+
+#: assets/src/ProviderWizard.tsx:447
+msgid "Conversation pages"
+msgstr "बातचीत के पृष्ठ"
+
+#: assets/src/App.tsx:655
+msgid "Conversation title"
+msgstr "बातचीत का शीर्षक"
+
+#: assets/src/ProviderWizard.tsx:830
+msgid "Credential"
+msgstr "क्रेडेंशियल"
+
+#: assets/src/ProviderWizard.tsx:476
+msgid "Credentials"
+msgstr "क्रेडेंशियल"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"\"%s\" के क्रेडेंशियल एन्क्रिप्टेड स्टोर से हटाए जाएँगे। यह क्रिया पूर्ववत "
+"नहीं हो सकती।"
+
+#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
+msgid "Delete"
+msgstr "हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:413
+#, javascript-format
+msgid "Delete all conversations older than %d days"
+msgstr "%d दिनों से अधिक पुरानी सभी बातचीतें हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:438 assets/src/ProviderWizard.tsx:689
+msgid "Delete conversation"
+msgstr "बातचीत हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:437
+#, javascript-format
+msgid "Delete conversation %s"
+msgstr "बातचीत %s हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:1026
+msgid "Delete conversations"
+msgstr "बातचीतें हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:519 assets/src/ProviderWizard.tsx:737
+msgid "Delete credential"
+msgstr "क्रेडेंशियल हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:518
+#, javascript-format
+msgid "Delete credential %s"
+msgstr "क्रेडेंशियल %s हटाएँ"
+
+#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
+msgid "Deleting…"
+msgstr "हटाया जा रहा है…"
+
+#: assets/src/ProviderWizard.tsx:813
+msgid "Discovery"
+msgstr "Discovery"
+
+#: assets/src/ProviderWizard.tsx:819
+msgid "Last validation"
+msgstr "अंतिम सत्यापन"
+
+#: assets/src/ProviderWizard.tsx:895
+msgid "Load"
+msgstr "लोड"
+
+#: assets/src/ProviderWizard.tsx:508 assets/src/ProviderWizard.tsx:785
+#, javascript-format
+msgid "Manage %s"
+msgstr "%s प्रबंधित करें"
+
+#: assets/src/ProviderWizard.tsx:509
+msgid "Manage credential"
+msgstr "क्रेडेंशियल प्रबंधित करें"
+
+#: assets/src/App.tsx:779
+msgid "Management"
+msgstr "प्रबंधन"
+
+#: assets/src/ProviderWizard.tsx:941
+msgid "Manual model IDs"
+msgstr "मैनुअल मॉडल ID"
+
+#: assets/src/ProviderWizard.tsx:887
+msgid "Models"
+msgstr "मॉडल"
+
+#: assets/src/App.tsx:816
+msgid ""
+"Neither Project Flash Workflow nor Project Flash Management is installed."
+msgstr "न तो Project Flash Workflow न Project Flash Management इंस्टॉल है।"
+
+#: assets/src/ProviderWizard.tsx:832
+msgid "New API key"
+msgstr "नई API कुंजी"
+
+#: assets/src/ProviderWizard.tsx:543
+msgid "New credential"
+msgstr "नया क्रेडेंशियल"
+
+#: assets/src/ProviderWizard.tsx:465
+msgid "Next page"
+msgstr "अगला पृष्ठ"
+
+#: assets/src/ProviderWizard.tsx:421
+msgid "No conversations yet."
+msgstr "अभी तक कोई बातचीत नहीं।"
+
+#: assets/src/ProviderWizard.tsx:934
+msgid ""
+"No model list loaded yet. Click Load to fetch from the API or Refresh to "
+"bypass cache."
+msgstr ""
+"अभी कोई मॉडल सूची लोड नहीं हुई। API से लाने के लिए Load पर क्लिक करें या "
+"cache छोड़ने के लिए Refresh पर।"
+
+#: assets/src/ProviderWizard.tsx:929
+msgid "No models returned."
+msgstr "कोई मॉडल नहीं लौटा।"
+
+#: assets/src/ProviderWizard.tsx:1049
+msgid "Not configured"
+msgstr "कॉन्फ़िगर नहीं"
+
+#: assets/src/ProviderWizard.tsx:1045
+msgid "Not verified"
+msgstr "सत्यापित नहीं"
+
+#: assets/src/ProviderWizard.tsx:458
+#, javascript-format
+msgid "Page %1$d of %2$d"
+msgstr "पृष्ठ %1$d / %2$d"
+
+#: assets/src/ProviderWizard.tsx:837
+msgid "Paste API key to confirm changes"
+msgstr "परिवर्तनों की पुष्टि के लिए API कुंजी पेस्ट करें"
+
+#: assets/src/ProviderWizard.tsx:453
+msgid "Previous page"
+msgstr "पिछला पृष्ठ"
+
+#: assets/src/App.tsx:800
+msgid "Project Flash Management"
+msgstr "Project Flash Management"
+
+#: assets/src/App.tsx:808
+msgid "Project Flash Workflow"
+msgstr "Project Flash Workflow"
+
+#: assets/src/App.tsx:769
+msgid "Project Flash views"
+msgstr "Project Flash व्यूज़"
+
+#: assets/src/ProviderWizard.tsx:416
+#, javascript-format
+msgid "Purge > %dd"
+msgstr "साफ़ करें > %dd"
+
+#: assets/src/ProviderWizard.tsx:1000
+msgid "Purge old conversations"
+msgstr "पुरानी बातचीतें साफ़ करें"
+
+#: assets/src/ProviderWizard.tsx:416 assets/src/ProviderWizard.tsx:1026
+msgid "Purging…"
+msgstr "साफ़ किया जा रहा है…"
+
+#: assets/src/ProviderWizard.tsx:253
+msgid "Re-enter the API key to save changes."
+msgstr "परिवर्तन सहेजने के लिए API कुंजी पुनः दर्ज करें।"
+
+#: assets/src/App.tsx:676 assets/src/App.tsx:677
+msgid "Rename conversation"
+msgstr "बातचीत का नाम बदलें"
+
+#: assets/src/ProviderWizard.tsx:863
+msgid "Save"
+msgstr "सहेजें"
+
+#: assets/src/ProviderWizard.tsx:957
+msgid "Save manual list"
+msgstr "मैनुअल सूची सहेजें"
+
+#: assets/src/App.tsx:663 assets/src/App.tsx:664
+msgid "Save title"
+msgstr "शीर्षक सहेजें"
+
+#: assets/src/ProviderWizard.tsx:912
+#, javascript-format
+msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
+msgstr "स्रोत: %1$s · प्राप्त %2$s · %3$d मॉडल"
+
+#: assets/src/ProviderWizard.tsx:801
+msgid "Status"
+msgstr "स्थिति"
+
+#: assets/src/ProviderWizard.tsx:807
+msgid "Stored key"
+msgstr "सहेजी गई कुंजी"
+
+#: assets/src/ProviderWizard.tsx:499 assets/src/ProviderWizard.tsx:871
+msgid "Test connection"
+msgstr "कनेक्शन परीक्षण"
+
+#: assets/src/ProviderWizard.tsx:498
+#, javascript-format
+msgid "Test connection for %s"
+msgstr "%s के लिए कनेक्शन परीक्षण"
+
+#: assets/src/ProviderWizard.tsx:1047
+msgid "Validation failed"
+msgstr "सत्यापन विफल"
+
+#: assets/src/ProviderWizard.tsx:1043
+msgid "Verified"
+msgstr "सत्यापित"
+
+#: assets/src/App.tsx:579 assets/src/App.tsx:580
+msgid "Volver al admin de WordPress"
+msgstr "WordPress एडमिन पर वापस"
+
+#: assets/src/App.tsx:791
+msgid "Workflow"
+msgstr "Workflow"
+
+#: assets/src/ProviderWizard.tsx:808
+msgid "not stored"
+msgstr "सहेजा नहीं"
+
+#: assets/src/ProviderWizard.tsx:945
+msgid "one model id per line"
+msgstr "प्रति पंक्ति एक मॉडल id"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"\"%s\" को इसके संदेशों के साथ स्थायी रूप से हटा दिया जाएगा। यह क्रिया "
+"पूर्ववत नहीं हो सकती।"
+
+#: assets/src/App.tsx:611
+msgid "Active LLM"
+msgstr "सक्रिय LLM"
+
+#: assets/src/App.tsx:618
+msgid "Change LLM"
+msgstr "LLM बदलें"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"\"%s\" के क्रेडेंशियल एन्क्रिप्टेड स्टोर से हटाए जाएँगे। यह क्रिया पूर्ववत "
+"नहीं हो सकती।"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"\"%s\" को इसके संदेशों के साथ स्थायी रूप से हटा दिया जाएगा। यह क्रिया "
+"पूर्ववत नहीं हो सकती।"
+
+#: assets/src/App.tsx:625
+msgid "Configure"
+msgstr "कॉन्फ़िगर करें"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"\"%s\" के क्रेडेंशियल एन्क्रिप्टेड स्टोर से हटाए जाएँगे। यह क्रिया पूर्ववत "
+"नहीं हो सकती।"
+
+#: assets/src/App.tsx:635
+msgid "No LLM configured."
+msgstr "कोई LLM कॉन्फ़िगर नहीं।"

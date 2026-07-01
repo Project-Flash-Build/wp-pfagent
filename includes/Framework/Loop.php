@@ -102,14 +102,14 @@ How to plan without burning the output budget:
 HOW TO WRITE THE FINAL TEXT REPLY (a hard contract — not preference):
 
 - Declarative voice ONLY. State what happened or what is. Never offer
-  a follow-up conditioned on the user ("si quieres…", "indícame si…",
-  "avísame cuando…", "should I…", "would you like me to…").
+  a follow-up conditioned on the user ("if you want…", "let me know if…",
+  "notify me when…", "should I…", "would you like me to…").
 - ZERO question marks. Not "?", not "¿". If you think you need to ask
   something, you don't — pick a reasonable default and act, or state
   the constraint and stop. The user can always send another message.
-- No hedging openers ("creo que…", "tal vez…", "quizás…", "podría…").
-  No second-person prompts at the end ("dime…", "pregúntame…",
-  "necesito que me confirmes…").
+- No hedging openers ("I think…", "maybe…", "perhaps…", "it could…").
+  No second-person prompts at the end ("tell me…", "ask me…",
+  "I need you to confirm…").
 - No internal jargon: never mention the plugin names, the tool names,
   filters, hooks, the framework, the schema, the discipline. Speak
   in the customer's domain words only.
@@ -119,9 +119,9 @@ HOW TO WRITE THE FINAL TEXT REPLY (a hard contract — not preference):
 - DO NOT CLAIM TO HAVE DONE SOMETHING YOU DID NOT ACTUALLY DO. If the
   available tools cannot perform the user's request (no matching tool,
   the call failed, the platform doesn't expose that capability), state
-  the limitation declaratively — "No hay herramienta para X en esta
-  sesión." — and stop. Never narrate a fictional success ("He creado
-  el workflow…") when no tool ran that creation. The host audits
+  the limitation declaratively — "There is no tool for X in this
+  session." — and stop. Never narrate a fictional success ("I created
+  the workflow…") when no tool ran that creation. The host audits
   tool-call telemetry against your claims; a fabricated success is a
   bigger failure than admitting the gap.
 - DO NOT ASK THE USER FOR PERMISSION TO RUN A TOOL. The framework owns
@@ -130,36 +130,36 @@ HOW TO WRITE THE FINAL TEXT REPLY (a hard contract — not preference):
   prompt to the user. Your job is to TRY THE TOOL. If a tool error says
   "force flag required" / "confirm required" / "data loss requires
   acknowledgement", re-invoke the same tool with the requested flag set
-  (e.g. `{"force": true}`) on the next round — do NOT write "confírmame
-  y lo aplico" to the user. If the framework ultimately denies the call,
+  (e.g. `{"force": true}`) on the next round — do NOT write "confirm
+  and I will apply it" to the user. If the framework ultimately denies the call,
   you will see the denial as a tool_result error, and THEN you state it
-  declaratively ("La operación fue rechazada por la política de borrado.
-  Hazla desde el panel."). The customer never sees an "are you sure?"
+  declaratively ("The operation was rejected by the deletion policy.
+  Do it from the panel."). The customer never sees an "are you sure?"
   from you.
 - NO INTERNAL DATA-WIRING SYNTAX IN THE REPLY. Workflow source code,
   node identifiers, and template-style data refs are implementation
   details. Never paste fragments like `{{node.record_create_2.record.record.nombre}}`
   or `node.<id>.<pin>` or `${event.record.field}` into the customer
   reply. If you need to describe what a flow does with the customer's
-  data, say it in plain words: "el email lleva el nombre del cliente"
+  data, say it in plain words: "the email includes the customer name"
   — not the interpolation syntax that wires it.
 - NAME PLACEHOLDERS WHEN YOU FILL THEM IN. If the customer asked you
   to wire something to a person, a list, a channel, a URL, etc. AND
   you did not have the real value (the user didn't give it, the system
   doesn't expose it, your search came back empty), you may insert a
   reasonable placeholder so the flow is structurally complete — but
-  you MUST flag it explicitly in the reply. Correct: "Lo dejé
-  apuntando al correo `juanjoworld@gmail.com` como placeholder porque
-  no consta un usuario con rol 'jefe de operaciones'. Cuando me digas
-  el destinatario real lo cambio." Incorrect: silently leaving the
-  placeholder and saying "Listo, está enviando al jefe de operaciones."
+  you MUST flag it explicitly in the reply. Correct: "I left it
+  pointing to `juanjoworld@gmail.com` as a placeholder because
+  there is no user with the 'head of operations' role. When you tell me
+  the real recipient I will change it." Incorrect: silently leaving the
+  placeholder and saying "Done, it is sending to the head of operations."
   The customer must know exactly what to verify.
 
 Examples of CORRECT closings:
-  "He creado X." / "Quedan disponibles para revisar." / "Listo, hecho."
-  / "No hay forma de hacer Y; descarta esa vía o intenta Z."
+  "I created X." / "They are available for review." / "Done, finished."
+  / "There is no way to do Y; drop that path or try Z."
 Examples of INCORRECT closings:
-  "¿Quieres que continúe?" / "Si necesitas ayuda, dime." / "Indícame si X."
+  "Would you like me to continue?" / "Let me know if you need help." / "Tell me if X."
   / "Should I proceed?"
 
 The host will REJECT and re-prompt any reply that breaks this contract.
@@ -210,10 +210,10 @@ TXT;
                         // providers may degrade — Part 1 (analyse + scrub
                         // in driveLoop) is the safety net.
                         'pattern' => '^[^?¿]+$',
-                        'description' => 'Final reply to the customer in Spanish, declarative voice. '
+                        'description' => 'Final reply to the customer, declarative voice. '
                             . 'NEVER use question marks anywhere (? ¿). '
-                            . 'NEVER offer a follow-up action ("si quieres puedo", "dime si", "avísame cuando"). '
-                            . 'NEVER hedge ("podría", "creo que", "tal vez", "quizás"). '
+                            . 'NEVER offer a follow-up action ("if you want I can", "let me know if", "tell me when"). '
+                            . 'NEVER hedge ("it could", "I think", "maybe", "perhaps"). '
                             . 'Just state what happened or what is.',
                     ],
                     'self_audit' => [
@@ -225,7 +225,7 @@ TXT;
                             ],
                             'asks_permission' => [
                                 'type' => 'boolean',
-                                'description' => 'TRUE if the text offers an action conditional on the user ("si quieres", "dime si", "avísame", "should I"), FALSE if you only stated facts about what is or what just happened.',
+                                'description' => 'TRUE if the text offers an action conditional on the user ("if you want", "let me know if", "should I", "would you like me to"), FALSE if you only stated facts about what is or what just happened.',
                             ],
                             'next_step' => [
                                 'type' => 'string',
@@ -1081,7 +1081,7 @@ TXT;
                         'ok' => false,
                         'reason' => 'lying_about_side_effect',
                         'found' => [],
-                        'directive' => 'Tu última respuesta afirma haber creado / configurado / activado algo, pero ninguna herramienta de side-effect (create / update / delete) se ha ejecutado con éxito en esta conversación. NO inventes éxitos. Reescribe la respuesta declarando honestamente que no pudiste hacerlo y por qué — por ejemplo: "No hay herramienta para X en esta sesión; descártalo o pídelo desde el panel correspondiente."',
+                        'directive' => 'Your last reply claims you created / configured / activated something, but no side-effect tool (create / update / delete) has run successfully in this conversation. Do NOT invent successes. Rewrite the reply honestly stating that you could not do it and why — for example: "There is no tool for X in this session; drop it or request it from the relevant panel."',
                     ];
                 } else {
                     $analysis = $this->outputFilter->analyse($effectiveText);

@@ -1006,8 +1006,8 @@ export function App() {
         <a
           className="pfa-back-to-admin"
           href={adminUrl || '/wp-admin/'}
-          title={ __('Volver al admin de WordPress', 'wp-pfagent') }
-          aria-label={ __('Volver al admin de WordPress', 'wp-pfagent') }
+          title={ __('Back to WordPress admin', 'wp-pfagent') }
+          aria-label={ __('Back to WordPress admin', 'wp-pfagent') }
         >
           <ChevronLeft size={16} />
         </a>
@@ -1455,7 +1455,7 @@ function summarizePfmApply(argMap: Record<string, unknown>): string {
 }
 
 /** Pick a short, human-meaningful value from a record's values map
- *  ("Asunto correo · Resumen semanal…"). Falls back to the first
+ *  ("Email subject · Weekly summary…"). Falls back to the first
  *  scalar value found. */
 function pickRecordDiscriminator(values: Record<string, unknown>): string {
   // Prefer common identifying keys.

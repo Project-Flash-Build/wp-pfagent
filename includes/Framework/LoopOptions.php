@@ -59,8 +59,8 @@ final class LoopOptions
         public readonly ?float $topP = null,
         public readonly ?int $topK = null,
         // Penalties tightened from 0.3 / 0.2 after probe round 3: the LLM
-        // kept finding new permission phrasings ("Si necesitas...", "Dame
-        // una instrucción y procedo") that the OutputFilter caught only
+        // kept finding new permission phrasings ("If you need...", "Give me
+        // an instruction and I proceed") that the OutputFilter caught only
         // post-hoc, costing a rewrite per turn. Higher penalties make
         // those tokens slightly more costly, so the model picks
         // alternatives earlier in the decoding without us having to ban

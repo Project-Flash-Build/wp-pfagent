@@ -1,0 +1,1368 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP PFAgent 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-pfagent\n"
+"POT-Creation-Date: 2026-05-17T16:38:13+00:00\n"
+"PO-Revision-Date: 2026-05-28 11:58+0200\n"
+"Last-Translator: Project Flash Build <build@project-flash.com>\n"
+"Language-Team: Indonesian\n"
+"Language: id_ID\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: wp-pfagent\n"
+"X-Generator: WP-CLI 2.12.0\n"
+
+#. Plugin Name of the plugin
+#: wp-pfagent.php includes/AdminPage.php:25 includes/AdminPage.php:109
+msgid "WP PFAgent"
+msgstr "WP PFAgent"
+
+#. Description of the plugin
+#: wp-pfagent.php
+msgid "Agent console for ProjectFlash products."
+msgstr "Konsol agen untuk produk ProjectFlash."
+
+#. Author of the plugin
+#: wp-pfagent.php
+msgid "ProjectFlash"
+msgstr "ProjectFlash"
+
+#: includes/AdminPage.php:26
+msgid "PF Agent"
+msgstr "PF Agent"
+
+#: includes/AdminPage.php:110
+msgid "Back to admin"
+msgstr "Kembali ke admin"
+
+#: includes/AdminPage.php:111 includes/AdminPage.php:176
+msgid ""
+"WP PFAgent assets are missing. Run npm install and npm run build inside the "
+"plugin directory."
+msgstr ""
+"Aset WP PFAgent hilang. Jalankan npm install dan npm run build di dalam "
+"direktori plugin."
+
+#: includes/AdminPage.php:141
+msgid "WP PFAgent assets are not built."
+msgstr "Aset WP PFAgent belum dibangun."
+
+#: includes/AdminPage.php:169
+msgid "You do not have permission to manage WP PFAgent."
+msgstr "Anda tidak memiliki izin untuk mengelola WP PFAgent."
+
+#: includes/AgentContract.php:168
+msgid "Agent capability manifest is missing."
+msgstr "Manifest kapabilitas agen hilang."
+
+#: includes/AgentContract.php:173
+msgid "Agent capability manifest is invalid."
+msgstr "Manifest kapabilitas agen tidak valid."
+
+#: includes/AgentRuntime.php:40
+msgid "providerId is required."
+msgstr "providerId wajib diisi."
+
+#: includes/AgentRuntime.php:59
+msgid "message is required."
+msgstr "message wajib diisi."
+
+#: includes/AgentRuntime.php:145
+msgid "No tool was selected by the model."
+msgstr "Model tidak memilih alat apa pun."
+
+#: includes/AgentRuntime.php:146
+msgid ""
+"Tools ran but the model returned an empty reply. The data is in the "
+"executions panel."
+msgstr ""
+"Alat berjalan, tetapi model mengembalikan balasan kosong. Datanya ada di "
+"panel eksekusi."
+
+#: includes/AgentRuntime.php:161
+msgid "The model returned a malformed tool call."
+msgstr "Model mengembalikan panggilan alat yang tidak sesuai format."
+
+#: includes/AgentRuntime.php:184
+msgid "The model requested a tool that is not declared or allowed."
+msgstr "Model meminta alat yang tidak dideklarasikan atau tidak diizinkan."
+
+#: includes/AgentRuntime.php:260
+msgid ""
+"This action has side effects and requires confirmation before execution."
+msgstr ""
+"Tindakan ini memiliki efek samping dan memerlukan konfirmasi sebelum "
+"dieksekusi."
+
+#: includes/AgentRuntime.php:364
+msgid "I gathered some data but the model did not produce a final reply."
+msgstr ""
+"Saya mengumpulkan beberapa data tetapi model tidak menghasilkan balasan "
+"akhir."
+
+#: includes/AgentRuntime.php:379
+msgid "confirmationId is required when confirmed=true."
+msgstr "confirmationId wajib diisi saat confirmed=true."
+
+#: includes/AgentRuntime.php:384
+msgid "Pending confirmation was not found or has expired."
+msgstr "Konfirmasi tertunda tidak ditemukan atau telah kedaluwarsa."
+
+#: includes/AgentRuntime.php:703
+msgid "Workflow tool execution completed, but final LLM response failed."
+msgstr "Eksekusi alat workflow selesai, tetapi respons LLM akhir gagal."
+
+#: includes/AgentToolRegistry.php:42
+msgid "The requested tool is not in the declared agent tool registry."
+msgstr ""
+"Alat yang diminta tidak ada di registry alat agen yang dideklarasikan."
+
+#: includes/AgentToolRegistry.php:52
+msgid "Agent tool contract file is missing."
+msgstr "Berkas kontrak alat agen hilang."
+
+#: includes/AgentToolRegistry.php:57
+msgid "Agent tool contract file is invalid."
+msgstr "Berkas kontrak alat agen tidak valid."
+
+#: includes/AgentToolRegistry.php:148
+msgid "Agent tool entries must be objects."
+msgstr "Entri alat agen harus berupa objek."
+
+#: includes/ChatSessions.php:136
+msgid "A logged-in user is required."
+msgstr "Pengguna yang sudah login diperlukan."
+
+#. translators: %s: UTC timestamp used as default chat session title
+#: includes/ChatSessions.php:145
+#, php-format
+msgid "Session %s"
+msgstr "Sesi %s"
+
+#: includes/ChatSessions.php:176 includes/ChatSessions.php:223
+#: includes/ChatSessions.php:310 includes/ChatSessions.php:365
+msgid "Chat session not found."
+msgstr "Sesi chat tidak ditemukan."
+
+#: includes/ChatSessions.php:200
+msgid "label cannot be empty."
+msgstr "label tidak boleh kosong."
+
+#: includes/ChatSessions.php:242
+msgid "Failed to delete the chat session."
+msgstr "Gagal menghapus sesi chat."
+
+#: includes/ChatSessions.php:264
+msgid "messages array is required."
+msgstr "array messages wajib diisi."
+
+#: includes/ChatSessions.php:289
+msgid "No valid messages were provided."
+msgstr "Tidak ada pesan valid yang diberikan."
+
+#. translators: 1: maximum bytes allowed, 2: actual bytes received
+#: includes/ChatSessions.php:350 includes/RestApi.php:78
+#, php-format
+msgid "Request body exceeds %1$d bytes (got %2$d)."
+msgstr "Body permintaan melebihi %1$d byte (diterima %2$d)."
+
+#: includes/ChatSessions.php:374
+msgid "You do not have access to this chat session."
+msgstr "Anda tidak memiliki akses ke sesi chat ini."
+
+#: includes/ConversationCompactor.php:132
+#, php-format
+msgid ""
+"[Summary of prior work — %d turns folded, ~%d tokens reduced past the "
+"%d-token threshold]"
+msgstr ""
+"[Ringkasan pekerjaan sebelumnya — %d giliran dipadatkan, ~%d token dikurangi"
+" melewati ambang %d token]"
+
+#: includes/CredentialStore.php:50 includes/CredentialStore.php:67
+#: includes/CredentialStore.php:117 includes/CredentialStore.php:135
+#: includes/CredentialStore.php:228 includes/CredentialStore.php:266
+#: includes/ProviderHealth.php:37 includes/ProviderModelDiscovery.php:28
+#: includes/ProviderModelDiscovery.php:86
+msgid "Provider preset was not found."
+msgstr "Preset penyedia tidak ditemukan."
+
+#: includes/CredentialStore.php:72
+msgid "API key is required and must be at least 8 characters."
+msgstr "Kunci API wajib dan harus minimal 8 karakter."
+
+#: includes/CredentialStore.php:76
+msgid "Credential encryption is not available on this WordPress runtime."
+msgstr "Enkripsi kredensial tidak tersedia pada runtime WordPress ini."
+
+#: includes/CredentialStore.php:99
+msgid "Credential stored but connection has not been validated."
+msgstr "Kredensial tersimpan tetapi koneksi belum divalidasi."
+
+#: includes/CredentialStore.php:141 includes/CredentialStore.php:234
+#: includes/CredentialStore.php:272 includes/CredentialStore.php:309
+msgid "Provider is not configured."
+msgstr "Penyedia belum dikonfigurasi."
+
+#: includes/CredentialStore.php:151
+msgid "Provider family does not support connection testing yet."
+msgstr "Keluarga penyedia belum mendukung uji koneksi."
+
+#. translators: %s: redacted underlying error message
+#: includes/CredentialStore.php:172
+#, php-format
+msgid "Connection failed: %s"
+msgstr "Koneksi gagal: %s"
+
+#: includes/CredentialStore.php:186
+msgid "Connection validated through provider model discovery."
+msgstr "Koneksi divalidasi melalui penemuan model penyedia."
+
+#. translators: %d: HTTP status code
+#: includes/CredentialStore.php:194
+#, php-format
+msgid "Connection test returned HTTP %d without a valid models payload."
+msgstr "Uji koneksi mengembalikan HTTP %d tanpa payload model yang valid."
+
+#: includes/CredentialStore.php:239
+msgid "Provider family is not supported for runtime calls."
+msgstr "Keluarga penyedia tidak didukung untuk panggilan runtime."
+
+#: includes/CredentialStore.php:278
+msgid "Connection validation updated."
+msgstr "Validasi koneksi diperbarui."
+
+#: includes/CredentialStore.php:347
+msgid "Credential encryption failed."
+msgstr "Enkripsi kredensial gagal."
+
+#: includes/CredentialStore.php:364
+msgid "Stored credential cipher is unsupported."
+msgstr "Cipher kredensial yang tersimpan tidak didukung."
+
+#: includes/CredentialStore.php:371
+msgid "Stored credential payload is invalid."
+msgstr "Payload kredensial yang tersimpan tidak valid."
+
+#: includes/CredentialStore.php:381
+msgid "Credential decryption failed."
+msgstr "Dekripsi kredensial gagal."
+
+#: includes/CredentialStore.php:448
+msgid ""
+"Provider family does not expose a models endpoint for connection testing."
+msgstr "Keluarga penyedia tidak mengekspos endpoint model untuk uji koneksi."
+
+#: includes/CredentialStore.php:482
+msgid "Provider requires additional settings before testing connection."
+msgstr "Penyedia memerlukan pengaturan tambahan sebelum menguji koneksi."
+
+#: includes/CredentialStore.php:486 includes/ProviderModelDiscovery.php:430
+#: includes/ProviderRuntime.php:431
+msgid "Provider base URL must be an HTTP URL."
+msgstr "URL dasar penyedia harus berupa URL HTTP."
+
+#: includes/LlmGateway.php:124
+msgid "At least one tool definition is required for toolCall."
+msgstr "Setidaknya satu definisi alat diperlukan untuk toolCall."
+
+#: includes/LlmGateway.php:761 includes/ProviderModelDiscovery.php:68
+#: includes/ProviderRuntime.php:132
+msgid "Provider model discovery returned no models."
+msgstr "Penemuan model penyedia tidak mengembalikan model apa pun."
+
+#: includes/LlmGateway.php:784 includes/ProviderRuntime.php:163
+msgid "Provider model discovery returned no text generation model candidate."
+msgstr ""
+"Penemuan model penyedia tidak mengembalikan kandidat model generasi teks."
+
+#: includes/PhpStreamTransport.php:26
+msgid ""
+"PHP stream transport is not available because allow_url_fopen is disabled."
+msgstr ""
+"Transport stream PHP tidak tersedia karena allow_url_fopen dinonaktifkan."
+
+#: includes/PhpStreamTransport.php:45
+msgid "PHP stream transport could not open provider stream."
+msgstr "Transport stream PHP tidak dapat membuka stream penyedia."
+
+#: includes/PhpStreamTransport.php:74
+msgid "PHP stream transport failed while reading provider stream."
+msgstr "Transport stream PHP gagal saat membaca stream penyedia."
+
+#: includes/PhpStreamTransport.php:81
+msgid "Provider stream timed out."
+msgstr "Stream penyedia kehabisan waktu."
+
+#: includes/ProviderModelDiscovery.php:40
+msgid ""
+"Provider does not expose API model discovery. Manual model entries are "
+"required for this preset."
+msgstr ""
+"Penyedia tidak mengekspos penemuan model via API. Entri model manual "
+"diperlukan untuk preset ini."
+
+#: includes/ProviderModelDiscovery.php:91
+msgid "Manual model entries are not allowed for this provider preset."
+msgstr "Entri model manual tidak diizinkan untuk preset penyedia ini."
+
+#: includes/ProviderModelDiscovery.php:116
+msgid "At least one manual model id is required."
+msgstr "Setidaknya satu id model manual diperlukan."
+
+#: includes/ProviderModelDiscovery.php:139 includes/ProviderRuntime.php:321
+msgid "Provider family does not expose the required runtime endpoint."
+msgstr "Keluarga penyedia tidak mengekspos endpoint runtime yang diperlukan."
+
+#: includes/ProviderModelDiscovery.php:426 includes/ProviderRuntime.php:427
+msgid "Provider requires additional settings before runtime call."
+msgstr "Penyedia memerlukan pengaturan tambahan sebelum panggilan runtime."
+
+#: includes/ProviderPresets.php:18
+msgid "Provider presets file is missing."
+msgstr "Berkas preset penyedia hilang."
+
+#: includes/ProviderPresets.php:23
+msgid "Provider presets file is not valid JSON."
+msgstr "Berkas preset penyedia bukan JSON yang valid."
+
+#: includes/ProviderPresets.php:70
+msgid "Provider presets schemaVersion must be 1."
+msgstr "schemaVersion preset penyedia harus 1."
+
+#: includes/ProviderPresets.php:74
+msgid "Provider presets must define families and presets."
+msgstr "Preset penyedia harus mendefinisikan families dan presets."
+
+#: includes/ProviderPresets.php:79
+msgid "Provider preset entries must be keyed objects."
+msgstr "Entri preset penyedia harus berupa objek berkunci."
+
+#: includes/ProviderPresets.php:83
+msgid "Provider presets require label, family and baseUrl."
+msgstr "Preset penyedia memerlukan label, family, dan baseUrl."
+
+#: includes/ProviderPresets.php:87
+msgid "Provider preset references an unknown family."
+msgstr "Preset penyedia merujuk family yang tidak dikenal."
+
+#: includes/ProviderPresets.php:91
+msgid "Provider presets must not define defaultModels."
+msgstr "Preset penyedia tidak boleh mendefinisikan defaultModels."
+
+#: includes/ProviderPresets.php:95
+msgid ""
+"Provider modelHints must remain non-authoritative and empty; real models "
+"come from discovery, cache or explicit manual entry."
+msgstr ""
+"modelHints penyedia harus tetap non-otoritatif dan kosong; model sebenarnya "
+"datang dari penemuan, cache, atau entri manual eksplisit."
+
+#: includes/ProviderRuntime.php:45
+msgid "Provider family is not supported for generation yet."
+msgstr "Keluarga penyedia belum didukung untuk generasi."
+
+#: includes/RateLimiter.php:65
+#, php-format
+msgid "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds."
+msgstr "Batas laju tercapai untuk \"%s\" (%d per %dd). Coba lagi dalam %dd."
+
+#: includes/RestApi.php:90
+msgid "oversized request body"
+msgstr "body permintaan terlalu besar"
+
+#: includes/TraceLogger.php:88
+#, php-format
+msgid "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
+msgstr "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
+
+#: includes/WorkflowApiBridge.php:31
+msgid "WP PFWorkflow plugin is not active."
+msgstr "Plugin WP PFWorkflow tidak aktif."
+
+#: includes/WorkflowApiBridge.php:44
+msgid "Tool is not executable by Workflow API bridge."
+msgstr "Alat tidak dapat dieksekusi oleh jembatan Workflow API."
+
+#: includes/WorkflowApiBridge.php:56
+msgid "workflowId is required."
+msgstr "workflowId wajib diisi."
+
+#: includes/WorkflowApiBridge.php:70
+msgid "payload is required."
+msgstr "payload wajib diisi."
+
+#: includes/WorkflowApiBridge.php:135
+msgid "wp-pfworkflow agent-ready service is not available."
+msgstr "Layanan agent-ready wp-pfworkflow tidak tersedia."
+
+#: assets/src/Diagnostic.tsx:194
+msgid "$0 (no pricing configured)"
+msgstr "$0 (harga tidak dikonfigurasi)"
+
+#: assets/src/ProviderWizard.tsx:186
+#, javascript-format
+msgid "%1$d turn(s) · last %2$s"
+msgstr "%1$d giliran · terakhir %2$s"
+
+#: assets/src/App.tsx:849 assets/src/App.tsx:882
+#, javascript-format
+msgid "%1$s / %2$d nodes / %3$d wires"
+msgstr "%1$s / %2$d node / %3$d wire"
+
+#: assets/src/Diagnostic.tsx:108
+#, javascript-format
+msgid "%1$s tokens, %2$s"
+msgstr "%1$s token, %2$s"
+
+#: assets/src/App.tsx:709
+#, javascript-format
+msgid "%d execution(s)"
+msgstr "%d eksekusi"
+
+#: assets/src/Diagnostic.tsx:128
+#, javascript-format
+msgid "%d issue(s)"
+msgstr "%d masalah"
+
+#: assets/src/App.tsx:785
+#, javascript-format
+msgid "%d nodes"
+msgstr "%d node"
+
+#: assets/src/App.tsx:786
+#, javascript-format
+msgid "%d wires"
+msgstr "%d wire"
+
+#: assets/src/ProviderWizard.tsx:289
+msgid "(manual)"
+msgstr "(manual)"
+
+#: assets/src/ProviderWizard.tsx:218
+msgid "+ Add new credential"
+msgstr "+ Tambah kredensial baru"
+
+#: assets/src/App.tsx:638
+msgid "+ New"
+msgstr "+ Baru"
+
+#: assets/src/ProviderWizard.tsx:197
+msgid "1. Pick a credential"
+msgstr "1. Pilih kredensial"
+
+#: assets/src/ProviderWizard.tsx:231
+msgid "1b. New credential"
+msgstr "1b. Kredensial baru"
+
+#: assets/src/ProviderWizard.tsx:277
+msgid "2. Model"
+msgstr "2. Model"
+
+#: assets/src/ProviderWizard.tsx:251
+msgid "API key"
+msgstr "Kunci API"
+
+#: assets/src/ActionInspector.tsx:22 assets/src/ActionInspector.tsx:34
+#: assets/src/ActionInspector.tsx:46 assets/src/ActionInspector.tsx:60
+msgid "Action Inspector"
+msgstr "Inspektur tindakan"
+
+#: assets/src/App.tsx:511
+msgid "Action cancelled by the user."
+msgstr "Tindakan dibatalkan oleh pengguna."
+
+#: assets/src/App.tsx:368 assets/src/App.tsx:410
+#, javascript-format
+msgid "Action failed: %s"
+msgstr "Tindakan gagal: %s"
+
+#: assets/src/Diagnostic.tsx:167
+#, javascript-format
+msgid "Active (%s)"
+msgstr "Aktif (%s)"
+
+#: assets/src/App.tsx:537
+#, javascript-format
+msgid "Active LLM: %1$s · %2$s."
+msgstr "LLM aktif: %1$s · %2$s."
+
+#: assets/src/ActionInspector.tsx:206
+msgid "After"
+msgstr "Sesudah"
+
+#: assets/src/App.tsx:475
+#, javascript-format
+msgid "Agent runtime failed: %s"
+msgstr "Runtime agen gagal: %s"
+
+#: assets/src/App.tsx:858
+msgid "All"
+msgstr "Semua"
+
+#: assets/src/ActionInspector.tsx:163 assets/src/App.tsx:694
+msgid "Arguments"
+msgstr "Argumen"
+
+#: assets/src/App.tsx:765
+msgid "Ask the agent…"
+msgstr "Tanya agen…"
+
+#: assets/src/ProviderWizard.tsx:269
+msgid "Back"
+msgstr "Kembali"
+
+#: assets/src/App.tsx:602
+msgid "Back to WP admin"
+msgstr "Kembali ke admin WP"
+
+#: assets/src/ActionInspector.tsx:198
+msgid "Before"
+msgstr "Sebelum"
+
+#: assets/src/App.tsx:912
+msgid "Can manage"
+msgstr "Dapat mengelola"
+
+#: assets/src/App.tsx:910
+msgid "Can view"
+msgstr "Dapat melihat"
+
+#: assets/src/App.tsx:702 assets/src/ProviderWizard.tsx:222
+#: assets/src/ProviderWizard.tsx:333
+msgid "Cancel"
+msgstr "Batal"
+
+#: assets/src/Diagnostic.tsx:138
+msgid "Capability matrix"
+msgstr "Matriks kapabilitas"
+
+#: assets/src/App.tsx:629
+msgid "Change"
+msgstr "Ubah"
+
+#: assets/src/ProviderWizard.tsx:329
+msgid "Change provider"
+msgstr "Ubah penyedia"
+
+#: assets/src/App.tsx:899
+msgid ""
+"Chat history is local to this screen. Provider keys are never stored in "
+"browser storage."
+msgstr ""
+"Riwayat chat bersifat lokal untuk layar ini. Kunci penyedia tidak pernah "
+"disimpan di storage peramban."
+
+#: assets/src/App.tsx:302
+msgid "Checking Workflow API endpoints…"
+msgstr "Memeriksa endpoint Workflow API…"
+
+#: assets/src/App.tsx:901
+msgid "Clear local history"
+msgstr "Hapus riwayat lokal"
+
+#: assets/src/App.tsx:815
+msgid "Close"
+msgstr "Tutup"
+
+#: assets/src/ProviderWizard.tsx:166
+msgid "Configure LLM"
+msgstr "Konfigurasi LLM"
+
+#: assets/src/Diagnostic.tsx:173
+#, javascript-format
+msgid "Configured providers (%d)"
+msgstr "Penyedia yang dikonfigurasi (%d)"
+
+#: assets/src/App.tsx:699 assets/src/ProviderWizard.tsx:317
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#: assets/src/ActionInspector.tsx:68
+msgid "Confirmation pending:"
+msgstr "Konfirmasi tertunda:"
+
+#: assets/src/App.tsx:689
+msgid "Confirmation required"
+msgstr "Konfirmasi diperlukan"
+
+#: assets/src/ProviderWizard.tsx:179
+msgid "Continue a previous conversation or proceed to start a new one."
+msgstr "Lanjutkan percakapan sebelumnya atau lanjut untuk memulai yang baru."
+
+#: assets/src/ProviderWizard.tsx:178
+msgid "Conversation"
+msgstr "Percakapan"
+
+#: assets/src/Diagnostic.tsx:88
+#, javascript-format
+msgid "Cost and tokens (last %dh)"
+msgstr "Biaya dan token (%d jam terakhir)"
+
+#: assets/src/ActionInspector.tsx:208
+msgid "Could not capture the resulting state."
+msgstr "Tidak dapat menangkap status hasilnya."
+
+#: assets/src/App.tsx:799
+msgid "Create draft"
+msgstr "Buat draf"
+
+#: assets/src/App.tsx:400
+#, javascript-format
+msgid ""
+"Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" "
+"and loaded it."
+msgstr ""
+"Workflow #%1$d \"%2$s\" dibuat (status: %3$s) dari template %4$s \"%5$s\" "
+"dan dimuat."
+
+#: assets/src/App.tsx:287
+msgid "Current user cannot view workflows. API calls were skipped."
+msgstr ""
+"Pengguna saat ini tidak dapat melihat workflow. Panggilan API dilewati."
+
+#: assets/src/App.tsx:827 assets/src/Diagnostic.tsx:35
+#: assets/src/Diagnostic.tsx:46 assets/src/Diagnostic.tsx:66
+msgid "Diagnostic"
+msgstr "Diagnostik"
+
+#: assets/src/App.tsx:1000
+msgid "Done."
+msgstr "Selesai."
+
+#: assets/src/App.tsx:756 assets/src/Diagnostic.tsx:50
+#: assets/src/ProviderWizard.tsx:172
+msgid "Error:"
+msgstr "Kesalahan:"
+
+#: assets/src/Diagnostic.tsx:94
+msgid "Estimated cost"
+msgstr "Perkiraan biaya"
+
+#: assets/src/Diagnostic.tsx:97
+msgid "Events recorded"
+msgstr "Peristiwa tercatat"
+
+#: assets/src/ActionInspector.tsx:168
+msgid "Evidence"
+msgstr "Bukti"
+
+#: assets/src/ActionInspector.tsx:73
+#, javascript-format
+msgid "Executions (%d)"
+msgstr "Eksekusi (%d)"
+
+#: assets/src/Diagnostic.tsx:123
+msgid "FAIL"
+msgstr "GAGAL"
+
+#: assets/src/Diagnostic.tsx:83
+#, javascript-format
+msgid "Generated at %s."
+msgstr "Dihasilkan pada %s."
+
+#: assets/src/Diagnostic.tsx:168
+msgid "Inactive (fallback in use)"
+msgstr "Tidak aktif (fallback digunakan)"
+
+#: assets/src/App.tsx:442
+#, javascript-format
+msgid "LLM error: %1$s — %2$s"
+msgstr "Kesalahan LLM: %1$s — %2$s"
+
+#: assets/src/App.tsx:804
+msgid "Load a workflow or preview a template."
+msgstr "Muat workflow atau pratinjau template."
+
+#: assets/src/App.tsx:358
+#, javascript-format
+msgid "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d)."
+msgstr "Workflow #%1$d \"%2$s\" dimuat (status: %3$s, node: %4$d, wire: %5$d)."
+
+#: assets/src/Diagnostic.tsx:37
+msgid "Loading beta readiness report…"
+msgstr "Memuat laporan kesiapan beta…"
+
+#: assets/src/ProviderWizard.tsx:282
+msgid "Loading models…"
+msgstr "Memuat model…"
+
+#: assets/src/App.tsx:767
+msgid "Message to the agent"
+msgstr "Pesan untuk agen"
+
+#: assets/src/ProviderWizard.tsx:285
+msgid "Model"
+msgstr "Model"
+
+#: assets/src/ProviderWizard.tsx:296
+msgid "Model (manual)"
+msgstr "Model (manual)"
+
+#: assets/src/App.tsx:906
+msgid "Namespace"
+msgstr "Namespace"
+
+#: assets/src/App.tsx:526 assets/src/App.tsx:573
+msgid "New conversation"
+msgstr "Percakapan baru"
+
+#: assets/src/App.tsx:579
+msgid "New conversation."
+msgstr "Percakapan baru."
+
+#: assets/src/ProviderWizard.tsx:199
+msgid "No credentials in the store yet. Add one to continue."
+msgstr "Belum ada kredensial di store. Tambahkan satu untuk melanjutkan."
+
+#: assets/src/Diagnostic.tsx:175
+msgid "No credentials stored yet. Configure one from Settings."
+msgstr ""
+"Belum ada kredensial tersimpan. Konfigurasi salah satu dari Pengaturan."
+
+#: assets/src/ActionInspector.tsx:200
+msgid "No prior state existed (creation or import)."
+msgstr "Tidak ada status sebelumnya (pembuatan atau impor)."
+
+#: assets/src/App.tsx:1008
+msgid "No response from the runtime."
+msgstr "Tidak ada respons dari runtime."
+
+#: assets/src/ActionInspector.tsx:75
+msgid "No tool was executed in this turn."
+msgstr "Tidak ada alat yang dieksekusi di giliran ini."
+
+#: assets/src/App.tsx:595
+msgid "No workflow loaded"
+msgstr "Tidak ada workflow dimuat"
+
+#: assets/src/App.tsx:731
+msgid "Open in viewer"
+msgstr "Buka di viewer"
+
+#: assets/src/App.tsx:615
+msgid "Open menu"
+msgstr "Buka menu"
+
+#: assets/src/App.tsx:729
+#, javascript-format
+msgid "Open workflow %d in the viewer"
+msgstr "Buka workflow %d di viewer"
+
+#: assets/src/Diagnostic.tsx:123
+msgid "PASS"
+msgstr "LULUS"
+
+#: assets/src/Diagnostic.tsx:150
+msgid "Partial capabilities"
+msgstr "Kapabilitas parsial"
+
+#: assets/src/Diagnostic.tsx:102
+msgid "Per provider"
+msgstr "Per penyedia"
+
+#: assets/src/ProviderWizard.tsx:157
+msgid "Pick a model or enter the id manually."
+msgstr "Pilih model atau masukkan id secara manual."
+
+#: assets/src/ProviderWizard.tsx:129
+msgid "Pick a provider and paste the API key."
+msgstr "Pilih penyedia dan tempel kunci API."
+
+#: assets/src/App.tsx:941
+msgid ""
+"Pick an LLM provider to get started. Your credentials live encrypted inside "
+"the WordPress store."
+msgstr ""
+"Pilih penyedia LLM untuk memulai. Kredensial Anda tersimpan terenkripsi di "
+"dalam store WordPress."
+
+#: assets/src/App.tsx:886
+msgid "Preview before creating"
+msgstr "Pratinjau sebelum membuat"
+
+#: assets/src/App.tsx:381
+#, javascript-format
+msgid ""
+"Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No "
+"workflow was created yet."
+msgstr ""
+"Pratinjau dimuat untuk template %1$s \"%2$s\" (%3$d node, %4$d wire). Belum "
+"ada workflow yang dibuat."
+
+#: assets/src/ProviderWizard.tsx:233
+msgid "Provider"
+msgstr "Penyedia"
+
+#: assets/src/App.tsx:621
+msgid "Provider · model"
+msgstr "Penyedia · model"
+
+#: assets/src/ProviderWizard.tsx:279
+msgid "Provider:"
+msgstr "Penyedia:"
+
+#: assets/src/App.tsx:645 assets/src/Diagnostic.tsx:78
+msgid "Refresh"
+msgstr "Segarkan"
+
+#: assets/src/Diagnostic.tsx:76
+msgid "Refresh diagnostic"
+msgstr "Segarkan diagnostik"
+
+#: assets/src/ActionInspector.tsx:49
+msgid ""
+"Run an action against the agent to see the steps, evidence and diffs here."
+msgstr ""
+"Jalankan tindakan terhadap agen untuk melihat langkah, bukti, dan diff di "
+"sini."
+
+#: assets/src/ProviderWizard.tsx:266
+msgid "Save and continue"
+msgstr "Simpan dan lanjutkan"
+
+#: assets/src/ProviderWizard.tsx:266
+msgid "Saving…"
+msgstr "Menyimpan…"
+
+#: assets/src/App.tsx:835
+msgid "Search…"
+msgstr "Cari…"
+
+#: assets/src/App.tsx:769
+msgid "Send"
+msgstr "Kirim"
+
+#: assets/src/App.tsx:555
+#, javascript-format
+msgid "Session %d is empty."
+msgstr "Sesi %d kosong."
+
+#: assets/src/App.tsx:898
+msgid "Session only"
+msgstr "Hanya sesi"
+
+#: assets/src/App.tsx:830
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: assets/src/Diagnostic.tsx:119
+msgid "Severe criteria"
+msgstr "Kriteria berat"
+
+#: assets/src/App.tsx:908
+msgid "Source"
+msgstr "Sumber"
+
+#: assets/src/App.tsx:636
+msgid "Start a new conversation with the active LLM"
+msgstr "Mulai percakapan baru dengan LLM aktif"
+
+#: assets/src/App.tsx:594
+msgid "Template Preview"
+msgstr "Pratinjau template"
+
+#: assets/src/App.tsx:856
+msgid "Template categories"
+msgstr "Kategori template"
+
+#: assets/src/App.tsx:824
+msgid "Templates"
+msgstr "Template"
+
+#: assets/src/App.tsx:321
+#, javascript-format
+msgid "Templates failed: %s"
+msgstr "Template gagal: %s"
+
+#: assets/src/App.tsx:1006
+msgid "The action ran but the final response failed."
+msgstr "Tindakan berjalan tetapi respons akhir gagal."
+
+#: assets/src/ProviderWizard.tsx:263
+msgid ""
+"The key is encrypted (AES-256-GCM) in the WordPress store and never returned"
+" over REST."
+msgstr ""
+"Kunci terenkripsi (AES-256-GCM) di store WordPress dan tidak pernah "
+"dikembalikan via REST."
+
+#: assets/src/App.tsx:1004
+msgid "The runtime rejected this call."
+msgstr "Runtime menolak panggilan ini."
+
+#: assets/src/App.tsx:747
+msgid "Thinking…"
+msgstr "Berpikir…"
+
+#: assets/src/App.tsx:1002
+msgid "This action requires confirmation."
+msgstr "Tindakan ini memerlukan konfirmasi."
+
+#: assets/src/ProviderWizard.tsx:305
+msgid ""
+"This provider does not allow manual models; check your credential or retry."
+msgstr ""
+"Penyedia ini tidak mengizinkan model manual; periksa kredensial Anda atau "
+"coba lagi."
+
+#: assets/src/ActionInspector.tsx:175
+msgid "This tool produces no diff (read-only or without workflow state)."
+msgstr ""
+"Alat ini tidak menghasilkan diff (read-only atau tanpa status workflow)."
+
+#: assets/src/ActionInspector.tsx:86
+#, javascript-format
+msgid "Timeline (%d)"
+msgstr "Linimasa (%d)"
+
+#: assets/src/ActionInspector.tsx:88
+msgid "Timeline is empty."
+msgstr "Linimasa kosong."
+
+#: assets/src/ProviderWizard.tsx:167
+msgid "To send messages to the agent you need to pick a provider and a model."
+msgstr "Untuk mengirim pesan ke agen, Anda perlu memilih penyedia dan model."
+
+#: assets/src/App.tsx:691
+msgid "Tool:"
+msgstr "Alat:"
+
+#: assets/src/Diagnostic.tsx:91
+msgid "Total tokens"
+msgstr "Total token"
+
+#: assets/src/App.tsx:983
+msgid "Unexpected error."
+msgstr "Kesalahan tak terduga."
+
+#: assets/src/ActionInspector.tsx:25
+msgid "Waiting for the agent response…"
+msgstr "Menunggu respons agen…"
+
+#: assets/src/App.tsx:765
+msgid "Waiting for the agent…"
+msgstr "Menunggu agen…"
+
+#: assets/src/App.tsx:904
+msgid "Workflow API"
+msgstr "Workflow API"
+
+#: assets/src/App.tsx:334
+msgid ""
+"Workflow API check failed. See dependency status for the exact endpoint "
+"result."
+msgstr ""
+"Pemeriksaan Workflow API gagal. Lihat status dependensi untuk hasil endpoint"
+" yang tepat."
+
+#: assets/src/App.tsx:813
+msgid "Workflow API consumer"
+msgstr "Konsumen Workflow API"
+
+#: assets/src/App.tsx:174
+msgid "Workflow API has not been checked yet."
+msgstr "Workflow API belum diperiksa."
+
+#: assets/src/App.tsx:318
+msgid "Workflow API responded for workflows and templates."
+msgstr "Workflow API merespons untuk workflow dan template."
+
+#: assets/src/App.tsx:594
+msgid "Workflow View"
+msgstr "Tampilan Workflow"
+
+#: assets/src/App.tsx:642
+msgid "Workflow companion"
+msgstr "Pendamping Workflow"
+
+#: assets/src/Diagnostic.tsx:164
+msgid "Workflow dependency"
+msgstr "Dependensi Workflow"
+
+#: assets/src/App.tsx:658
+msgid "Workflow dependency active"
+msgstr "Dependensi Workflow aktif"
+
+#: assets/src/App.tsx:658
+msgid "Workflow dependency inactive"
+msgstr "Dependensi Workflow tidak aktif"
+
+#: assets/src/App.tsx:276
+msgid "Workflow plugin is not active. API calls were skipped."
+msgstr "Plugin Workflow tidak aktif. Panggilan API dilewati."
+
+#: assets/src/App.tsx:652
+msgid ""
+"Workflow plugin was not detected during page bootstrap. API calls may fail "
+"until it is active."
+msgstr ""
+"Plugin Workflow tidak terdeteksi saat bootstrap halaman. Panggilan API "
+"mungkin gagal sampai aktif."
+
+#: assets/src/App.tsx:821
+msgid "Workflows"
+msgstr "Workflow"
+
+#: assets/src/App.tsx:320
+#, javascript-format
+msgid "Workflows failed: %s"
+msgstr "Workflow gagal: %s"
+
+#: assets/src/App.tsx:812
+msgid "Workspace"
+msgstr "Ruang kerja"
+
+#: assets/src/Diagnostic.tsx:61
+msgid "beta partial"
+msgstr "beta parsial"
+
+#: assets/src/Diagnostic.tsx:61
+msgid "beta ready"
+msgstr "siap beta"
+
+#: assets/src/App.tsx:717
+#, javascript-format
+msgid "diff: %s"
+msgstr "diff: %s"
+
+#: assets/src/ProviderWizard.tsx:301
+msgid "model-id"
+msgstr "model-id"
+
+#: assets/src/App.tsx:444
+msgid "no message"
+msgstr "tanpa pesan"
+
+#: assets/src/App.tsx:443
+msgid "unknown"
+msgstr "tidak diketahui"
+
+#: assets/src/ProviderWizard.tsx:240
+msgid "— Pick one —"
+msgstr "— Pilih satu —"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"\"%s\" akan dihapus secara permanen beserta pesan-pesannya. Tindakan ini "
+"tidak dapat dibatalkan."
+
+#: assets/src/ProviderWizard.tsx:429
+#, javascript-format
+msgid "%1$d turn(s) · updated %2$s"
+msgstr "%1$d giliran · diperbarui %2$s"
+
+#: assets/src/ProviderWizard.tsx:1005
+#, javascript-format
+msgid ""
+"All conversations whose last activity is older than %d days will be "
+"permanently deleted. This action cannot be undone."
+msgstr ""
+"Semua percakapan yang aktivitas terakhirnya lebih lama dari %d hari akan "
+"dihapus permanen. Tindakan ini tidak dapat dibatalkan."
+
+#: assets/src/App.tsx:629 assets/src/App.tsx:630
+msgid "Back to conversations"
+msgstr "Kembali ke percakapan"
+
+#: assets/src/ProviderWizard.tsx:811
+msgid "Base URL"
+msgstr "URL dasar"
+
+#: assets/src/ProviderWizard.tsx:447
+msgid "Conversation pages"
+msgstr "Halaman percakapan"
+
+#: assets/src/App.tsx:655
+msgid "Conversation title"
+msgstr "Judul percakapan"
+
+#: assets/src/ProviderWizard.tsx:830
+msgid "Credential"
+msgstr "Kredensial"
+
+#: assets/src/ProviderWizard.tsx:476
+msgid "Credentials"
+msgstr "Kredensial"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"Kredensial untuk \"%s\" akan dihapus dari store terenkripsi. Tindakan ini "
+"tidak dapat dibatalkan."
+
+#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
+msgid "Delete"
+msgstr "Hapus"
+
+#: assets/src/ProviderWizard.tsx:413
+#, javascript-format
+msgid "Delete all conversations older than %d days"
+msgstr "Hapus semua percakapan yang lebih lama dari %d hari"
+
+#: assets/src/ProviderWizard.tsx:438 assets/src/ProviderWizard.tsx:689
+msgid "Delete conversation"
+msgstr "Hapus percakapan"
+
+#: assets/src/ProviderWizard.tsx:437
+#, javascript-format
+msgid "Delete conversation %s"
+msgstr "Hapus percakapan %s"
+
+#: assets/src/ProviderWizard.tsx:1026
+msgid "Delete conversations"
+msgstr "Hapus percakapan"
+
+#: assets/src/ProviderWizard.tsx:519 assets/src/ProviderWizard.tsx:737
+msgid "Delete credential"
+msgstr "Hapus kredensial"
+
+#: assets/src/ProviderWizard.tsx:518
+#, javascript-format
+msgid "Delete credential %s"
+msgstr "Hapus kredensial %s"
+
+#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
+msgid "Deleting…"
+msgstr "Menghapus…"
+
+#: assets/src/ProviderWizard.tsx:813
+msgid "Discovery"
+msgstr "Penemuan"
+
+#: assets/src/ProviderWizard.tsx:819
+msgid "Last validation"
+msgstr "Validasi terakhir"
+
+#: assets/src/ProviderWizard.tsx:895
+msgid "Load"
+msgstr "Muat"
+
+#: assets/src/ProviderWizard.tsx:508 assets/src/ProviderWizard.tsx:785
+#, javascript-format
+msgid "Manage %s"
+msgstr "Kelola %s"
+
+#: assets/src/ProviderWizard.tsx:509
+msgid "Manage credential"
+msgstr "Kelola kredensial"
+
+#: assets/src/App.tsx:779
+msgid "Management"
+msgstr "Pengelolaan"
+
+#: assets/src/ProviderWizard.tsx:941
+msgid "Manual model IDs"
+msgstr "ID model manual"
+
+#: assets/src/ProviderWizard.tsx:887
+msgid "Models"
+msgstr "Model"
+
+#: assets/src/App.tsx:816
+msgid ""
+"Neither Project Flash Workflow nor Project Flash Management is installed."
+msgstr ""
+"Baik Project Flash Workflow maupun Project Flash Management tidak terpasang."
+
+#: assets/src/ProviderWizard.tsx:832
+msgid "New API key"
+msgstr "Kunci API baru"
+
+#: assets/src/ProviderWizard.tsx:543
+msgid "New credential"
+msgstr "Kredensial baru"
+
+#: assets/src/ProviderWizard.tsx:465
+msgid "Next page"
+msgstr "Halaman berikutnya"
+
+#: assets/src/ProviderWizard.tsx:421
+msgid "No conversations yet."
+msgstr "Belum ada percakapan."
+
+#: assets/src/ProviderWizard.tsx:934
+msgid ""
+"No model list loaded yet. Click Load to fetch from the API or Refresh to "
+"bypass cache."
+msgstr ""
+"Daftar model belum dimuat. Klik Muat untuk mengambil dari API atau Segarkan "
+"untuk melewati cache."
+
+#: assets/src/ProviderWizard.tsx:929
+msgid "No models returned."
+msgstr "Tidak ada model yang dikembalikan."
+
+#: assets/src/ProviderWizard.tsx:1049
+msgid "Not configured"
+msgstr "Belum dikonfigurasi"
+
+#: assets/src/ProviderWizard.tsx:1045
+msgid "Not verified"
+msgstr "Belum diverifikasi"
+
+#: assets/src/ProviderWizard.tsx:458
+#, javascript-format
+msgid "Page %1$d of %2$d"
+msgstr "Halaman %1$d dari %2$d"
+
+#: assets/src/ProviderWizard.tsx:837
+msgid "Paste API key to confirm changes"
+msgstr "Tempel kunci API untuk mengonfirmasi perubahan"
+
+#: assets/src/ProviderWizard.tsx:453
+msgid "Previous page"
+msgstr "Halaman sebelumnya"
+
+#: assets/src/App.tsx:800
+msgid "Project Flash Management"
+msgstr "Project Flash Management"
+
+#: assets/src/App.tsx:808
+msgid "Project Flash Workflow"
+msgstr "Project Flash Workflow"
+
+#: assets/src/App.tsx:769
+msgid "Project Flash views"
+msgstr "Tampilan Project Flash"
+
+#: assets/src/ProviderWizard.tsx:416
+#, javascript-format
+msgid "Purge > %dd"
+msgstr "Bersihkan > %dd"
+
+#: assets/src/ProviderWizard.tsx:1000
+msgid "Purge old conversations"
+msgstr "Bersihkan percakapan lama"
+
+#: assets/src/ProviderWizard.tsx:416 assets/src/ProviderWizard.tsx:1026
+msgid "Purging…"
+msgstr "Membersihkan…"
+
+#: assets/src/ProviderWizard.tsx:253
+msgid "Re-enter the API key to save changes."
+msgstr "Masukkan kembali kunci API untuk menyimpan perubahan."
+
+#: assets/src/App.tsx:676 assets/src/App.tsx:677
+msgid "Rename conversation"
+msgstr "Ganti nama percakapan"
+
+#: assets/src/ProviderWizard.tsx:863
+msgid "Save"
+msgstr "Simpan"
+
+#: assets/src/ProviderWizard.tsx:957
+msgid "Save manual list"
+msgstr "Simpan daftar manual"
+
+#: assets/src/App.tsx:663 assets/src/App.tsx:664
+msgid "Save title"
+msgstr "Simpan judul"
+
+#: assets/src/ProviderWizard.tsx:912
+#, javascript-format
+msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
+msgstr "Sumber: %1$s · diambil %2$s · %3$d model"
+
+#: assets/src/ProviderWizard.tsx:801
+msgid "Status"
+msgstr "Status"
+
+#: assets/src/ProviderWizard.tsx:807
+msgid "Stored key"
+msgstr "Kunci tersimpan"
+
+#: assets/src/ProviderWizard.tsx:499 assets/src/ProviderWizard.tsx:871
+msgid "Test connection"
+msgstr "Uji koneksi"
+
+#: assets/src/ProviderWizard.tsx:498
+#, javascript-format
+msgid "Test connection for %s"
+msgstr "Uji koneksi untuk %s"
+
+#: assets/src/ProviderWizard.tsx:1047
+msgid "Validation failed"
+msgstr "Validasi gagal"
+
+#: assets/src/ProviderWizard.tsx:1043
+msgid "Verified"
+msgstr "Diverifikasi"
+
+#: assets/src/App.tsx:579 assets/src/App.tsx:580
+msgid "Volver al admin de WordPress"
+msgstr "Kembali ke admin WordPress"
+
+#: assets/src/App.tsx:791
+msgid "Workflow"
+msgstr "Workflow"
+
+#: assets/src/ProviderWizard.tsx:808
+msgid "not stored"
+msgstr "tidak tersimpan"
+
+#: assets/src/ProviderWizard.tsx:945
+msgid "one model id per line"
+msgstr "satu id model per baris"
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"\"%s\" akan dihapus secara permanen beserta pesan-pesannya. Tindakan ini "
+"tidak dapat dibatalkan."
+
+#: assets/src/App.tsx:611
+msgid "Active LLM"
+msgstr "LLM aktif"
+
+#: assets/src/App.tsx:618
+msgid "Change LLM"
+msgstr "Ubah LLM"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"Kredensial untuk \"%s\" akan dihapus dari store terenkripsi. Tindakan ini "
+"tidak dapat dibatalkan."
+
+#: assets/src/ProviderWizard.tsx:694
+#, javascript-format
+msgid ""
+"\"%s\" will be permanently deleted along with its messages. This action "
+"cannot be undone."
+msgstr ""
+"\"%s\" akan dihapus secara permanen beserta pesan-pesannya. Tindakan ini "
+"tidak dapat dibatalkan."
+
+#: assets/src/App.tsx:625
+msgid "Configure"
+msgstr "Konfigurasi"
+
+#: assets/src/ProviderWizard.tsx:742
+#, javascript-format
+msgid ""
+"Credentials for \"%s\" will be removed from the encrypted store. This action"
+" cannot be undone."
+msgstr ""
+"Kredensial untuk \"%s\" akan dihapus dari store terenkripsi. Tindakan ini "
+"tidak dapat dibatalkan."
+
+#: assets/src/App.tsx:635
+msgid "No LLM configured."
+msgstr "Tidak ada LLM yang dikonfigurasi."

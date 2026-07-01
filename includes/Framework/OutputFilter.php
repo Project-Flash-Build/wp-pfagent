@@ -53,7 +53,7 @@ final class OutputFilter
     public static function defaults(): self
     {
         // Defaults target Spanish + English permission-asking, the common
-        // engineering jargon we saw leaking in the maratón, and the
+        // engineering jargon we saw leaking in the marathon, and the
         // provider-internal control tokens DeepSeek / OpenAI sometimes
         // exude. Hosts add their own product-specific terms (plugin slugs,
         // internal table names, etc.) by re-instantiating with extended
@@ -212,11 +212,11 @@ final class OutputFilter
             $uniq = array_values(array_unique($matches));
             $samples = array_slice($uniq, 0, 4);
             $directive = sprintf(
-                "Tu última respuesta sigue pidiendo permiso o usa marcadores. Lo que está mal en concreto: %s. "
-                . "Reescríbela en VOZ DECLARATIVA — afirma lo que hiciste o lo que es, no ofrezcas, no preguntes. "
-                . "Ejemplos de cierre CORRECTO: \"He creado X.\" / \"Quedan disponibles para revisar.\" / \"Listo, esto está hecho.\" / \"No hay forma de hacer Y; descártalo o intenta Z.\". "
-                . "Ejemplos de cierre INCORRECTO: \"¿Quieres que lo haga?\" / \"Si necesitas ayuda, dime\" / \"Indícame si X\" / \"Should I proceed?\". "
-                . "El usuario sabe que puede hablar contigo otra vez si necesita algo más; NO se lo recuerdes al final.",
+                "Your last reply is still asking for permission or uses markers. Specifically wrong: %s. "
+                . "Rewrite it in DECLARATIVE VOICE — state what you did or what is, do not offer, do not ask. "
+                . "Examples of a CORRECT closing: \"I created X.\" / \"They are available for review.\" / \"Done, this is finished.\" / \"There is no way to do Y; drop it or try Z.\". "
+                . "Examples of an INCORRECT closing: \"Would you like me to do it?\" / \"Let me know if you need help\" / \"Tell me if X\" / \"Should I proceed?\". "
+                . "The user knows they can talk to you again if they need anything else; do NOT remind them at the end.",
                 implode(', ', array_map(static fn(string $t) => '"' . $t . '"', $samples)),
             );
             return ['ok' => false, 'reason' => 'permission_asking', 'found' => $uniq, 'directive' => $directive];
