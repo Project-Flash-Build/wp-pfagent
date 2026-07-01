@@ -43,12 +43,14 @@ namespace ProjectFlash\Licensing;
 final class LicenseClient
 {
     /** Drop-in revision — bump when the shared file changes so adopters can tell copies apart. */
-    public const DROPIN_VERSION = '1.0.0';
+    public const DROPIN_VERSION = '1.1.0';
 
     private const REST_NAMESPACE = 'pfw-portal/v1';
     private const DEFAULT_PORTAL = 'https://project-flash.com';
     /** How long a check-update result is cached (portal rate-limit is 60/min/IP; be gentle). */
     private const CHECK_TTL = 12 * HOUR_IN_SECONDS;
+    /** Silent grace window (days) after a licence lapses for a site that was EVER licensed. */
+    private const GRACE_DAYS = 30;
 
     private string $pluginFile;
     private string $pluginBasename;
@@ -92,9 +94,10 @@ final class LicenseClient
         // Drop our cached result when WP clears its update cache (e.g. after an update).
         add_action('upgrader_process_complete', [$this, 'flush_cache']);
 
-        // Daily background refresh (kept well under the portal rate-limit).
+        // Daily background refresh: both the update-check and the license state.
         $cron = $this->cron_hook();
         add_action($cron, [$this, 'refresh_check']);
+        add_action($cron, [$this, 'refresh_state']);
         if (!wp_next_scheduled($cron)) {
             wp_schedule_event(time() + HOUR_IN_SECONDS, 'daily', $cron);
         }
@@ -102,6 +105,13 @@ final class LicenseClient
         // License settings screen + form handler.
         add_action('admin_menu', [$this, 'admin_menu'], 20);
         add_action('admin_post_' . $this->action_slug(), [$this, 'handle_form']);
+
+        // Publish the enforcement decision so the host plugin can gate its own
+        // surfaces (dispatcher, REST, UI). Fired early on init; hosts add_action
+        // on 'pf_license_gate_<slug>' and react to 'licensed' | 'grace' | 'cut'.
+        add_action('init', function (): void {
+            do_action('pf_license_gate_' . $this->slug, $this->gate_state(), $this);
+        }, 5);
     }
 
     // ── identity / config helpers ───────────────────────────────────────────
@@ -153,7 +163,7 @@ final class LicenseClient
 
     // ── stored state ────────────────────────────────────────────────────────
 
-    /** @return array{key:string, status:string, site_match:bool, expires_at:string, last_activation:string} */
+    /** @return array{key:string, status:string, site_match:bool, expires_at:string, last_activation:string, ever_licensed:bool, lapsed_at:string} */
     private function state(): array
     {
         $s = get_option($this->optionKey, []);
@@ -166,6 +176,11 @@ final class LicenseClient
             'site_match'      => (bool) ($s['site_match'] ?? false),
             'expires_at'      => (string) ($s['expires_at'] ?? ''),
             'last_activation' => (string) ($s['last_activation'] ?? ''),
+            // Sticky: true once this site ever activated a valid licence. Drives
+            // the grace window (ever-licensed lapse → 30d grace; never → cut).
+            'ever_licensed'   => (bool) ($s['ever_licensed'] ?? false),
+            // When a definitive lapse was first seen after being licensed.
+            'lapsed_at'       => (string) ($s['lapsed_at'] ?? ''),
         ];
     }
 
@@ -180,6 +195,103 @@ final class LicenseClient
     {
         $s = $this->state();
         return $s['key'] !== '' && in_array($s['status'], ['active', 'grace'], true) && $s['site_match'];
+    }
+
+    // ── enforcement ─────────────────────────────────────────────────────────
+
+    /**
+     * Dev / test / portal bypass. Our own environments set the constant (via
+     * WORDPRESS_CONFIG_EXTRA) so licensing never gets in the operator's way and
+     * never touches cert / portal. Deliberately NOT tied to
+     * wp_get_environment_type() — that would be a one-flag customer bypass.
+     * Constant / env var / filter only.
+     */
+    public function is_dev_bypass(): bool
+    {
+        if (defined('PF_LICENSE_DEV_BYPASS') && PF_LICENSE_DEV_BYPASS) {
+            return true;
+        }
+        $env = getenv('PF_LICENSE_DEV_BYPASS');
+        if ($env !== false && $env !== '' && $env !== '0' && strtolower((string) $env) !== 'false') {
+            return true;
+        }
+        return (bool) apply_filters('pf_license_dev_bypass', false, $this->slug);
+    }
+
+    /**
+     * The enforcement decision: 'licensed' | 'grace' | 'cut'.
+     *
+     * grace is SILENT — the host treats it exactly like 'licensed' for feature
+     * access and never surfaces it. FAIL-OPEN: the state is only ever driven to
+     * 'cut' by a DEFINITIVE portal signal (not-licensed, or expired past the
+     * grace window). A network blip never cuts, because the stored status does
+     * not flip on transient errors (see refresh_state).
+     */
+    public function gate_state(): string
+    {
+        if ($this->is_dev_bypass()) {
+            return 'licensed';
+        }
+        $s = $this->state();
+
+        // Currently valid per the last stored verify → full function.
+        if ($this->is_licensed()) {
+            return 'licensed';
+        }
+        // Never licensed on this site → cut (the UI still offers onboarding).
+        if (!$s['ever_licensed']) {
+            return 'cut';
+        }
+        // Was licensed, not currently valid, but no definitive lapse recorded
+        // (only transient/network failures seen) → fail-open to silent grace.
+        if ($s['lapsed_at'] === '') {
+            return 'grace';
+        }
+        $lapsed = strtotime($s['lapsed_at']);
+        if ($lapsed === false) {
+            return 'grace';
+        }
+        return (time() - $lapsed) <= self::GRACE_DAYS * DAY_IN_SECONDS ? 'grace' : 'cut';
+    }
+
+    /**
+     * Refresh the stored licence state from the portal /verify. FAIL-OPEN: on a
+     * network / parse error we DON'T touch status or lapsed_at (a blip must
+     * never trigger a cut). Only a definitive portal response updates the state
+     * and, when it reports not-licensed after the site was ever licensed, stamps
+     * lapsed_at to start the silent grace clock.
+     */
+    public function refresh_state(): void
+    {
+        $s = $this->state();
+        if ($s['key'] === '') {
+            return; // nothing to verify.
+        }
+        $res = wp_remote_post($this->rest_url('licenses/' . rawurlencode($s['key']) . '/verify'), [
+            'timeout' => 15,
+            'body'    => ['site_fingerprint' => $this->fingerprint()],
+        ]);
+        $body = $this->parse_raw($res);
+        if ($body === null) {
+            return; // network / portal error → fail-open, keep prior state.
+        }
+
+        $status    = (string) ($body['license_status'] ?? ($body['status'] ?? ''));
+        $siteMatch = ($body['site_match'] ?? null) !== false;
+        $valid     = in_array($status, ['active', 'grace'], true) && $siteMatch;
+
+        $patch = [
+            'status'     => $status !== '' ? $status : $s['status'],
+            'site_match' => $siteMatch,
+            'expires_at' => (string) ($body['expires_at'] ?? $s['expires_at']),
+        ];
+        if ($valid) {
+            $patch['ever_licensed'] = true;
+            $patch['lapsed_at']     = ''; // recovered — clear any grace clock.
+        } elseif ($s['ever_licensed'] && $s['lapsed_at'] === '') {
+            $patch['lapsed_at'] = gmdate('c'); // definitive lapse → start grace.
+        }
+        $this->save_state($patch);
     }
 
     // ── portal calls ────────────────────────────────────────────────────────
@@ -513,6 +625,8 @@ final class LicenseClient
             'site_match'      => ($verify['site_match'] ?? true) !== false,
             'expires_at'      => (string) ($verify['expires_at'] ?? ''),
             'last_activation' => gmdate('c'),
+            'ever_licensed'   => true, // sticky — enables the grace window on a future lapse.
+            'lapsed_at'       => '',
         ]);
         $this->flush_cache();
         $this->check_update(true); // warm the cache so the update row can appear immediately.
