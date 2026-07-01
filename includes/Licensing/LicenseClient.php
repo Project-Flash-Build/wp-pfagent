@@ -37,7 +37,7 @@ namespace ProjectFlash\Licensing;
  * plugins share the code without colliding.
  *
  * Portal base URL: defaults to the production portal; override with the
- * `pfw_license_portal_url` filter or a `PFW_LICENSE_PORTAL_URL` constant (handy
+ * `pf_license_portal_url` filter or a `PF_LICENSE_PORTAL_URL` constant (handy
  * for pointing a dev site at a local portal).
  */
 final class LicenseClient
@@ -123,9 +123,9 @@ final class LicenseClient
 
     private function portal_base(): string
     {
-        $base = defined('PFW_LICENSE_PORTAL_URL') ? (string) PFW_LICENSE_PORTAL_URL : self::DEFAULT_PORTAL;
+        $base = defined('PF_LICENSE_PORTAL_URL') ? (string) PF_LICENSE_PORTAL_URL : self::DEFAULT_PORTAL;
         /** Filter the portal base URL (scheme + host, no trailing slash). */
-        $base = (string) apply_filters('pfw_license_portal_url', $base, $this->slug);
+        $base = (string) apply_filters('pf_license_portal_url', $base, $this->slug);
         return untrailingslashit($base);
     }
 
