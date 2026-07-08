@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP-PFAgent
  * Description: Open-source AI agent console for the Project Flash suite. Drives WP-PFWorkflow and WP-PFManagement from natural language.
- * Version: 1.0.0
+ * Version: 1.0.2
  * Author: Project Flash Build
  * Requires PHP: 8.1
  * License: GPL-2.0-or-later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('WP_PFAGENT_VERSION')) {
-    define('WP_PFAGENT_VERSION', '1.0.0');
+    define('WP_PFAGENT_VERSION', '1.0.2');
 }
 if (!defined('WP_PFAGENT_FILE')) {
     define('WP_PFAGENT_FILE', __FILE__);

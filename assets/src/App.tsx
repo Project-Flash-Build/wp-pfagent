@@ -23,7 +23,7 @@ import {
   patchChatSession,
   setActiveLlm
 } from './api';
-import { agentResume, agentProgress } from './api';
+import { agentResume, agentProgress, agentContinue } from './api';
 import type { ProviderCredentialStatus } from './types';
 import { ProviderWizard } from './ProviderWizard';
 import type {
@@ -490,6 +490,104 @@ export function App() {
     );
   }
 
+  // H5: render one turn/continue/resume result into the chat (narrations,
+  // executions, decoration, preview focus). Shared by runTurn, confirmPending
+  // and the continuation loop so a paused-and-continued turn renders exactly
+  // like a single long one. `isFinal` is false for an intermediate paused
+  // segment — we then suppress the status-fallback bubble (there is no answer
+  // yet) but still surface any narration / tool executions it produced.
+  const renderTurnResult = (result: AgentRuntimeTurnResult, isFinal: boolean) => {
+    const executions: AgentRuntimeExecution[] | undefined =
+      Array.isArray(result.executions) && result.executions.length > 0 ? result.executions : undefined;
+    const pending =
+      result.status === 'needs_confirmation' && result.confirmationId && result.tool
+        ? { confirmationId: result.confirmationId, toolName: result.tool.name, args: result.tool.arguments }
+        : undefined;
+    const errorCodeForMessage = result.status === 'completed_with_response_error' ? result.llmError?.code : undefined;
+    const tailNarrations = Array.isArray(result.assistantTexts)
+      ? result.assistantTexts.filter((t) => t.ordinal > lastSeenNarrationOrdinalRef.current && t.content.trim() !== '')
+      : [];
+    const livePushedAny = lastSeenNarrationOrdinalRef.current >= 0;
+    const decoration = { executions, pending, errorCode: errorCodeForMessage } as const;
+
+    if (tailNarrations.length > 0) {
+      for (let i = 0; i < tailNarrations.length; i++) {
+        lastSeenNarrationOrdinalRef.current = tailNarrations[i].ordinal;
+        const isLast = i === tailNarrations.length - 1;
+        if (isLast) {
+          pushAssistant(tailNarrations[i].content, decoration);
+        } else {
+          pushAssistant(tailNarrations[i].content);
+        }
+      }
+    } else if (livePushedAny) {
+      if (executions || pending || errorCodeForMessage) {
+        setMessages((items) => attachDecorationToLastAssistant(items, decoration));
+      }
+    } else if (result.status === 'needs_confirmation' && !result.message && pending) {
+      setMessages((items) => attachPendingToLastAssistant(items, pending, executions));
+    } else if (isFinal) {
+      const baseText = result.message || statusFallback(result.status);
+      const text =
+        result.status === 'completed_with_response_error' && result.llmError
+          ? `${baseText}\n\n${sprintf(
+              /* translators: 1: error code, 2: error message */
+              __('LLM error: %1$s — %2$s', 'wp-pfagent'),
+              result.llmError.code ?? __('unknown', 'wp-pfagent'),
+              result.llmError.message ?? __('no message', 'wp-pfagent')
+            )}`
+          : baseText;
+      pushAssistant(text, decoration);
+    } else if (executions || errorCodeForMessage) {
+      // Paused segment with tool work but no narration: attach its executions
+      // to the latest bubble instead of a bare status line.
+      setMessages((items) => attachDecorationToLastAssistant(items, decoration));
+    }
+
+    if (typeof result.usage?.promptTokens === 'number') {
+      setLatestPromptTokens(result.usage.promptTokens);
+    }
+
+    const previewTarget = inferPreviewTarget(
+      executions ?? [],
+      pfmActive ? config.managementDependency?.adminUrl ?? null : null,
+      pfwActive ? config.workflowDependency?.adminUrl ?? null : null,
+    );
+    if (previewTarget) {
+      if (previewTarget.tab === 'pfm') {
+        setPfmUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
+      }
+      if (previewTarget.tab === 'pfw') {
+        setPfwUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
+      }
+      setIframeActiveTab((current) => (current === previewTarget.tab ? current : previewTarget.tab));
+    }
+  };
+
+  // H5: drive the transparent continuation chain. While the last result paused
+  // on its time budget, POST /continue-v2 for the same conversation and render
+  // each segment, until it completes / needs confirmation / errors. Bounded by
+  // a client-side guard mirroring the server's maxTurns cap so it can never
+  // spin forever, and never issues without a conversationId.
+  const driveContinuations = async (
+    result: AgentRuntimeTurnResult,
+    providerId: string,
+    model: string,
+    appendHint: (hint: string) => void,
+  ): Promise<AgentRuntimeTurnResult> => {
+    let current = result;
+    let guard = 0;
+    while (current.continuation === true && guard < 60) {
+      guard += 1;
+      const conversationId = current.conversationId;
+      if (!conversationId) break;
+      appendHint(__('Continuing…', 'wp-pfagent'));
+      current = await agentContinue({ providerId, model, conversationId });
+      renderTurnResult(current, current.continuation !== true);
+    }
+    return current;
+  };
+
   async function runTurn(
     payload: { providerId: string; model: string; message?: string; conversationId?: number },
     userText?: string
@@ -580,101 +678,13 @@ export function App() {
       ? startProgressPolling(payload.conversationId, () => stopPolling, appendHint, focusFromTool, pushNarrationLive, initialCursors)
       : null;
     try {
-      const result: AgentRuntimeTurnResult = await agentTurn(payload);
-      const baseText = result.message || statusFallback(result.status);
-      const text =
-        result.status === 'completed_with_response_error' && result.llmError
-          ? `${baseText}\n\n${sprintf(
-              /* translators: 1: error code, 2: error message */
-              __('LLM error: %1$s — %2$s', 'wp-pfagent'),
-              result.llmError.code ?? __('unknown', 'wp-pfagent'),
-              result.llmError.message ?? __('no message', 'wp-pfagent')
-            )}`
-          : baseText;
-      const executions: AgentRuntimeExecution[] | undefined =
-        Array.isArray(result.executions) && result.executions.length > 0 ? result.executions : undefined;
-      const pending =
-        result.status === 'needs_confirmation' && result.confirmationId && result.tool
-          ? { confirmationId: result.confirmationId, toolName: result.tool.name, args: result.tool.arguments }
-          : undefined;
-      const errorCodeForMessage = result.status === 'completed_with_response_error' ? result.llmError?.code : undefined;
-      // Reconcile end-of-turn narrations against what was pushed live
-      // via the polling stream. Keep only ordinals the live stream
-      // never delivered (race window between the last poll and the
-      // /turn-v2 return). The kept entries are pushed as their own
-      // bubbles; the very last one — whether it came from the polling
-      // OR from this end-of-turn payload — carries the decoration
-      // (executions list, pending modal, error code) because that's
-      // the bubble the operator sees just before the confirmation
-      // modal appears.
-      const tailNarrations = Array.isArray(result.assistantTexts)
-        ? result.assistantTexts.filter((t) => t.ordinal > lastSeenNarrationOrdinalRef.current && t.content.trim() !== '')
-        : [];
-      const livePushedAny = lastSeenNarrationOrdinalRef.current >= 0;
-      const decoration = { executions, pending, errorCode: errorCodeForMessage } as const;
-      if (tailNarrations.length > 0) {
-        // Mixed: some narrations streamed live, others came back with
-        // /turn-v2 (or the turn produced no live narrations at all).
-        // Push the unseen ones; decorate the last one of this batch.
-        for (let i = 0; i < tailNarrations.length; i++) {
-          lastSeenNarrationOrdinalRef.current = tailNarrations[i].ordinal;
-          const isLast = i === tailNarrations.length - 1;
-          if (isLast) {
-            pushAssistant(tailNarrations[i].content, decoration);
-          } else {
-            pushAssistant(tailNarrations[i].content);
-          }
-        }
-      } else if (livePushedAny) {
-        // Every narration this turn already surfaced as a live bubble
-        // — there is nothing new to render. Attach the end-of-turn
-        // decoration (executions, pending modal, errorCode) onto the
-        // most-recent assistant bubble so the modal doesn't appear
-        // out of context.
-        if (executions || pending || errorCodeForMessage) {
-          setMessages((items) => attachDecorationToLastAssistant(items, decoration));
-        }
-      } else if (result.status === 'needs_confirmation' && !result.message && pending) {
-        // Tool-only round that paused for confirmation: no narration
-        // anywhere, just a pending modal. Splice it onto the previous
-        // assistant bubble so we don't push a bare "this action
-        // requires confirmation" bubble.
-        setMessages((items) => attachPendingToLastAssistant(items, pending, executions));
-      } else {
-        // Fallback (no narrations at all, plain reply): render the
-        // assistant's final text — either result.message or a status
-        // synonym — as a single bubble with decoration.
-        pushAssistant(text, decoration);
-      }
+      let result: AgentRuntimeTurnResult = await agentTurn(payload);
+      renderTurnResult(result, result.continuation !== true);
+      // H5: if the turn paused on its wall-clock budget, transparently continue
+      // the SAME conversation until it actually finishes — no operator action.
+      result = await driveContinuations(result, payload.providerId, payload.model, appendHint);
 
-      if (typeof result.usage?.promptTokens === 'number') {
-        setLatestPromptTokens(result.usage.promptTokens);
-      }
-
-      // Auto-focus the matching iframe pane on whatever the agent just
-      // touched: a side-effecting pfm_apply lands on the management tab
-      // with the entity / record in scope; a write_file / edit_file /
-      // activate_workflow lands on the workflow tab with that workflow
-      // selected. The LLM never asks for this — we infer it from the
-      // executions list. The plugins ignore the preview params today;
-      // they activate the read-only focus mode once each ships its own
-      // ?pfa_preview=1 handler (Fases 2 + 3).
-      const previewTarget = inferPreviewTarget(
-        executions ?? [],
-        pfmActive ? config.managementDependency?.adminUrl ?? null : null,
-        pfwActive ? config.workflowDependency?.adminUrl ?? null : null,
-      );
-      if (previewTarget) {
-        if (previewTarget.tab === 'pfm') {
-          setPfmUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
-        }
-        if (previewTarget.tab === 'pfw') {
-          setPfwUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
-        }
-        setIframeActiveTab((current) => (current === previewTarget.tab ? current : previewTarget.tab));
-      }
-
-      void persistTurnToSession(userText ?? '', text);
+      void persistTurnToSession(userText ?? '', result.message || statusFallback(result.status));
     } catch (error) {
       const message = errorMessage(error);
       const code = errorCode(error);
@@ -795,61 +805,17 @@ export function App() {
       ? startProgressPolling(active.sessionId, () => stopPolling, appendHint, focusFromTool, pushNarrationLive, initialCursors)
       : null;
     try {
-      const result: AgentRuntimeTurnResult = await agentResume({
+      let result: AgentRuntimeTurnResult = await agentResume({
         providerId: active.providerId,
         model: active.model,
         conversationId: active.sessionId,
         confirmationToken: confirmationId,
         approved: true,
       });
-      const baseText = result.message || statusFallback(result.status);
-      const executions: AgentRuntimeExecution[] | undefined =
-        Array.isArray(result.executions) && result.executions.length > 0 ? result.executions : undefined;
-      const pending =
-        result.status === 'needs_confirmation' && result.confirmationId && result.tool
-          ? { confirmationId: result.confirmationId, toolName: result.tool.name, args: result.tool.arguments }
-          : undefined;
-      const tailNarrations = Array.isArray(result.assistantTexts)
-        ? result.assistantTexts.filter((t) => t.ordinal > lastSeenNarrationOrdinalRef.current && t.content.trim() !== '')
-        : [];
-      const livePushedAny = lastSeenNarrationOrdinalRef.current >= 0;
-      const decoration = { executions, pending } as const;
-      if (tailNarrations.length > 0) {
-        for (let i = 0; i < tailNarrations.length; i++) {
-          lastSeenNarrationOrdinalRef.current = tailNarrations[i].ordinal;
-          const isLast = i === tailNarrations.length - 1;
-          if (isLast) {
-            pushAssistant(tailNarrations[i].content, decoration);
-          } else {
-            pushAssistant(tailNarrations[i].content);
-          }
-        }
-      } else if (livePushedAny) {
-        if (executions || pending) {
-          setMessages((items) => attachDecorationToLastAssistant(items, decoration));
-        }
-      } else if (result.status === 'needs_confirmation' && !result.message && pending) {
-        setMessages((items) => attachPendingToLastAssistant(items, pending, executions));
-      } else {
-        pushAssistant(baseText, decoration);
-      }
-      if (typeof result.usage?.promptTokens === 'number') {
-        setLatestPromptTokens(result.usage.promptTokens);
-      }
-      const previewTarget = inferPreviewTarget(
-        executions ?? [],
-        pfmActive ? config.managementDependency?.adminUrl ?? null : null,
-        pfwActive ? config.workflowDependency?.adminUrl ?? null : null,
-      );
-      if (previewTarget) {
-        if (previewTarget.tab === 'pfm') {
-          setPfmUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
-        }
-        if (previewTarget.tab === 'pfw') {
-          setPfwUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
-        }
-        setIframeActiveTab((current) => (current === previewTarget.tab ? current : previewTarget.tab));
-      }
+      renderTurnResult(result, result.continuation !== true);
+      // H5: a resumed turn can itself pause on the time budget — continue it
+      // transparently, same as a fresh turn.
+      result = await driveContinuations(result, active.providerId, active.model, appendHint);
     } catch (error) {
       const message = errorMessage(error);
       setTurnError(message);
@@ -1942,6 +1908,8 @@ function statusFallback(status: string): string {
       return __('The runtime rejected this call.', 'wp-pfagent');
     case 'completed_with_response_error':
       return __('The action ran but the final response failed.', 'wp-pfagent');
+    case 'paused':
+      return __('Still working…', 'wp-pfagent');
     default:
       return __('No response from the runtime.', 'wp-pfagent');
   }

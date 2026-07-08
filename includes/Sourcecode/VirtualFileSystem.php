@@ -439,10 +439,28 @@ final class VirtualFileSystem
         if (is_wp_error($envelope)) {
             throw new \RuntimeException($envelope->get_error_message());
         }
+
+        // Confirmar por READ-BACK, no reportar 'active' a ciegas. El apply puede
+        // devolver un envelope sin error y AUN ASÍ dejar el workflow en draft
+        // (visto tras un write_file grande de re-estructura): un success
+        // silencioso que engaña al agente. Releemos el estado REAL persistido y,
+        // si no cuajó la activación, fallamos RUIDOSO para que el agente
+        // reintente en vez de creer que quedó vivo.
+        $after = $service->get_workflow($wf_id);
+        $actual_status = is_array($after) ? (string) ($after['status'] ?? '') : '';
+        if ($actual_status !== 'active') {
+            throw new \RuntimeException(sprintf(
+                'activate_workflow did not stick: workflow #%d is still "%s" after apply (expected "active"). Re-run activate_workflow on %s.',
+                $wf_id,
+                $actual_status !== '' ? $actual_status : 'unknown',
+                $path
+            ));
+        }
+
         return [
             'workflowId' => $wf_id,
-            'name' => (string) ($existing['name'] ?? ''),
-            'status' => 'active',
+            'name' => (string) (is_array($after) ? ($after['name'] ?? $existing['name'] ?? '') : ($existing['name'] ?? '')),
+            'status' => $actual_status,
             'wasStatus' => (string) ($existing['status'] ?? 'draft'),
         ];
     }

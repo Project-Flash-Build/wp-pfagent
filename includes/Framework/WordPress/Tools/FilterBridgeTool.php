@@ -138,6 +138,18 @@ final class FilterBridgeTool implements Tool
                     $result = call_user_func_array([$service, $this->method], $positional);
                 }
             }
+        } catch (\TypeError $e) {
+            // H9: a positional decomposition that hands null (or a wrong-typed
+            // value) to a typed parameter throws a TypeError. It is already
+            // caught here (never a fatal), but surface it as a CLEAN, labelled
+            // argument-validation failure the agent can act on — not the raw
+            // engine message — so "payload: null" reads as an invalid-argument
+            // 400 rather than an opaque internal throw.
+            return ToolResult::failure(
+                'bridge_invalid_args',
+                sprintf('Invalid arguments for %s: %s', $this->method, $e->getMessage()),
+                false,
+            );
         } catch (\Throwable $e) {
             return ToolResult::failure('bridge_threw', $e->getMessage(), false);
         }

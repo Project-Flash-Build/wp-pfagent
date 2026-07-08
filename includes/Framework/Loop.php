@@ -665,6 +665,20 @@ TXT;
     }
 
     /**
+     * H5: continue a turn that paused on its wall-clock budget
+     * (SUBTYPE_PAUSED_TIME_BUDGET). Unlike resume(), there is no held tool call
+     * and no user verdict — the conversation state is already fully persisted;
+     * we just resume driving more rounds in a fresh request. The host keeps
+     * calling this while the result is SUBTYPE_PAUSED_TIME_BUDGET, so the work
+     * finishes across several short requests instead of one that fatals.
+     */
+    public function continueAfterBudget(int $conversationId): LoopResult
+    {
+        $turn = $this->store->loadConversation($conversationId)?->turnCount ?? 0;
+        return $this->driveLoop($conversationId, 0, $turn);
+    }
+
+    /**
      * Continue after a needs_confirmation. The host calls this with the token
      * from the LoopResult and the user's approval verdict.
      */
@@ -924,6 +938,25 @@ TXT;
 
     private function driveLoop(int $conversationId, int $userOrdinal, int $turn): LoopResult
     {
+        // H5: a multi-round turn can outlive PHP's own max_execution_time (30s on
+        // the web SAPI) and die as an opaque fatal mid-round. Lift PHP's timer so
+        // that is never the failure mode; the wall-clock budget below (a clean,
+        // resumable pause between rounds) is what keeps each request short enough
+        // for the WEB SERVER's own timeout. ignore_user_abort so a client that
+        // gives up doesn't kill an in-flight tool mid-write. Both best-effort:
+        // some hosts disable set_time_limit — the budget pause covers that too.
+        if (function_exists('set_time_limit')) {
+            @set_time_limit(0);
+        }
+        if (function_exists('ignore_user_abort')) {
+            @ignore_user_abort(true);
+        }
+        // Wall-clock budget for THIS request. <= 0 disables the pause entirely
+        // (single long request, legacy behaviour). Default 20s: under a typical
+        // 30s server timeout, filterable up for dev / hosts with a longer cap.
+        $turnStartedAt = microtime(true);
+        $timeBudgetSeconds = (float) apply_filters('pfa_turn_time_budget_seconds', 20);
+
         $rewriteCount = 0;
         $totalRounds = 0;
         $totalCostMicros = 0;
@@ -967,6 +1000,23 @@ TXT;
             : [];
 
         for ($round = 1; $round <= $this->options->maxTurns; $round++) {
+            // H5: wall-clock budget check, BETWEEN rounds only — never mid-round,
+            // so a tool already executing (e.g. a .pfflow compile) always finishes
+            // and its result is persisted before we consider pausing. We only get
+            // here on round >1 with tool work still pending (a final answer would
+            // have returned SUBTYPE_SUCCESS already), so there is genuinely more to
+            // do. Return a clean, resumable pause; the host continues the same
+            // conversation via continueAfterBudget(). maxTurns below stays the
+            // ultimate cap so the continuation chain can never loop forever.
+            if ($round > 1 && $timeBudgetSeconds > 0 && (microtime(true) - $turnStartedAt) >= $timeBudgetSeconds) {
+                $this->store->logTrace($conversationId, $turn, $totalRounds, 'turn_time_budget_paused', [
+                    'budgetSeconds' => $timeBudgetSeconds,
+                    'elapsedSeconds' => round(microtime(true) - $turnStartedAt, 3),
+                    'roundsSoFar' => $totalRounds,
+                ]);
+                return new LoopResult(LoopResult::SUBTYPE_PAUSED_TIME_BUDGET, $conversationId, '', $totalRounds, $totalUsage, costMicros: $totalCostMicros);
+            }
+
             $totalRounds++;
             $conv = $this->store->loadConversation($conversationId);
             if ($conv === null) {

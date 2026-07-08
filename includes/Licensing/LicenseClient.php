@@ -43,7 +43,31 @@ namespace ProjectFlash\Licensing;
 final class LicenseClient
 {
     /** Drop-in revision — bump when the shared file changes so adopters can tell copies apart. */
-    public const DROPIN_VERSION = '1.1.0';
+    public const DROPIN_VERSION = '1.4.0';
+
+    /**
+     * Shared master key (base64 of 32 bytes) for the offline ENCRYPTED license
+     * token (PFL3.<b64url(nonce|tag|ciphertext)>). Symmetric: the same key the portal
+     * encrypts with is embedded here so the plugin can DECRYPT the token LOCALLY and
+     * activate with NO portal call.
+     *
+     * Crypto is OUR OWN pure-PHP AEAD — NO openssl, NO sodium, NO external lib. Only
+     * the always-compiled hash extension + core CSPRNG: HKDF-SHA256 subkeys (salted
+     * by the nonce), an HMAC-SHA256 CTR keystream for confidentiality, and an
+     * encrypt-then-MAC HMAC-SHA256 tag (constant-time verified) for integrity. See
+     * the portal's LicenseCipher for the mirror implementation.
+     *
+     * SECURITY: an embedded symmetric key is extractable from the shipped plugin, so
+     * offline it only protects against casual tampering (the MAC), not a determined
+     * forger who extracts the key. The ONLINE contrast (revalidation against the real
+     * license record when the portal is reachable) is the actual backstop. This is
+     * the operator's chosen model (self-decrypting key, our own crypto).
+     */
+    private const LICENSE_ENC_KEY = 'QH7UCry3cJG+JwbVa8MxwLA6yYhN9qy6d5LNDPLOKII=';
+    /** Self-contained offline token format tag (encrypted). */
+    private const TOKEN_PREFIX = 'PFL3';
+    private const NONCE_LEN = 16;
+    private const TAG_LEN   = 32;
 
     private const REST_NAMESPACE = 'pfw-portal/v1';
     private const DEFAULT_PORTAL = 'https://project-flash.com';
@@ -197,6 +221,85 @@ final class LicenseClient
         return $s['key'] !== '' && in_array($s['status'], ['active', 'grace'], true) && $s['site_match'];
     }
 
+    // ── offline signed token (PFL1) ──────────────────────────────────────────
+
+    /**
+     * Decrypt a self-contained OFFLINE license token (PFL3.<b64url(nonce|tag|ct)>)
+     * LOCALLY with the embedded master key, using our own pure-PHP AEAD (no openssl,
+     * no sodium). Returns the decoded payload when the token decrypts, authenticates
+     * (encrypt-then-MAC), and is bound to THIS product; null for anything else — a
+     * legacy opaque key, a tampered/foreign-key token, or a wrong-product token.
+     * NEVER makes a network call. Expiry is NOT checked here (the caller decides what
+     * to do with an expired-but-valid token); `prod` and the MAC ARE checked.
+     *
+     * @return array<string,mixed>|null
+     */
+    public function decrypt_token_offline(string $key): ?array
+    {
+        $key = trim($key);
+        $prefix = self::TOKEN_PREFIX . '.';
+        if (strncmp($key, $prefix, strlen($prefix)) !== 0) {
+            return null; // not a PFL3 token → legacy/opaque key, use the online path.
+        }
+        $enc = base64_decode(self::LICENSE_ENC_KEY, true);
+        if (!is_string($enc) || strlen($enc) !== 32) {
+            return null;
+        }
+        $blob = self::b64url_decode(substr($key, strlen($prefix)));
+        // Need at least nonce(16) + tag(32) + 1 byte of ciphertext.
+        if ($blob === null || strlen($blob) < self::NONCE_LEN + self::TAG_LEN + 1) {
+            return null;
+        }
+        $nonce = substr($blob, 0, self::NONCE_LEN);
+        $tag   = substr($blob, self::NONCE_LEN, self::TAG_LEN);
+        $ct    = substr($blob, self::NONCE_LEN + self::TAG_LEN);
+        // Encrypt-then-MAC: authenticate BEFORE decrypting, in constant time.
+        $km   = hash_hkdf('sha256', $enc, 32, 'PFL3-mac', $nonce);
+        $calc = hash_hmac('sha256', $nonce . $ct, $km, true);
+        if (!hash_equals($calc, $tag)) {
+            return null; // tampered / wrong key.
+        }
+        $ke   = hash_hkdf('sha256', $enc, 32, 'PFL3-enc', $nonce);
+        $json = $ct ^ self::keystream($ke, $nonce, strlen($ct));
+        $payload = json_decode($json, true);
+        if (!is_array($payload)) {
+            return null;
+        }
+        // Product binding: the token must be for this plugin's product slug.
+        if ((string) ($payload['prod'] ?? '') !== $this->slug) {
+            return null;
+        }
+        return $payload;
+    }
+
+    /**
+     * HMAC-SHA256 keystream in CTR mode — the decrypt mirror of the portal's
+     * LicenseCipher::keystream(). block_i = HMAC(Ke, nonce || counter_i), truncated
+     * to $len bytes.
+     */
+    private static function keystream(string $ke, string $nonce, int $len): string
+    {
+        $out = '';
+        $counter = 0;
+        while (strlen($out) < $len) {
+            $out .= hash_hmac('sha256', $nonce . pack('N', $counter), $ke, true);
+            $counter++;
+        }
+        return substr($out, 0, $len);
+    }
+
+    /** URL-safe base64 decode (tolerates missing padding), or null on failure. */
+    private static function b64url_decode(string $s): ?string
+    {
+        $s = strtr($s, '-_', '+/');
+        $mod = strlen($s) % 4;
+        if ($mod > 0) {
+            $s .= str_repeat('=', 4 - $mod);
+        }
+        $d = base64_decode($s, true);
+        return is_string($d) ? $d : null;
+    }
+
     // ── enforcement ─────────────────────────────────────────────────────────
 
     /**
@@ -233,6 +336,23 @@ final class LicenseClient
             return 'licensed';
         }
         $s = $this->state();
+
+        // OFFLINE encrypted token: decide entirely from the local token — no network.
+        // Decrypts + authenticates for this product + not past the embedded expiry →
+        // licensed, even with the portal unreachable. Past expiry → cut (the embedded
+        // date is definitive; a renewal ships a new token to activate). An explicit
+        // portal 'revoked' status (learned via the optional online contrast) overrides
+        // a still-valid token. Legacy opaque keys fall through to the online logic.
+        if ($s['key'] !== '') {
+            $tok = $this->decrypt_token_offline($s['key']);
+            if ($tok !== null) {
+                if ($s['status'] === 'revoked') {
+                    return 'cut';
+                }
+                $exp = (int) ($tok['exp'] ?? 0);
+                return ($exp === 0 || time() < $exp) ? 'licensed' : 'cut';
+            }
+        }
 
         // Currently valid per the last stored verify → full function.
         if ($this->is_licensed()) {
@@ -603,6 +723,36 @@ final class LicenseClient
         $key = isset($_POST['pf_license_key']) ? trim(sanitize_text_field((string) wp_unslash($_POST['pf_license_key']))) : '';
         if ($key === '') {
             wp_safe_redirect(add_query_arg('pf_lic', 'error', $redirect));
+            exit;
+        }
+
+        // OFFLINE encrypted token: decrypt locally — activation succeeds with the
+        // portal unreachable (the whole point of the offline license). Only a token
+        // that decrypts + authenticates for THIS product, in-date, activates; an
+        // expired or tampered one is rejected like a bad key. Legacy opaque keys fall
+        // through to the online activate below.
+        $tok = $this->decrypt_token_offline($key);
+        if ($tok !== null) {
+            $exp = (int) ($tok['exp'] ?? 0);
+            if ($exp !== 0 && time() >= $exp) {
+                wp_safe_redirect(add_query_arg('pf_lic', 'error', $redirect)); // expired token.
+                exit;
+            }
+            $this->save_state([
+                'key'             => $key,
+                'status'          => 'active',
+                'site_match'      => true,
+                'expires_at'      => $exp > 0 ? gmdate('c', $exp) : '',
+                'last_activation' => gmdate('c'),
+                'ever_licensed'   => true,
+                'lapsed_at'       => '',
+            ]);
+            $this->flush_cache();
+            // Best-effort online: register the site fingerprint for seat tracking /
+            // revocation. Ignored on failure — activation already succeeded offline.
+            $this->activate($key);
+            $this->check_update(true);
+            wp_safe_redirect(add_query_arg('pf_lic', 'activated', $redirect));
             exit;
         }
 

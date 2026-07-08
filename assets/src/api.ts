@@ -455,6 +455,16 @@ export class AgentApiClient {
     });
   }
 
+  // H5: continue a turn that paused on its time budget (result.continuation).
+  // No confirmation token — just the conversation + the same provider/model.
+  agentContinue(input: { providerId: string; model: string; conversationId: number }, options: WorkflowApiRequestOptions = {}): Promise<AgentRuntimeTurnResult> {
+    return this.request<AgentRuntimeTurnResult>('agent-runtime/continue-v2', {
+      ...options,
+      method: 'POST',
+      body: input
+    });
+  }
+
   agentProgress(
     input: { conversationId: number; sinceToolCallId?: number; sinceTraceId?: number; sinceMessageOrdinal?: number },
     options: WorkflowApiRequestOptions = {}
@@ -755,6 +765,13 @@ export function agentResume(
   options?: WorkflowApiRequestOptions
 ): Promise<AgentRuntimeTurnResult> {
   return agentApi().agentResume(input, options);
+}
+
+export function agentContinue(
+  input: { providerId: string; model: string; conversationId: number },
+  options?: WorkflowApiRequestOptions
+): Promise<AgentRuntimeTurnResult> {
+  return agentApi().agentContinue(input, options);
 }
 
 export function agentProgress(

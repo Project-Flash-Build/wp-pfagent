@@ -20,6 +20,7 @@ use WP_Error;
  *   - pfm_list({ kind, filters? }) — list a resource kind (entity/record/action/…)
  *   - pfm_get({ kind, ref }) — fetch one resource by slug or id
  *   - pfm_apply({ kind, payload }) — create or update one resource
+ *   - pfm_delete({ kind, ref }) — delete one resource by reference
  */
 final class ManagementApiBridge
 {
@@ -42,6 +43,7 @@ final class ManagementApiBridge
             'pfm_list'         => $this->pfm_list($service, $arguments, $tool_name),
             'pfm_get'          => $this->pfm_get($service, $arguments, $tool_name),
             'pfm_apply'        => $this->pfm_apply($service, $arguments, $tool_name),
+            'pfm_delete'       => $this->pfm_delete($service, $arguments, $tool_name),
             default            => new WP_Error('pfa_agent_tool_not_allowed', __('Tool is not executable by Management API bridge.', 'wp-pfagent'), ['status' => 400]),
         };
     }
@@ -125,7 +127,41 @@ final class ManagementApiBridge
         if ($kind === '' || $payload === []) {
             return new WP_Error('pfa_agent_kind_payload_required', __('Send { kind: "<entity|record|action|application|module|group|role|page>", payload: { <kind>: {...} } }.', 'wp-pfagent'), ['status' => 400]);
         }
-        return $this->call_service($service, 'agent_apply', [$kind, $payload], $tool_name);
+        // options pass-through (agent_apply's third argument), notably
+        // options.force. Without this, the Reconciler's own guidance
+        // ("pass options.force=true") is impossible to follow from the
+        // agent: any schema change on an entity that already has records
+        // dead-ends in pfm_reconcile_unsafe. Accepted both at the tool
+        // root (canonical, declared in agent-tools.json) and inside the
+        // payload (lenient, where smaller LLMs tend to put it).
+        $options = is_array($arguments['options'] ?? null) ? $arguments['options'] : [];
+        if ($options === [] && is_array($payload['options'] ?? null)) {
+            $options = $payload['options'];
+            unset($payload['options']);
+        }
+        return $this->call_service($service, 'agent_apply', [$kind, $payload, $options], $tool_name);
+    }
+
+    /**
+     * Delete ONE resource by { kind, ref }. Same shape as pfm_get; the ref is
+     * the single explicit target (there is no bulk delete). Downstream
+     * agent_delete re-applies the capability gate, the audit trail and the
+     * cascade rules (business_rule delete refused, entity delete drops records,
+     * record delete clears inbound relations), so this bridge stays a thin
+     * argument adapter.
+     *
+     * @param array<string, mixed> $arguments
+     * @return array<string, mixed>|WP_Error
+     */
+    private function pfm_delete(object $service, array $arguments, string $tool_name)
+    {
+        $kind = sanitize_key((string) ($arguments['kind'] ?? ''));
+        $ref  = trim((string) ($arguments['ref'] ?? ''));
+        if ($kind === '' || $ref === '') {
+            return new WP_Error('pfa_agent_kind_ref_required', __('kind and ref are required.', 'wp-pfagent'), ['status' => 400]);
+        }
+        $options = is_array($arguments['options'] ?? null) ? $arguments['options'] : [];
+        return $this->call_service($service, 'agent_delete', [$kind, $ref, $options], $tool_name);
     }
 
     /**

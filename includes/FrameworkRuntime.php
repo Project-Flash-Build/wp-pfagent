@@ -126,6 +126,36 @@ final class FrameworkRuntime
     }
 
     /**
+     * H5: continue a turn that paused on its wall-clock budget. Same wiring as
+     * resume(), but there is no confirmation token / verdict — the conversation
+     * state is already persisted; we just drive more rounds in this fresh
+     * request. The host calls this repeatedly while the response carries
+     * `continuation: true`.
+     */
+    public function continueTurn(int $conversationId, string $providerId, string $model): array|WP_Error
+    {
+        $context = $this->credentials->runtime_context($providerId);
+        if ($context instanceof WP_Error) {
+            return $context;
+        }
+
+        global $wpdb;
+        if (!$wpdb instanceof \wpdb) {
+            return new WP_Error('pfa_runtime_wpdb_missing', __('WordPress database is not available.', 'wp-pfagent'), ['status' => 500]);
+        }
+
+        $turnStartIso = gmdate('c');
+        try {
+            $loop = $this->buildLoop($wpdb, $context, $providerId, $model);
+            $result = $loop->continueAfterBudget($conversationId);
+        } catch (\Throwable $e) {
+            return new WP_Error('pfa_runtime_continue_failed', $e->getMessage(), ['status' => 500]);
+        }
+
+        return $this->serialise($result, $wpdb, $turnStartIso);
+    }
+
+    /**
      * Wire the Loop from per-request context. Pure factory — no caching
      * across calls so a credential change is picked up immediately.
      *
@@ -404,6 +434,10 @@ final class FrameworkRuntime
             'costMicros' => $result->costMicros,
             'errorMessage' => $result->errorMessage,
             'confirmation' => $confirmation,
+            // H5: true when the turn paused on its time budget with work still
+            // pending. The host should immediately POST /agent-runtime/continue-v2
+            // with this conversationId to resume — no user action, transparent.
+            'continuation' => $result->subtype === LoopResult::SUBTYPE_PAUSED_TIME_BUDGET,
         ];
     }
 
@@ -521,6 +555,9 @@ final class FrameworkRuntime
         return match ($subtype) {
             LoopResult::SUBTYPE_SUCCESS => 'completed',
             LoopResult::SUBTYPE_NEEDS_CONFIRMATION => 'needs_confirmation',
+            // H5: clean resumable pause — the host must continue the same
+            // conversation (see the `continuation` flag in serialise()).
+            LoopResult::SUBTYPE_PAUSED_TIME_BUDGET => 'paused',
             LoopResult::SUBTYPE_REFUSAL => 'refused',
             LoopResult::SUBTYPE_ERROR_MAX_TURNS => 'max_turns',
             LoopResult::SUBTYPE_ERROR_MAX_BUDGET => 'max_budget',

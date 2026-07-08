@@ -278,6 +278,20 @@ final class RestApi
             ],
         ]);
 
+        // H5: continue a turn that paused on its wall-clock time budget
+        // (response `continuation: true`, status `paused`). No verdict, no
+        // token — just the conversationId + the same provider/model. The host
+        // calls this transparently until the response is no longer a pause, so
+        // long multi-round work spans several short requests instead of one
+        // that fatals on max_execution_time.
+        register_rest_route(self::NAMESPACE, '/agent-runtime/continue-v2', [
+            [
+                'methods' => 'POST',
+                'callback' => [$this, 'agent_continue_v2'],
+                'permission_callback' => [Capabilities::class, 'can_manage_agent'],
+            ],
+        ]);
+
         // Progress polling: the frontend hits this while waiting on
         // /turn-v2 (synchronous request that may take 1-2 minutes for
         // multi-round tool work). Returns the latest tool calls and
@@ -843,6 +857,37 @@ final class RestApi
 
         $started_at = microtime(true);
         $result = $this->framework_runtime->resume($conversationId, $token, $approved, $providerId, $model);
+        if ($result instanceof WP_Error) {
+            return $result;
+        }
+        $this->log_turn_metric($params, $result, $started_at);
+
+        return rest_ensure_response($result);
+    }
+
+    /**
+     * H5: continue a turn that paused on its time budget. Same auth + rate gate
+     * as a turn; no confirmation token — just conversationId + provider/model.
+     */
+    public function agent_continue_v2(WP_REST_Request $request): WP_REST_Response|WP_Error
+    {
+        if ($error = $this->enforce_rate('agent_turn')) {
+            return $error;
+        }
+        if ($error = $this->enforce_body_size($request)) {
+            return $error;
+        }
+        $params = $this->json_params($request);
+        $conversationId = (int) ($params['conversationId'] ?? 0);
+        $providerId = (string) ($params['providerId'] ?? '');
+        $model = (string) ($params['model'] ?? '');
+
+        if ($conversationId <= 0 || $providerId === '' || $model === '') {
+            return new WP_Error('pfa_continue_invalid', __('conversationId, providerId and model are required.', 'wp-pfagent'), ['status' => 400]);
+        }
+
+        $started_at = microtime(true);
+        $result = $this->framework_runtime->continueTurn($conversationId, $providerId, $model);
         if ($result instanceof WP_Error) {
             return $result;
         }

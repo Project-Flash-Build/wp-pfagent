@@ -368,7 +368,7 @@ export interface AgentRuntimeProgress {
 }
 
 export interface AgentRuntimeTurnResult {
-  status: 'completed' | 'needs_confirmation' | 'rejected' | 'completed_with_response_error';
+  status: 'completed' | 'needs_confirmation' | 'rejected' | 'completed_with_response_error' | 'paused';
   traceId?: string;
   message: string;
   /** Every non-empty assistant text the Loop persisted during this
@@ -403,6 +403,10 @@ export interface AgentRuntimeTurnResult {
   finalText?: string;
   rounds?: number;
   costMicros?: number;
+  /** H5: true when the turn paused on its wall-clock budget with work still
+   *  pending. The client must POST /agent-runtime/continue-v2 to resume the
+   *  same conversation — transparent, no user action. */
+  continuation?: boolean;
 }
 
 export type ChatSessionRole = 'system' | 'user' | 'assistant';

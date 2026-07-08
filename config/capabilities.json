@@ -972,6 +972,19 @@
       "notes": "PHP-internal call to agent_apply(kind, payload). Side-effecting; the AgentRuntime confirmation gate fires before invocation. Construction only; no execution semantics."
     },
     {
+      "key": "management.agent_delete",
+      "label": "wp-pfmanagement unified delete",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": ["includes/ManagementApiBridge.php", "includes/FrameworkRuntime.php", "config/agent-tools.json"],
+      "tests": ["tests/runtime-pfm-bridge-smoke.php"],
+      "evidence": ["tests/runtime-pfm-bridge-smoke.php"],
+      "notes": "PHP-internal call to agent_delete(kind, ref, options). Side-effecting; the confirmation gate fires before invocation. Gated by the SAME AgentCapabilityGuard as agent_apply (delete_<kind>), audited via the pfm.record.deleted / repository events, and cascade-aware (business_rule delete refused → deactivate instead; entity delete drops records + layout; record delete clears inbound relations). One ref = one target; no bulk delete."
+    },
+    {
       "key": "agent.workflow_source_language",
       "label": "Internal workflow authoring DSL (.pfflow)",
       "state": "tested",
