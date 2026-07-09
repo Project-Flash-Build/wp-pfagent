@@ -4,6 +4,14 @@
 
 WP-PFAgent is the conductor of the Project Flash™ suite. It reads and writes through [WP-PFWorkflow™](https://github.com/Project-Flash-Build/wp-pfworkflow) (the visual workflow engine) and WP-PFManagement™ (the low-code data platform), stopping at a confirmation gate before any change — the agent never takes a side-effect on its own. Bring your own LLM: your keys, your bills, your data stays in your WordPress install.
 
+## ⚠️ Disclaimer — read before downloading
+
+WP-PFAgent™ (PFA) is an AI agent that reads from and acts on the data stored in your system. You download, install and operate it **at your own responsibility**.
+
+**Security warning — prompt injection:** malicious users may plant crafted text inside system records (task names, descriptions, comments or any other stored content) attempting to manipulate the agent's behavior and defeat its safeguards. You are responsible for the security measures of your installation, for reviewing the agent's actions, and for the data you expose to it.
+
+PFA is provided "as is", without warranty of any kind, to the maximum extent permitted by law. See the EULA and the Terms of Service on the product site for details.
+
 ## Open source, free
 
 WP-PFAgent is released under the **GNU General Public License v2.0 or later** (see [LICENSE](LICENSE)). It is free to use, read, modify and self-host.
