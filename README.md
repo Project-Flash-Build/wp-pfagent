@@ -2,7 +2,7 @@
 
 **The open-source AI agent for WordPress automation.** Describe what you want in plain language — *"when a WooCommerce order is over 200 EUR, draft a thank-you note with the customer's history"* — and WP-PFAgent designs the entities, generates the forms and wires the workflows that make it happen, confirming every side-effect before it acts.
 
-WP-PFAgent is the conductor of the Project Flash™ suite. It reads and writes through [WP-PFWorkflow™](https://github.com/Project-Flash-Build/wp-pfworkflow) (the visual workflow engine) and WP-PFManagement™ (the low-code data platform), stopping at a confirmation gate before any change — the agent never takes a side-effect on its own. Bring your own LLM: your keys, your bills, your data stays in your WordPress install.
+WP-PFAgent is the conductor of the Setyenv™ suite. It reads and writes through [WP-PFWorkflow™](https://github.com/Project-Flash-Build/wp-pfworkflow) (the visual workflow engine) and WP-PFManagement™ (the low-code data platform), stopping at a confirmation gate before any change — the agent never takes a side-effect on its own. Bring your own LLM: your keys, your bills, your data stays in your WordPress install.
 
 ## ⚠️ Disclaimer — read before downloading
 
@@ -24,8 +24,8 @@ WP-PFAgent is a standard WordPress plugin. Copy the plugin folder into `wp-conte
 
 ## Get the suite
 
-WP-PFWorkflow and WP-PFManagement are available for evaluation, purchase and licensing at **[project-flash.com](https://project-flash.com)**.
+WP-PFWorkflow and WP-PFManagement are available for evaluation, purchase and licensing at **[setyenv.com](https://setyenv.com)**.
 
 ---
 
-Project Flash™, WP-PFWorkflow™, WP-PFManagement™ and WP-PFAgent™ are trademarks of Project Flash. WP-PFAgent's source code is licensed under GPL-2.0-or-later.
+Setyenv™, WP-PFWorkflow™, WP-PFManagement™ and WP-PFAgent™ are trademarks of Setyenv. WP-PFAgent's source code is licensed under GPL-2.0-or-later.
