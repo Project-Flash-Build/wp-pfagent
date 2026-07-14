@@ -1,31 +1,126 @@
-# WP-PFAgent™
+<p align="center">
+  <img src="assets/logo-pfa.png" alt="WP-PFAgent" width="96" height="96" />
+</p>
 
-**The open-source AI agent for WordPress automation.** Describe what you want in plain language — *"when a WooCommerce order is over 200 EUR, draft a thank-you note with the customer's history"* — and WP-PFAgent designs the entities, generates the forms and wires the workflows that make it happen, confirming every side-effect before it acts.
+<h1 align="center">WP-PFAgent™</h1>
 
-WP-PFAgent is the conductor of the Setyenv™ suite. It reads and writes through [WP-PFWorkflow™](https://github.com/Project-Flash-Build/wp-pfworkflow) (the visual workflow engine) and WP-PFManagement™ (the low-code data platform), stopping at a confirmation gate before any change — the agent never takes a side-effect on its own. Bring your own LLM: your keys, your bills, your data stays in your WordPress install.
+<p align="center"><strong>Workflows and schemas from a sentence.</strong></p>
 
-## ⚠️ Disclaimer — read before downloading
+<p align="center">The open-source AI agent for WordPress — the conversational layer of the <a href="https://setyenv.com">Setyenv™</a> platform.</p>
 
-WP-PFAgent™ (PFA) is an AI agent that reads from and acts on the data stored in your system. You download, install and operate it **at your own responsibility**.
-
-**Security warning — prompt injection:** malicious users may plant crafted text inside system records (task names, descriptions, comments or any other stored content) attempting to manipulate the agent's behavior and defeat its safeguards. You are responsible for the security measures of your installation, for reviewing the agent's actions, and for the data you expose to it.
-
-PFA is provided "as is", without warranty of any kind, to the maximum extent permitted by law. See the EULA and the Terms of Service on the product site for details.
-
-## Open source, free
-
-WP-PFAgent is released under the **GNU General Public License v2.0 or later** (see [LICENSE](LICENSE)). It is free to use, read, modify and self-host.
-
-It needs a licensed **WP-PFWorkflow** or **WP-PFManagement** on the WordPress side to do useful work — those are the proprietary, per-customer-licensed plugins of the suite. WP-PFAgent and the open-source [WP-Executor](https://github.com/Project-Flash-Build/wp-executor) runner are free.
-
-## Install
-
-WP-PFAgent is a standard WordPress plugin. Copy the plugin folder into `wp-content/plugins/` (or install the packaged zip through **Plugins → Add New → Upload**), then activate it. Configure your LLM provider and key in the agent's settings.
-
-## Get the suite
-
-WP-PFWorkflow and WP-PFManagement are available for evaluation, purchase and licensing at **[setyenv.com](https://setyenv.com)**.
+<p align="center">
+  <a href="#license"><img src="https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg" alt="license: GPL-2.0-or-later" /></a>
+  <img src="https://img.shields.io/badge/WordPress-6.5%2B-21759b.svg" alt="WordPress 6.5+" />
+  <img src="https://img.shields.io/badge/PHP-8.1%2B-777bb4.svg" alt="PHP 8.1+" />
+  <a href="https://setyenv.com"><img src="https://img.shields.io/badge/suite-setyenv.com-6c5ce7.svg" alt="Setyenv" /></a>
+</p>
 
 ---
 
-Setyenv™, WP-PFWorkflow™, WP-PFManagement™ and WP-PFAgent™ are trademarks of Setyenv. WP-PFAgent's source code is licensed under GPL-2.0-or-later.
+**WP-PFAgent puts an AI agent in your WordPress dashboard.** Tell it what you need in plain language — it finds, writes and edits content, moderates comments, runs WooCommerce tasks, tunes your SEO and more — always showing you what it wants to change and waiting for your click. Bring your own AI provider key: your data stays in your own database, and nothing is ever sent to us.
+
+It is the **open-source AI layer of the Setyenv™ suite**. On its own it manages your WordPress site conversationally; alongside the premium platform it designs whole data schemas and visual workflows from a one-line description.
+
+## ⚠️ Before you install — read this
+
+WP-PFAgent is an AI agent that reads from and acts on the data in your site. You download, install and operate it **at your own responsibility**.
+
+**Prompt-injection warning:** malicious users may plant crafted text inside your records (post titles, descriptions, comments or any stored content) to try to manipulate the agent and defeat its safeguards. You are responsible for your installation's security, for reviewing the agent's proposed actions, and for the data you expose to it.
+
+WP-PFAgent is provided "as is", without warranty of any kind, to the maximum extent permitted by law. See the [EULA](https://setyenv.com/eula/) and the [Terms of Service](https://setyenv.com/terms-of-service/).
+
+## The Setyenv™ platform
+
+> **Your own ServiceNow, Zapier, and ChatGPT plugins. Inside WordPress. No SaaS in the middle.**
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-setyenv-dark.png" />
+    <img src="assets/logo-setyenv-light.png" alt="Setyenv" width="360" />
+  </picture>
+</p>
+
+Setyenv™ turns a WordPress install into a self-hosted automation platform — four pieces that fit together, with your process data and credentials never leaving your server. WP-PFAgent is one of them.
+
+<p align="center">
+  <img src="assets/cross-plugin-architecture.svg" alt="Setyenv architecture: WP-PFAgent, an LLM-driven console, builds WP-PFManagement entities and WP-PFWorkflow workflows inside your WordPress install; WP-PFWorkflow publishes an HMAC-signed job queue that wp-executor polls from a machine you control." width="900" />
+</p>
+
+| Piece | What it is | |
+|---|---|:---:|
+| **WP-PFManagement™** | The **low-code platform**. A ServiceNow-style layer, native to WordPress: model your processes, assets and services — entities, fields, forms, lists, row- and field-level permissions and business rules — and ship real apps (ITSM, CRM, asset/CMDB, service desk) with no code. Includes first-class Agile project management: a Kanban board and a Gantt where each task's width is its duration, with typed dependencies and milestones. | proprietary |
+| **WP-PFWorkflow™** | The **visual workflow engine**. Automations as diagrams you can open and read — triggers, conditional branches, function calls and error boundaries on a real execution canvas, with queue, retries, replay and idempotency. It reacts to your site's events natively (orders, record changes, schedules, webhooks). | proprietary |
+| **WP-PFAgent™** *(this repo)* | The **AI agent**. Describe what you want; it manages your site and — with the suite present — designs the schema or the workflow, using your own LLM provider keys. | **open source** |
+| **[wp-executor](https://github.com/setyenv/wp-executor)** | The **host-side runner**. A single Rust binary that takes workflow events and runs them on *your own machine* — shell, files, outbound HTTP — under a capability allowlist you define. | **open source** |
+
+**How they fit:** you **define** data and processes in WP-PFManagement, **automate** them in WP-PFWorkflow, reach your **own machine** through wp-executor, and drive all of it in **plain language** with WP-PFAgent. WP-PFManagement and WP-PFWorkflow are proprietary and licensed per domain (the standard build ships obfuscated and is refundable; an optional annual add-on delivers the clean PHP source). **WP-PFAgent and wp-executor are open source and free.** A worked end-to-end example lives at [setyenv.com/use-case](https://setyenv.com/use-case).
+
+## What WP-PFAgent does
+
+### You approve every change
+
+- Every action that would modify your site opens a **confirmation dialog first**. The agent proposes; you decide. It never takes a side effect on its own.
+- It respects **WordPress permissions**: every tool checks real capabilities, so the agent can never do more than the logged-in user could.
+- Site options and custom fields are writable only from **strict allow-lists** — no arbitrary database writes, and other plugins' settings stay out of reach.
+- It never reads, sets or reveals passwords, and role changes are guarded against privilege escalation.
+- It works **exclusively through WordPress APIs** — no shell commands, no file editing, no remote code.
+- Your prompts, and the content the agent reads to answer them, go **only to the AI provider you configured** — never to us.
+
+### What you can ask for
+
+- **Posts, pages & custom post types** — list, search, read, create (drafts by default, content sanitized), edit, trash; set public custom fields (protected internal fields stay off-limits).
+- **Categories, tags & taxonomies** — list, create terms, assign them to content.
+- **Media** — browse the library, read item details, import an image or file from a URL (with a guard that rejects private/internal addresses).
+- **Users** — list and read profiles; create users (auto-generated password, never revealed) and update profiles or roles.
+- **Comments** — list and moderate: approve, hold, spam, trash, or reply.
+- **Site settings** — read and adjust a safe allow-list: title, tagline, timezone, date/time format, posts per page.
+- **Menus & widgets** — list navigation menus and widget areas; create a menu or add items.
+- **Site overview & discovery** — WordPress version, active theme, language, content counts, installed plugins, and every content type and taxonomy other plugins register.
+
+### Works with what you already run
+
+Each integration appears only when the matching plugin is active, talks to that plugin's own public API, and never affects the rest when absent:
+
+- **WooCommerce** — read orders and products; with your confirmation, add order notes, change or cancel an order's status, create a pending order, add/remove line items, apply a coupon, set stock, create or edit simple products. Refunds are never automatic — the agent records a refund request for a person to review.
+- **Yoast SEO, Rank Math or SEOPress** — auto-detected; read and optimize a post's SEO title, meta description and focus keyword.
+- **Gravity Forms, Fluent Forms, WPForms or Contact Form 7** — list forms and browse entries; mark an entry read/unread, spam, trash, star, or add a note (within each plugin's limits).
+- **LearnDash** — read courses, lessons and enrollments; enroll or unenroll a user.
+- **MemberPress** — read membership products and a member's memberships; grant or revoke access (recorded as a manual transaction).
+
+### Bring your own AI
+
+Connect **Anthropic (Claude)**, **OpenAI**, **Google (Gemini)**, or **any OpenAI-compatible API** (DeepSeek, Groq, OpenRouter, a self-hosted endpoint…). Your key is stored encrypted in your own database, and WP-PFAgent makes **no external call until you configure a provider**. It does not phone home.
+
+### Speaks your language
+
+The interface ships localized in **14 languages**, and you can chat with the agent in any language your model understands.
+
+## Install
+
+1. Upload the plugin to `wp-content/plugins/`, or install the zip via **Plugins → Add New → Upload**, then activate it.
+2. Open **PF Agent** in the admin menu.
+3. Add your LLM provider and API key in the settings, and pick a model.
+4. Start a conversation and ask the agent to do something.
+
+**Requirements:** WordPress 6.5+, PHP 8.1+.
+
+## Related products
+
+- **[wp-executor](https://github.com/setyenv/wp-executor)** — the open-source (MIT OR Apache-2.0) Rust runner that executes workflow events on a machine you control.
+- **WP-PFManagement™** and **WP-PFWorkflow™** — the proprietary low-code platform and workflow engine. Evaluate, buy and license them at **[setyenv.com](https://setyenv.com)**; the license is per-domain and refundable, so the purchase is the trial.
+
+## License
+
+WP-PFAgent is free software, licensed under **GPL-2.0-or-later**. See [LICENSE](LICENSE).
+
+Setyenv™, WP-PFWorkflow™, WP-PFManagement™ and WP-PFAgent™ are trademarks of Setyenv™.
+
+---
+
+## PFAgent Lite
+
+**PFAgent Lite** is the free, transversal WordPress-core edition of this agent — the conversational site management described above (content, taxonomies, media, users, comments, settings, plus the WooCommerce, SEO, forms, LearnDash and MemberPress integrations), with no part of the premium suite required. It runs entirely on its own: no account, no locked features.
+
+We are publishing PFAgent Lite to the **WordPress.org plugin directory** for one-click install. **Current status: _Awaiting Review_.** Until it lands there, you can install this open-source edition directly from this repository.
+
+The premium Setyenv™ suite — WP-PFManagement™ and WP-PFWorkflow™ — is optional, and extends the same conversational approach to data modeling and automation, driven natively by the full edition of PFAgent.
