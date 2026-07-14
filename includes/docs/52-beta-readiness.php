@@ -25,7 +25,7 @@
  *
  * ## Where to run it
  *
- * - **Admin**: Project Flash → Agent → Settings → Beta Readiness.
+ * - **Admin**: Setyenv → Agent → Settings → Beta Readiness.
  * - **REST**: `GET /pfw/v1/agent-runtime/beta-readiness`.
  *
  * ## How to read the verdict

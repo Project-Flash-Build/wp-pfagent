@@ -15,7 +15,7 @@
  *
  * Every action the agent has ever proposed — whether you approved it,
  * rejected it, or it was auto-decided by your permission rules — is
- * preserved in **Project Flash → Agent → Action Log**.
+ * preserved in **Setyenv → Agent → Action Log**.
  *
  * ## What each row shows
  *
@@ -73,7 +73,7 @@
  *
  * ## Where to see it
  *
- * **Project Flash → Agent → Telemetry**:
+ * **Setyenv → Agent → Telemetry**:
  *
  * - **Sparkline** at the top: turns per day for the last 30 days.
  * - **By outcome**: breakdown of how turns ended.

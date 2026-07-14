@@ -57,7 +57,7 @@
  *
  * ## Managing rules
  *
- * - **Admin UI**: Project Flash → Agent → Settings → Permission rules.
+ * - **Admin UI**: Setyenv → Agent → Settings → Permission rules.
  * - **REST**: `GET / PUT /pfw/v1/agent-runtime/permission-rules`.
  *
  * > [!WARNING] Setting `*` to `allow` skips the side-effect
@@ -161,7 +161,7 @@
  * @pfw-doc-order   75
  *
  * Top-level configuration for WP-PFAgent. Most settings live in the
- * admin SPA under **Project Flash → Agent → Settings**.
+ * admin SPA under **Setyenv → Agent → Settings**.
  *
  * ## Provider credentials
  *

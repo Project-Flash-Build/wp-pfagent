@@ -117,8 +117,30 @@ body.toplevel_page_wp-pfagent #wpfooter {
   margin-left: 1px;
 }
 
-.pfa-fullscreen-version {
+/* Right-aligned header group: Setyenv vendor logo + version. */
+.pfa-header-right {
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.pfa-setyenv-logo {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.9;
+  transition: opacity 0.15s;
+}
+.pfa-setyenv-logo:hover,
+.pfa-setyenv-logo:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+.pfa-setyenv-logo img {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+.pfa-fullscreen-version {
   font-size: 11px;
   color: var(--pfa-dim);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -1128,6 +1150,66 @@ body.toplevel_page_wp-pfagent #wpfooter {
   color: var(--pfa-muted);
   font-size: 13px;
   text-align: center;
+}
+
+/* WordPress pane: native wp-admin iframe + the turn's activity strip. Mirrors
+   the .pfa-iframe show/hide discipline (stays mounted, toggled by data-active)
+   but is a flex column so the strip sits above the frame. */
+.pfa-iframe-wp {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--pfa-bg);
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+.pfa-iframe-wp[data-active="true"] {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  z-index: 1;
+}
+.pfa-iframe-wp-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: var(--pfa-bg);
+}
+/* Turn activity strip: one chip per WP action, each links its native screen. */
+.pfa-wp-activity {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px;
+  max-height: 92px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--pfa-border, rgba(255, 255, 255, 0.08));
+  background: rgba(255, 255, 255, 0.02);
+}
+.pfa-wp-activity-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--pfa-text);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--pfa-border, rgba(255, 255, 255, 0.10));
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.pfa-wp-activity-item:hover,
+.pfa-wp-activity-item:focus-visible {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--pfa-accent);
+  outline: none;
 }
 
 .pfa-primary-action {

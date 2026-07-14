@@ -378,6 +378,21 @@ final class RestApi
         if ($error = $this->enforce_rate('writes')) {
             return $error;
         }
+        // The VFS library is the compiler's authoring surface. It only exists
+        // when the Setyenv-suite half is loaded; a standalone distribution omits
+        // those files, so this endpoint degrades to an honest no-op instead of
+        // fatally calling absent classes.
+        if (!class_exists('\\ProjectFlash\\Agent\\Sourcecode\\LibraryBuilder')) {
+            return rest_ensure_response([
+                'schema' => 'projectflash.agent.vfs.library_refresh',
+                'schemaVersion' => 1,
+                'available' => false,
+                'nodesBytes' => 0,
+                'manageBytes' => 0,
+                'workflowsBackfilled' => 0,
+                'templatesBackfilled' => 0,
+            ]);
+        }
         // Each plugin owns its TS — ask them to rebuild, then pull.
         if (class_exists('\\ProjectFlash\\Workflow\\Agent\\TypingsBuilder')) {
             \ProjectFlash\Workflow\Agent\TypingsBuilder::rebuild();
@@ -1024,6 +1039,28 @@ final class RestApi
             }
             if (isset($resArr['workflowId']) && is_numeric($resArr['workflowId'])) {
                 $focus['workflowId'] = (int) $resArr['workflowId'];
+            } elseif (isset($resArr['content']['workflowId']) && is_numeric($resArr['content']['workflowId'])) {
+                // The VFS tools (write_file / edit_file / read) wrap their return
+                // under `content`, so the id of the workflow the agent just wrote
+                // lands at content.workflowId — NOT the top level. Surface it so the
+                // Workflow tab focuses the graph as the agent authors it (create and
+                // every subsequent edit), both live and at end-of-turn. Without this
+                // the tab stayed on "Waiting for the agent" through a whole build.
+                $focus['workflowId'] = (int) $resArr['content']['workflowId'];
+            } elseif (isset($resArr['content']['business_rule']['workflow_id']) && is_numeric($resArr['content']['business_rule']['workflow_id'])) {
+                // A workflow born from a Business Rule carries its id nested under
+                // the BR content; surface it so the Workflow tab focuses the live
+                // graph as it evolves.
+                $focus['workflowId'] = (int) $resArr['content']['business_rule']['workflow_id'];
+            }
+            // Cross-cutting WordPress layer: derive the live wp-admin focus
+            // target for wp_*/wc_*/seo_*/forms_* tools so Susan's "WordPress"
+            // tab points at the touched screen live (progress poll), the same
+            // way workflowId drives the Workflow tab. Additive channel — it
+            // never touches the workflowId/kind/ref reflection above.
+            $wpTarget = self::wp_focus_target((string) ($r['tool_name'] ?? ''), $argsArr, $resArr);
+            if ($wpTarget !== null) {
+                $focus['wpTarget'] = $wpTarget;
             }
             return [
                 'id' => (int) $r['id'],
@@ -1088,6 +1125,191 @@ final class RestApi
             'lastTraceId' => $lastTraceId,
             'lastMessageOrdinal' => $lastMessageOrdinalSeen,
         ]);
+    }
+
+    /**
+     * Derive the live "WordPress" tab focus target for a cross-cutting tool
+     * call (wp_* / wc_* / seo_* / forms_*), mirroring the frontend's
+     * describeWpExecution() screen mapping in wpTarget.ts so the tab points at
+     * the same wp-admin screen LIVE (progress poll) as it resolves at
+     * end-of-turn from executions[]. Additive + self-contained: it inspects
+     * only the transversal tool surface and never references any suite
+     * (pfm/pfw) tool, mirroring the isolation of the WP-core module itself.
+     *
+     * @param array<string, mixed> $args
+     * @param array<string, mixed> $res
+     * @return array{screen:string, postType?:string, id?:int}|null
+     */
+    private static function wp_focus_target(string $tool, array $args, array $res): ?array
+    {
+        $isWp = false;
+        foreach (['wp_', 'wc_', 'seo_', 'forms_', 'ld_', 'mp_'] as $p) {
+            if (str_starts_with($tool, $p)) { $isWp = true; break; }
+        }
+        if (!$isWp) {
+            return null;
+        }
+
+        // Object id: result top-level, then nested result.post/user.id, then args.
+        $id = null;
+        foreach (['id', 'post', 'user'] as $k) {
+            if (isset($res[$k]) && is_numeric($res[$k])) { $id = (int) $res[$k]; break; }
+            if (isset($res[$k]) && is_array($res[$k]) && isset($res[$k]['id']) && is_numeric($res[$k]['id'])) {
+                $id = (int) $res[$k]['id']; break;
+            }
+        }
+        if ($id === null) {
+            foreach (['id', 'post_id', 'postId', 'user_id', 'order_id', 'comment_id', 'product_id', 'course_id', 'membership_id', 'menu_id'] as $k) {
+                if (isset($args[$k]) && is_numeric($args[$k])) { $id = (int) $args[$k]; break; }
+            }
+        }
+
+        $postType = '';
+        foreach ([$args['post_type'] ?? null, $res['type'] ?? null] as $c) {
+            if (is_string($c) && $c !== '') { $postType = $c; break; }
+        }
+        if ($postType === '') { $postType = 'post'; }
+
+        $mk = static function (string $screen, ?string $pt = null, ?int $oid = null): array {
+            $out = ['screen' => $screen];
+            if ($pt !== null && $pt !== '') { $out['postType'] = $pt; }
+            if ($oid !== null) { $out['id'] = $oid; }
+            return $out;
+        };
+
+        switch ($tool) {
+            case 'wp_post_create':
+            case 'wp_post_update':
+            case 'wp_post_get':
+            case 'wp_post_meta_set':
+            case 'wp_term_assign':
+                return $mk('edit', $postType, $id);
+            case 'wp_post_trash':
+            case 'wp_post_list':
+                return $mk('edit', $postType);
+            case 'wp_taxonomy_list':
+            case 'wp_term_create': {
+                // Terms live on edit-tags.php, NOT the posts list. Carry the
+                // taxonomy (and its owning post type, so wp-admin scopes the
+                // screen) for the frontend's `terms` mapping.
+                $tax = '';
+                foreach ([$res['taxonomy'] ?? null, $args['taxonomy'] ?? null] as $c) {
+                    if (is_string($c) && $c !== '') { $tax = $c; break; }
+                }
+                $target = ['screen' => 'terms'];
+                if ($tax !== '') {
+                    $target['taxonomy'] = $tax;
+                    $taxObj = get_taxonomy($tax);
+                    if ($taxObj && !empty($taxObj->object_type) && is_string($taxObj->object_type[0] ?? null)) {
+                        $target['postType'] = (string) $taxObj->object_type[0];
+                    }
+                }
+                return $target;
+            }
+            case 'wp_media_list':
+                return $mk('upload');
+            case 'wp_media_get':
+            case 'wp_media_sideload':
+                return $mk('upload', null, $id);
+            case 'wp_menu_manage':
+                return $mk('menus');
+            case 'wp_user_create':
+            case 'wp_user_update':
+            case 'wp_user_get':
+                return $mk('users', null, $id);
+            case 'wp_user_list':
+                return $mk('users');
+            case 'wp_comment_list':
+            case 'wp_comment_moderate':
+                return $mk('comments');
+            case 'wp_menu_list':
+                return $mk('menus');
+            case 'wp_option_get':
+            case 'wp_option_set':
+                return $mk('options');
+            case 'wp_site_info':
+                return $mk('site');
+            case 'wp_plugins_list':
+                return $mk('plugins');
+            // third-party adapters
+            case 'wc_read':
+            case 'wc_product_upsert':
+            case 'wc_stock_set':
+                return $mk('edit', 'product', $id ?: null);
+            case 'wc_order_note':
+            case 'wc_order_update':
+            case 'wc_order_cancel':
+            case 'wc_order_create':
+            case 'wc_order_line':
+            case 'wc_apply_coupon':
+            case 'wc_refund_request':
+                return $mk('edit', 'shop_order', $id);
+            case 'seo_get':
+            case 'seo_set':
+                return $mk('edit', $postType, $id);
+            case 'forms_list':
+            case 'forms_entries':
+            case 'forms_entry_manage':
+                return self::forms_focus($args, $res);
+            case 'ld_read':
+            case 'ld_enroll':
+                return $mk('edit', 'sfwd-courses', $id);
+            case 'mp_read':
+            case 'mp_access':
+                return $mk('edit', 'memberpressproduct', $id);
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * WordPress-tab target for a forms tool: the active engine's native screen,
+     * NOT the generic plugins list. With a specific form (form_id present) it
+     * deep-links that engine's entries view; otherwise the engine's forms page.
+     * The engine is taken from the tool's plugin field, else detected from the
+     * active forms plugin. Emits an `admin_page` target with the engine's page
+     * slug + a `query` map (route/view + the engine's form-id param) so the
+     * frontend builds `admin.php?page=<page>&<query…>`.
+     *
+     * @param array<string, mixed> $args
+     * @param array<string, mixed> $res
+     * @return array<string, mixed>
+     */
+    private static function forms_focus(array $args, array $res): array
+    {
+        $plugin = '';
+        foreach ([$res['plugin'] ?? null, $args['plugin'] ?? null] as $c) {
+            if (is_string($c) && $c !== '') { $plugin = $c; break; }
+        }
+        if ($plugin === '') {
+            if (defined('FLUENTFORM')) { $plugin = 'fluentforms'; }
+            elseif (class_exists('GFForms')) { $plugin = 'gravityforms'; }
+            elseif (defined('WPFORMS_VERSION')) { $plugin = 'wpforms'; }
+            elseif (defined('WPCF7_VERSION')) { $plugin = 'contactform7'; }
+        }
+        $formId = null;
+        foreach (['formId', 'form_id'] as $k) {
+            if (isset($res[$k]) && is_numeric($res[$k])) { $formId = (int) $res[$k]; break; }
+            if (isset($args[$k]) && is_numeric($args[$k])) { $formId = (int) $args[$k]; break; }
+        }
+        // Per engine: list page · entries page · entries query (form-id param
+        // name + any fixed route/view). CF7 stores no entries → forms page only.
+        $engines = [
+            'fluentforms'  => ['list' => 'fluent_forms',    'entries' => 'fluent_forms',    'idParam' => 'form_id', 'fixed' => ['route' => 'entries']],
+            'gravityforms' => ['list' => 'gf_edit_forms',   'entries' => 'gf_entries',      'idParam' => 'id',      'fixed' => []],
+            'wpforms'      => ['list' => 'wpforms-overview', 'entries' => 'wpforms-entries', 'idParam' => 'form_id', 'fixed' => ['view' => 'list']],
+            'contactform7' => ['list' => 'wpcf7',           'entries' => 'wpcf7',           'idParam' => null,      'fixed' => []],
+        ];
+        $e = $engines[$plugin] ?? null;
+        if ($e === null) {
+            return ['screen' => 'plugins']; // unknown engine — plugins list is the safe fallback
+        }
+        if ($formId !== null && $e['idParam'] !== null) {
+            $query = $e['fixed'];
+            $query[$e['idParam']] = (string) $formId;
+            return ['screen' => 'admin_page', 'page' => $e['entries'], 'query' => $query];
+        }
+        return ['screen' => 'admin_page', 'page' => $e['list']];
     }
 
     /**

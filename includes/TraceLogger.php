@@ -23,6 +23,13 @@ namespace ProjectFlash\Agent;
  */
 final class TraceLogger
 {
+    // Dedicated store for the plugin's OWN trace table (wp_pfa_trace_log). All
+    // queries bind their VALUES through $wpdb->prepare(); the only interpolation
+    // is the fixed table prefix ($wpdb->prefix, never user input), so the
+    // prepared-SQL sniffs mis-fire. Direct queries on a custom table are
+    // unavoidable and per-request trace reads are not object-cache candidates.
+    // Justified, class-scoped.
+    // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     public const SCHEMA_VERSION = '2';
     private const VERSION_OPTION = 'pfa_trace_log_schema_version';
     public const KIND_AGENT_TURN = 'agent_turn';
@@ -92,7 +99,7 @@ final class TraceLogger
             return wp_generate_uuid4();
         }
 
-        return sprintf(__('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', 'wp-pfagent'),
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             random_int(0, 0xffff),
             random_int(0, 0xffff),
             random_int(0, 0xffff),

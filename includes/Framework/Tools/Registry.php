@@ -12,6 +12,9 @@ namespace ProjectFlash\Agent\Framework\Tools;
  */
 final class Registry
 {
+    // Exceptions are internal registration errors (empty/duplicate tool name),
+    // caught by the runtime and surfaced as JSON/logs — never echoed as HTML.
+    // phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
     /** @var array<string, Tool> */
     private array $tools = [];
 

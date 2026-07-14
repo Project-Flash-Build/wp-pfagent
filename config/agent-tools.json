@@ -202,7 +202,7 @@
     },
     {
       "name": "pfm_get_contract",
-      "description": "Bootstrap call to the wp-pfmanagement agent-ready service. Returns the type catalog (field types + accepted config keys), the EQL operator vocabulary, and the supported resource kinds (entity, record, action, application, module, group, role, page) — wrapped as { content, contextForYou }. Read contextForYou for behavioural rules. DO NOT call again if you already have it in this conversation; it is large and stable.",
+      "description": "Bootstrap call to the wp-pfmanagement agent-ready service. Returns the type catalog (field types + accepted config keys), the EQL operator vocabulary, and the supported resource kinds (entity, record, action, application, module, group, role, page, business_rule, row_visibility, dialog, rest_message, scripted_route, oauth_connection) — wrapped as { content, contextForYou }. Read contextForYou for behavioural rules. DO NOT call again if you already have it in this conversation; it is large and stable.",
       "capabilityKeys": [
         "management.agent_contract"
       ],
@@ -253,7 +253,11 @@
               "role",
               "page",
               "business_rule",
-              "row_visibility"
+              "row_visibility",
+              "dialog",
+              "rest_message",
+              "scripted_route",
+              "oauth_connection"
             ]
           },
           "filters": {
@@ -301,7 +305,11 @@
               "role",
               "page",
               "business_rule",
-              "row_visibility"
+              "row_visibility",
+              "dialog",
+              "rest_message",
+              "scripted_route",
+              "oauth_connection"
             ]
           },
           "ref": {
@@ -338,7 +346,7 @@
       },
       "parameters": {
         "type": "object",
-        "description": "Canonical shape: { kind: '<entity|record|action|application|module|group|role|page|business_rule|row_visibility>', payload: { <kind>: {...} } }. The bridge also accepts flat shapes (top-level kind-named keys without an explicit `payload` wrapper) and auto-infers kind from a unique top-level resource key — useful when the LLM forgets the wrapper.",
+        "description": "Canonical shape: { kind: '<entity|record|action|application|module|group|role|page|business_rule|row_visibility|dialog|rest_message|scripted_route|oauth_connection>', payload: { <kind>: {...} } }. The bridge also accepts flat shapes (top-level kind-named keys without an explicit `payload` wrapper) and auto-infers kind from a unique top-level resource key — useful when the LLM forgets the wrapper. For any kind you have not built before, call pfm_get_contract / pfm_list first: the returned contextForYou documents that kind's exact payload shape.",
         "properties": {
           "kind": {
             "type": "string",
@@ -352,7 +360,11 @@
               "role",
               "page",
               "business_rule",
-              "row_visibility"
+              "row_visibility",
+              "dialog",
+              "rest_message",
+              "scripted_route",
+              "oauth_connection"
             ]
           },
           "payload": {
@@ -470,7 +482,11 @@
               "role",
               "event",
               "business_rule",
-              "row_visibility"
+              "row_visibility",
+              "dialog",
+              "rest_message",
+              "scripted_route",
+              "oauth_connection"
             ]
           },
           "ref": {
@@ -590,6 +606,1711 @@
       },
       "tests": [
         "tests/runtime-variables-vfs-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_post_list",
+      "description": "List/search WordPress posts, pages or any custom post type. Filter by type, status, author, search text, date order. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_post_list"
+      ],
+      "permission": "wpRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_post_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "post_type": {
+            "type": "string",
+            "description": "Post type slug: 'post' (default), 'page', or a custom type."
+          },
+          "status": {
+            "type": "string",
+            "description": "Status filter: 'any' (default), 'publish', 'draft', 'pending', 'private', or comma-separated."
+          },
+          "author": {
+            "type": "integer",
+            "description": "Filter by author user id."
+          },
+          "search": {
+            "type": "string",
+            "description": "Free-text search."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Items per page (1-100, default 20)."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number (default 1)."
+          },
+          "orderby": {
+            "type": "string",
+            "description": "One of date|title|modified|ID|menu_order."
+          },
+          "order": {
+            "type": "string",
+            "description": "ASC or DESC (default DESC)."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_post_get",
+      "description": "Read one post/page/CPT by id (or slug + post_type): fields, terms and public meta. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_post_get"
+      ],
+      "permission": "wpRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_post_get"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Post id."
+          },
+          "slug": {
+            "type": "string",
+            "description": "Post slug (needs post_type)."
+          },
+          "post_type": {
+            "type": "string",
+            "description": "Post type when resolving by slug (default 'post')."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_post_create",
+      "description": "Create a post/page/CPT. Defaults to draft. Content is sanitised. Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_post_create"
+      ],
+      "permission": "wpWriteContent",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_post_create"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "post_type": {
+            "type": "string",
+            "description": "Post type (default 'post')."
+          },
+          "title": {
+            "type": "string",
+            "description": "Post title."
+          },
+          "content": {
+            "type": "string",
+            "description": "Post body (HTML allowed, sanitised)."
+          },
+          "status": {
+            "type": "string",
+            "description": "draft (default)|publish|pending|private."
+          },
+          "excerpt": {
+            "type": "string",
+            "description": "Optional excerpt."
+          },
+          "author": {
+            "type": "integer",
+            "description": "Optional author user id."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_post_update",
+      "description": "Update an existing post/page/CPT (title, content, excerpt, status). Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_post_update"
+      ],
+      "permission": "wpWriteContent",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_post_update"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Post id."
+          },
+          "slug": {
+            "type": "string",
+            "description": "Post slug (needs post_type)."
+          },
+          "post_type": {
+            "type": "string",
+            "description": "Post type when resolving by slug."
+          },
+          "title": {
+            "type": "string",
+            "description": "New title."
+          },
+          "content": {
+            "type": "string",
+            "description": "New body (sanitised)."
+          },
+          "excerpt": {
+            "type": "string",
+            "description": "New excerpt."
+          },
+          "status": {
+            "type": "string",
+            "description": "draft|publish|pending|private."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_post_trash",
+      "description": "Move a post/page/CPT to the trash (not permanent deletion). Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_post_trash"
+      ],
+      "permission": "wpWriteContent",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_post_trash"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Post id."
+          },
+          "slug": {
+            "type": "string",
+            "description": "Post slug (needs post_type)."
+          },
+          "post_type": {
+            "type": "string",
+            "description": "Post type when resolving by slug."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_taxonomy_list",
+      "description": "With no argument, list public taxonomies. With 'taxonomy', list that taxonomy's terms. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_taxonomy_list"
+      ],
+      "permission": "wpRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_taxonomy_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "taxonomy": {
+            "type": "string",
+            "description": "Taxonomy slug to list terms of (e.g. 'category','post_tag')."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Max terms (1-500, default 100)."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_term_create",
+      "description": "Create a taxonomy term (category, tag or custom). Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_term_create"
+      ],
+      "permission": "wpWriteContent",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_term_create"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "taxonomy": {
+            "type": "string",
+            "description": "Taxonomy slug."
+          },
+          "name": {
+            "type": "string",
+            "description": "Term name."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description."
+          },
+          "parent": {
+            "type": "integer",
+            "description": "Optional parent term id."
+          }
+        },
+        "required": [
+          "taxonomy",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_term_assign",
+      "description": "Assign terms to a post. Terms may be ids or names/slugs. Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_term_assign"
+      ],
+      "permission": "wpWriteContent",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_term_assign"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer",
+            "description": "Target post id."
+          },
+          "taxonomy": {
+            "type": "string",
+            "description": "Taxonomy slug."
+          },
+          "terms": {
+            "type": "array",
+            "description": "Term ids or names/slugs.",
+            "items": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            }
+          },
+          "append": {
+            "type": "boolean",
+            "description": "Append instead of replace (default false)."
+          }
+        },
+        "required": [
+          "post_id",
+          "taxonomy",
+          "terms"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_media_list",
+      "description": "List the media library (filter by search text or mime type). Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_media_list"
+      ],
+      "permission": "wpMedia",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_media_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Free-text search."
+          },
+          "mime": {
+            "type": "string",
+            "description": "Mime filter, e.g. 'image' or 'image/png'."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Items per page (1-100, default 20)."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_media_get",
+      "description": "Read one media attachment's metadata (url, alt, dimensions). Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_media_get"
+      ],
+      "permission": "wpMedia",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_media_get"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Attachment id."
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_user_list",
+      "description": "List users (filter by role or search). Never returns passwords. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_user_list"
+      ],
+      "permission": "wpUsersRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_user_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Role slug filter."
+          },
+          "search": {
+            "type": "string",
+            "description": "Free-text search."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Items per page (1-100, default 20)."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_user_get",
+      "description": "Read one user's profile by id or login. Never returns the password. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_user_get"
+      ],
+      "permission": "wpUsersRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_user_get"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "User id."
+          },
+          "login": {
+            "type": "string",
+            "description": "User login."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_user_create",
+      "description": "Create a user (username, email, role). Password is auto-generated and never disclosed. Role grants are guarded against privilege escalation. Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_user_create"
+      ],
+      "permission": "wpUsersWrite",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_user_create"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Login."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address."
+          },
+          "role": {
+            "type": "string",
+            "description": "Role slug (default site default)."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Display name."
+          },
+          "first_name": {
+            "type": "string",
+            "description": "First name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Last name."
+          }
+        },
+        "required": [
+          "username",
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_user_update",
+      "description": "Update a user's profile or role (role changes need promote_users and are escalation-guarded). Passwords are not changeable here. Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_user_update"
+      ],
+      "permission": "wpUsersWrite",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_user_update"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "User id."
+          },
+          "email": {
+            "type": "string",
+            "description": "New email."
+          },
+          "role": {
+            "type": "string",
+            "description": "New role slug."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Display name."
+          },
+          "first_name": {
+            "type": "string",
+            "description": "First name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Last name."
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_comment_list",
+      "description": "List comments (filter by post, status, search). Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_comment_list"
+      ],
+      "permission": "wpComments",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_comment_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer",
+            "description": "Filter by post id."
+          },
+          "status": {
+            "type": "string",
+            "description": "all|approve|hold|spam|trash."
+          },
+          "search": {
+            "type": "string",
+            "description": "Free-text search."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Items per page (1-100, default 20)."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_comment_moderate",
+      "description": "Moderate a comment: approve, hold, spam, trash, or reply. Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_comment_moderate"
+      ],
+      "permission": "wpComments",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_comment_moderate"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "comment_id": {
+            "type": "integer",
+            "description": "Comment id."
+          },
+          "action": {
+            "type": "string",
+            "description": "approve|hold|spam|trash|reply."
+          },
+          "content": {
+            "type": "string",
+            "description": "Reply body (required when action=reply)."
+          }
+        },
+        "required": [
+          "comment_id",
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_option_get",
+      "description": "Read a basic site setting (only an allow-list of general options; suite/plugin options are not exposed). Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_option_get"
+      ],
+      "permission": "wpSettingsRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_option_get"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Option key (e.g. blogname, blogdescription, timezone_string, date_format, posts_per_page)."
+          }
+        },
+        "required": [
+          "key"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_option_set",
+      "description": "Change a basic site setting (only an allow-list of general options; suite/plugin options cannot be touched). Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_option_set"
+      ],
+      "permission": "wpSettingsWrite",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_option_set"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Option key from the writable allow-list."
+          },
+          "value": {
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean"
+            ],
+            "description": "New value."
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_site_info",
+      "description": "Site overview: WordPress version, active theme, language, content counts, active plugins. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_site_info"
+      ],
+      "permission": "wpSite",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_site_info"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_menu_list",
+      "description": "List navigation menus and their items. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_menu_list"
+      ],
+      "permission": "wpRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_menu_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_read",
+      "description": "Read WooCommerce data: list recent orders or products, or one by id. Read-only. Only when WooCommerce is active.",
+      "capabilityKeys": [
+        "thirdparty.wc_read"
+      ],
+      "permission": "wcRead",
+      "sideEffect": false,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_read"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "'orders' (default) or 'products'."
+          },
+          "id": {
+            "type": "integer",
+            "description": "A single order or product id."
+          },
+          "search": {
+            "type": "string",
+            "description": "Product search text."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Items per page (1-50, default 10)."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_order_note",
+      "description": "Add a note to a WooCommerce order (private, or customer-visible). Side-effect. Only when WooCommerce is active.",
+      "capabilityKeys": [
+        "thirdparty.wc_order_note"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_order_note"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "Order id."
+          },
+          "note": {
+            "type": "string",
+            "description": "Note text."
+          },
+          "customer_note": {
+            "type": "boolean",
+            "description": "If true, the note is visible to the customer (default false)."
+          }
+        },
+        "required": [
+          "order_id",
+          "note"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "seo_get",
+      "description": "Read the SEO title, meta description and focus keyword of a post/page. Works with Yoast, Rank Math or SEOPress (auto-detected). Read-only.",
+      "capabilityKeys": [
+        "thirdparty.seo_get"
+      ],
+      "permission": "seoRead",
+      "sideEffect": false,
+      "requiresPlugin": "seo",
+      "phpService": {
+        "filter": "pfa_seo_agent_api",
+        "method": "seo_get"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer",
+            "description": "Post/page id."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Alias of post_id."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "seo_set",
+      "description": "Optimize a post/page's SEO: set the SEO title, meta description and/or focus keyword. Works with Yoast, Rank Math or SEOPress. Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.seo_set"
+      ],
+      "permission": "seoWrite",
+      "sideEffect": true,
+      "requiresPlugin": "seo",
+      "phpService": {
+        "filter": "pfa_seo_agent_api",
+        "method": "seo_set"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer",
+            "description": "Post/page id."
+          },
+          "title": {
+            "type": "string",
+            "description": "New SEO title."
+          },
+          "description": {
+            "type": "string",
+            "description": "New meta description."
+          },
+          "focus_keyword": {
+            "type": "string",
+            "description": "Focus keyword."
+          }
+        },
+        "required": [
+          "post_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "forms_list",
+      "description": "List forms across the installed form plugins (Contact Form 7, Fluent Forms, Gravity Forms, WPForms), noting which support stored entries. Read-only.",
+      "capabilityKeys": [
+        "thirdparty.forms_list"
+      ],
+      "permission": "formsRead",
+      "sideEffect": false,
+      "requiresPlugin": "forms",
+      "phpService": {
+        "filter": "pfa_forms_agent_api",
+        "method": "forms_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "forms_entries",
+      "description": "List a form's stored entries (Fluent Forms / Gravity Forms; Contact Form 7 stores none). Read-only.",
+      "capabilityKeys": [
+        "thirdparty.forms_entries"
+      ],
+      "permission": "formsRead",
+      "sideEffect": false,
+      "requiresPlugin": "forms",
+      "phpService": {
+        "filter": "pfa_forms_agent_api",
+        "method": "forms_entries"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "plugin": {
+            "type": "string",
+            "description": "Optional plugin key: fluentforms | gravityforms."
+          },
+          "form_id": {
+            "type": "integer",
+            "description": "Form id."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Entries per page (1-50, default 20)."
+          }
+        },
+        "required": [
+          "form_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_post_meta_set",
+      "description": "Set a PUBLIC custom field (post meta) on a post. Protected keys (starting with _) are refused. Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_post_meta_set"
+      ],
+      "permission": "wpWriteContent",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_post_meta_set"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Post id."
+          },
+          "slug": {
+            "type": "string",
+            "description": "Post slug (needs post_type)."
+          },
+          "post_type": {
+            "type": "string",
+            "description": "Post type when resolving by slug."
+          },
+          "key": {
+            "type": "string",
+            "description": "Public meta key (no leading underscore)."
+          },
+          "value": {
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean"
+            ],
+            "description": "Value."
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_media_sideload",
+      "description": "Download a remote http(s) image/file URL into the media library. SSRF-guarded (rejects private/loopback hosts). Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_media_sideload"
+      ],
+      "permission": "wpMedia",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_media_sideload"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Public http(s) URL to import."
+          },
+          "title": {
+            "type": "string",
+            "description": "Optional attachment title."
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_menu_manage",
+      "description": "Create a navigation menu (action=create_menu) or append an item to one (action=add_item, with a post_id or a url). Side-effect.",
+      "capabilityKeys": [
+        "wpcore.wp_menu_manage"
+      ],
+      "permission": "wpTheme",
+      "sideEffect": true,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_menu_manage"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "create_menu | add_item."
+          },
+          "name": {
+            "type": "string",
+            "description": "Menu name (create_menu)."
+          },
+          "menu_id": {
+            "type": "integer",
+            "description": "Target menu id (add_item)."
+          },
+          "title": {
+            "type": "string",
+            "description": "Item title (add_item)."
+          },
+          "post_id": {
+            "type": "integer",
+            "description": "Link the item to this post/page (add_item)."
+          },
+          "url": {
+            "type": "string",
+            "description": "Custom link URL (add_item)."
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_widget_list",
+      "description": "List widgets grouped by sidebar. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_widget_list"
+      ],
+      "permission": "wpTheme",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_widget_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_plugins_list",
+      "description": "List installed plugins and their active state. Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_plugins_list"
+      ],
+      "permission": "wpSite",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_plugins_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wp_posttypes_list",
+      "description": "List registered post types and their taxonomies (discover any plugin's content; then use the wp_post_* tools with the post_type). Read-only.",
+      "capabilityKeys": [
+        "wpcore.wp_posttypes_list"
+      ],
+      "permission": "wpRead",
+      "sideEffect": false,
+      "phpService": {
+        "filter": "pfa_wpcore_agent_api",
+        "method": "wp_posttypes_list"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_order_update",
+      "description": "Change a WooCommerce order's status (processing/completed/on-hold/…). Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_order_update"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_order_update"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "Order id."
+          },
+          "status": {
+            "type": "string",
+            "description": "Target status slug (e.g. processing, completed, on-hold)."
+          },
+          "note": {
+            "type": "string",
+            "description": "Optional status-change note."
+          }
+        },
+        "required": [
+          "order_id",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_order_cancel",
+      "description": "Cancel a WooCommerce order. Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_order_cancel"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_order_cancel"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "Order id."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Optional reason."
+          }
+        },
+        "required": [
+          "order_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_order_create",
+      "description": "Create a pending WooCommerce order, optionally with a customer and line items. Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_order_create"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_order_create"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "integer",
+            "description": "Optional customer user id."
+          },
+          "items": {
+            "type": "array",
+            "description": "Line items.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product_id": {
+                  "type": "integer",
+                  "description": "Product id."
+                },
+                "quantity": {
+                  "type": "integer",
+                  "description": "Quantity."
+                }
+              },
+              "required": [
+                "product_id"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_order_line",
+      "description": "Add or remove a product line on a WooCommerce order. Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_order_line"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_order_line"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "Order id."
+          },
+          "op": {
+            "type": "string",
+            "description": "add (default) | remove."
+          },
+          "product_id": {
+            "type": "integer",
+            "description": "Product id (add)."
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantity (add)."
+          },
+          "item_id": {
+            "type": "integer",
+            "description": "Line item id (remove)."
+          }
+        },
+        "required": [
+          "order_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_apply_coupon",
+      "description": "Apply a coupon code to a WooCommerce order. Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_apply_coupon"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_apply_coupon"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "Order id."
+          },
+          "code": {
+            "type": "string",
+            "description": "Coupon code."
+          }
+        },
+        "required": [
+          "order_id",
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_stock_set",
+      "description": "Set a product's stock quantity (and derived stock status). Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_stock_set"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_stock_set"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "description": "Product id."
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "New stock quantity."
+          }
+        },
+        "required": [
+          "product_id",
+          "quantity"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_product_upsert",
+      "description": "Create or edit a simple WooCommerce product (name, price, sku, description, status). Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_product_upsert"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_product_upsert"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Product id to edit (omit to create)."
+          },
+          "name": {
+            "type": "string",
+            "description": "Product name."
+          },
+          "regular_price": {
+            "type": "string",
+            "description": "Regular price."
+          },
+          "sku": {
+            "type": "string",
+            "description": "SKU."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description."
+          },
+          "status": {
+            "type": "string",
+            "description": "publish|draft|pending."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "wc_refund_request",
+      "description": "Record a refund REQUEST on an order for a human to process. NEVER issues the refund automatically (our policy). Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.wc_refund_request"
+      ],
+      "permission": "wcWrite",
+      "sideEffect": true,
+      "requiresPlugin": "woocommerce",
+      "phpService": {
+        "filter": "pfa_woocommerce_agent_api",
+        "method": "wc_refund_request"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "Order id."
+          },
+          "amount": {
+            "type": "number",
+            "description": "Requested refund amount."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason."
+          }
+        },
+        "required": [
+          "order_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "forms_entry_manage",
+      "description": "Manage a stored form entry: read/unread, spam/unspam, trash, star/unstar, or add a note (Gravity Forms, Fluent Forms). Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.forms_entry_manage"
+      ],
+      "permission": "formsRead",
+      "sideEffect": true,
+      "requiresPlugin": "forms",
+      "phpService": {
+        "filter": "pfa_forms_agent_api",
+        "method": "forms_entry_manage"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "plugin": {
+            "type": "string",
+            "description": "gravityforms | fluentforms."
+          },
+          "entry_id": {
+            "type": "integer",
+            "description": "Entry id."
+          },
+          "action": {
+            "type": "string",
+            "description": "read|unread|spam|unspam|trash|star|unstar|note."
+          },
+          "note": {
+            "type": "string",
+            "description": "Note text (action=note)."
+          }
+        },
+        "required": [
+          "entry_id",
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "ld_read",
+      "description": "Read LearnDash courses, lessons, or a user's enrollments. Read-only.",
+      "capabilityKeys": [
+        "thirdparty.ld_read"
+      ],
+      "permission": "lmsRead",
+      "sideEffect": false,
+      "requiresPlugin": "lms",
+      "phpService": {
+        "filter": "pfa_learndash_agent_api",
+        "method": "ld_read"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "courses (default) | lessons | enrollments."
+          },
+          "user_id": {
+            "type": "integer",
+            "description": "User id (enrollments)."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Items per page."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "ld_enroll",
+      "description": "Enroll or unenroll a user in a LearnDash course. Side-effect.",
+      "capabilityKeys": [
+        "thirdparty.ld_enroll"
+      ],
+      "permission": "lmsWrite",
+      "sideEffect": true,
+      "requiresPlugin": "lms",
+      "phpService": {
+        "filter": "pfa_learndash_agent_api",
+        "method": "ld_enroll"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "description": "User id."
+          },
+          "course_id": {
+            "type": "integer",
+            "description": "Course id."
+          },
+          "op": {
+            "type": "string",
+            "description": "enroll (default) | unenroll."
+          }
+        },
+        "required": [
+          "user_id",
+          "course_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "mp_read",
+      "description": "Read MemberPress membership products, or a member's active memberships. Read-only.",
+      "capabilityKeys": [
+        "thirdparty.mp_read"
+      ],
+      "permission": "membershipRead",
+      "sideEffect": false,
+      "requiresPlugin": "membership",
+      "phpService": {
+        "filter": "pfa_memberpress_agent_api",
+        "method": "mp_read"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "memberships (default) | member."
+          },
+          "user_id": {
+            "type": "integer",
+            "description": "User id (kind=member)."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ]
+    },
+    {
+      "name": "mp_access",
+      "description": "Grant or revoke a member's access to a membership (creates/expires a manual transaction). Sensitive; side-effect.",
+      "capabilityKeys": [
+        "thirdparty.mp_access"
+      ],
+      "permission": "membershipWrite",
+      "sideEffect": true,
+      "requiresPlugin": "membership",
+      "phpService": {
+        "filter": "pfa_memberpress_agent_api",
+        "method": "mp_access"
+      },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "description": "User id."
+          },
+          "membership_id": {
+            "type": "integer",
+            "description": "Membership product id."
+          },
+          "op": {
+            "type": "string",
+            "description": "grant (default) | revoke."
+          }
+        },
+        "required": [
+          "user_id",
+          "membership_id"
+        ],
+        "additionalProperties": false
+      },
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
       ]
     }
   ]

@@ -43,14 +43,21 @@
  *    or rejects (the agent receives a "user rejected: <note>"
  *    message and can adjust its plan).
  *
- * The gate cannot be globally turned off. It can be NARROWED per
- * tool (e.g. "auto-approve `workflow.create` only when the workflow
- * status is `draft`") but never widened.
+ * By default (no rules configured) the gate is ON for every
+ * write/run/send/delete tool. It can be NARROWED per tool (e.g.
+ * "auto-approve `workflow.create` only when the workflow status is
+ * `draft`").
+ *
+ * An admin CAN also widen it — including a catch-all `"*": "allow"`
+ * rule that auto-approves everything — but this is a DELIBERATE opt-in
+ * an admin sets from the permission config, never the factory default.
+ * Out of the box nothing is auto-approved; skipping the gate is always
+ * a choice the operator makes on purpose and owns.
  *
  * ## The Action Inspector
  *
  * Every gate prompt is preserved in the Action Log
- * (**Project Flash → Agent → Action Log**), which lists every
+ * (**Setyenv → Agent → Action Log**), which lists every
  * decision the agent has wanted to make, with:
  *
  * - Tool name + arguments
@@ -65,7 +72,7 @@
  *
  * ## Auto-approval rules (advanced)
  *
- * In **Project Flash → Agent → Settings → Gate**, you can define
+ * In **Setyenv → Agent → Settings → Gate**, you can define
  * narrow auto-approval rules:
  *
  * - For tool `workflow.create`, auto-approve when
@@ -78,7 +85,7 @@
  *
  * Rules are JSON-Logic expressions on the tool's argument schema.
  * The full DSL is documented in
- * **Project Flash → Agent → Settings → Gate → Rules → Help**.
+ * **Setyenv → Agent → Settings → Gate → Rules → Help**.
  *
  * ## What "rejecting" sends back to the agent
  *

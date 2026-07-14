@@ -96,6 +96,11 @@ export interface AppConfig {
    */
   adminUrl: string;
   iconUrl?: string;
+  /** This plugin's display name (from its own "Plugin Name" header) — drives
+   *  the SPA header title, so each build shows its own name. */
+  name?: string;
+  /** Setyenv vendor logo URL, shown top-right in the header (links setyenv.com). */
+  setyenvLogoUrl?: string;
   workflowDependency: {
     active: boolean;
     namespace: string;
@@ -332,6 +337,20 @@ export interface AgentRuntimeProgressTool {
     ref?: string;
     path?: string;
     workflowId?: number;
+    /** Parallel channel for the transversal WordPress layer: the native
+     *  wp-admin screen a wp_*, wc_*, seo_*, forms_* tool maps to, so the
+     *  "WordPress" tab can jump its iframe live. Additive - never replaces
+     *  workflowId. Shape mirrors WpTarget in wpTarget.ts. */
+    wpTarget?: {
+      screen: 'edit' | 'terms' | 'upload' | 'users' | 'comments' | 'menus' | 'widgets' | 'options' | 'plugins' | 'site' | 'admin_page';
+      postType?: string;
+      id?: number;
+      page?: string;
+      /** `terms` screen: the taxonomy slug (edit-tags.php?taxonomy=…). */
+      taxonomy?: string;
+      /** `admin_page`: extra deep-link query params (e.g. Fluent Forms entries). */
+      query?: Record<string, string>;
+    };
   };
 }
 
@@ -417,6 +436,12 @@ export interface ChatSessionMessage {
   at?: string;
   toolName?: string;
   turnId?: string;
+  // F4: the tool executions this assistant turn produced, so a RELOADED
+  // conversation re-renders its "N execution(s)" panel instead of losing it.
+  // Populated by the session-load endpoint (grouped per assistant turn);
+  // absent on older payloads, in which case the panel simply doesn't render
+  // (the pre-existing behaviour).
+  executions?: AgentRuntimeExecution[];
 }
 
 export interface ChatSessionSummary {

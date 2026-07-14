@@ -13,7 +13,7 @@
  * Two possible causes:
  *
  * 1. **WP-PFWorkflow isn't installed / activated / licensed.** Open
- *    **Project Flash → Agent → Diagnostics → Beta Readiness**; the
+ *    **Setyenv → Agent → Diagnostics → Beta Readiness**; the
  *    "Workflow plugin reachable" check fails.
  *
  * 2. **Your user doesn't have `pfw_view_workflows` capability.**
@@ -43,7 +43,7 @@
  * The side-effect gate is conservative by design. Use auto-approval
  * rules sparingly:
  *
- * 1. Go to **Project Flash → Agent → Settings → Gate → Rules**.
+ * 1. Go to **Setyenv → Agent → Settings → Gate → Rules**.
  * 2. Click **Add rule**.
  * 3. Pick the tool you want to auto-approve.
  * 4. Define the JSON-Logic predicate. Example: for
@@ -58,7 +58,7 @@
  *
  * ## "Costs are surprisingly high"
  *
- * 1. **Project Flash → Agent → Telemetry → Cost by provider** shows
+ * 1. **Setyenv → Agent → Telemetry → Cost by provider** shows
  *    where the money is going. Sort by `cost_usd desc` to find the
  *    expensive turns.
  * 2. Open the offending session. Common patterns:
@@ -93,7 +93,7 @@
  *
  * Provider's API is returning errors to the probe. Three steps:
  *
- * 1. **Project Flash → Agent → Health → [provider name]** shows the
+ * 1. **Setyenv → Agent → Health → [provider name]** shows the
  *    last error message verbatim.
  * 2. Common causes: revoked API key, exhausted quota, provider
  *    outage. The error message tells you which.

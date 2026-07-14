@@ -67,7 +67,8 @@ final class RateLimiter
 
             return new WP_Error(
                 'pfa_rate_limited',
-                sprintf(__('Rate limit reached for "%s" (%d per %ds). Retry in %ds.', 'wp-pfagent'), $bucket_key, $limit, $window_seconds, $retry_after),
+                /* translators: 1: rate-limit bucket key, 2: max requests allowed, 3: window length in seconds, 4: seconds until retry is allowed */
+                sprintf(__('Rate limit reached for "%1$s" (%2$d per %3$ds). Retry in %4$ds.', 'wp-pfagent'), $bucket_key, $limit, $window_seconds, $retry_after),
                 [
                     'status' => 429,
                     'retryAfter' => $retry_after,

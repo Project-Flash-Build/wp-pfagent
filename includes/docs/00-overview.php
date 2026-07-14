@@ -11,9 +11,11 @@
  * picks the right tools, drafts a workflow, asks you to confirm any
  * side effects, and runs.
  *
- * It is the conductor layer of the three Project Flash plugins. It
- * requires WP-PFWorkflow installed and licensed on the same site —
- * the engine is the agent's hands.
+ * It works on its own — managing WordPress core (posts, pages, media,
+ * users, comments, taxonomies, menus, settings) and your popular
+ * plugins (WooCommerce, SEO, forms, and more) directly. When the rest
+ * of the Setyenv suite is installed, the same agent also becomes the
+ * conductor layer for WP-PFManagement and WP-PFWorkflow.
  *
  * ## What you can ask it
  *
@@ -35,7 +37,7 @@
  *
  * ## Bring your own LLM
  *
- * WP-PFAgent never proxies your LLM traffic through a Project Flash
+ * WP-PFAgent never proxies your LLM traffic through a Setyenv
  * server. You configure providers (OpenAI, Anthropic, Gemini, etc.)
  * with YOUR API keys. The agent calls those providers directly from
  * your WP server.
@@ -43,7 +45,7 @@
  * That means:
  *
  * - Your costs go to your LLM provider account, not to us.
- * - Your conversation content never crosses a Project Flash network.
+ * - Your conversation content never crosses a Setyenv network.
  * - You can mix providers — different workflows / sessions can use
  *   different models.
  *
@@ -51,11 +53,13 @@
  * Gemini, DeepSeek, Qwen, Grok — plus a generic "OpenAI-compatible"
  * preset for anything else exposing that API shape.
  *
- * ## How licensing works
+ * ## Cost
  *
- * Three variants: x1 (1 site), x5 (5 sites), x25 (25 sites). Same
- * licensing model as WP-PFWorkflow — see
- * [Portal → Licensing](../portal/licensing/) for details.
+ * WP-PFAgent is free and open-source (GPL-2.0-or-later). There is no
+ * licence key and no account: you bring your own LLM provider, so the
+ * only cost is whatever that provider charges for the calls you make.
+ * The optional Setyenv suite (WP-PFManagement / WP-PFWorkflow) adds the
+ * data-modelling and workflow-automation surfaces on top.
  *
  * ## Where to go from here
  *

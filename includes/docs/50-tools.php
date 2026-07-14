@@ -9,6 +9,14 @@
  * pauses at the [side-effect confirmation gate](wp-pfagent/side-effect-gate/)
  * for your approval before it executes.
  *
+ * ## Managing WordPress directly
+ *
+ * On any install — no other plugin required — the agent reads and manages your
+ * content, taxonomies, media, users, comments, settings, menus and site
+ * overview, and works with popular plugins (WooCommerce, SEO, forms, LearnDash,
+ * MemberPress) when they are active. See
+ * [Managing WordPress directly](wp-pfagent/wordpress/) for the full list.
+ *
  * ## Workflows
  *
  * The agent can list, read, design, modify, activate, deactivate, and

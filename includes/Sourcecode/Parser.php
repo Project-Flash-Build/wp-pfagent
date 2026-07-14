@@ -342,7 +342,7 @@ final class Parser
                 case 'new':
                 case 'this':
                 case 'super':
-                    throw $this->error('unsupported_statement', sprintf('"%s" is not supported in the source language.', (string) $tok['value']), 'See WORKFLOW_SOURCE_LANGUAGE.md for the supported statement forms.');
+                    throw $this->error('unsupported_statement', sprintf('"%s" is not supported in the source language.', (string) $tok['value']), 'This DSL is a small JavaScript subset. To iterate a collection use `for (const item of items) { ... }` — there is no `while`/`do`/`switch`, and no loop-until-condition (a workflow runs once per trigger event). See the AUTHORING RULES at the top of /lib/nodes.d.ts.');
             }
         }
         // Soft keyword: stop() — kept as a structural statement so we never

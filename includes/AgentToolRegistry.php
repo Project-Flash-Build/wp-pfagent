@@ -25,6 +25,52 @@ final class AgentToolRegistry
             }
         }
 
+        return $this->apply_live_pfm_kinds($tools);
+    }
+
+    /**
+     * Single-source the pfm_* tools' `kind` enum from wp-pfmanagement's LIVE
+     * agent manifest instead of the static list in agent-tools.json. The JSON
+     * enum is only a fallback for when management is absent; when it is present,
+     * a kind it newly starts accepting appears in the agent's tool schema with
+     * no edit here — the same anti-staleness discipline as the typings version
+     * guards. (Battery finding: the hardcoded enum had gone stale and hidden
+     * dialog / rest_message / scripted_route / oauth_connection from the LLM,
+     * so the agent reported it had "no tool" for them.)
+     *
+     * @param array<int, array<string, mixed>> $tools
+     * @return array<int, array<string, mixed>>
+     */
+    private function apply_live_pfm_kinds(array $tools): array
+    {
+        $service = apply_filters('projectflash_management_agent_api', null);
+        if (!is_object($service) || !method_exists($service, 'manifest')) {
+            return $tools; // management not installed — keep the JSON fallback enum.
+        }
+        try {
+            $manifest = $service->manifest();
+        } catch (\Throwable $e) {
+            return $tools; // never let a manifest hiccup break tool loading.
+        }
+        $kinds = is_array($manifest['kinds'] ?? null)
+            ? array_values(array_filter(array_map(
+                static fn($k): string => is_string($k) ? $k : '',
+                $manifest['kinds']
+            )))
+            : [];
+        if ($kinds === []) {
+            return $tools;
+        }
+        foreach ($tools as &$tool) {
+            $name = $tool['name'] ?? '';
+            if (($name === 'pfm_apply' || $name === 'pfm_list' || $name === 'pfm_get')
+                && isset($tool['parameters']['properties']['kind']['enum'])
+            ) {
+                $tool['parameters']['properties']['kind']['enum'] = $kinds;
+            }
+        }
+        unset($tool);
+
         return $tools;
     }
 
@@ -255,14 +301,80 @@ final class AgentToolRegistry
     }
 
     /**
+     * Cross-cutting WP-core tool permissions → the real WordPress capability
+     * that gates them. This is the self-contained WP-core module's gate; it is
+     * INDEPENDENT of PFM/PFW — a tool is available whenever the current user
+     * holds the mapped cap, whether or not the suite is installed. The suite
+     * (workflow) permissions are NOT in this map; they keep their own gating
+     * path below, unchanged.
+     */
+    private const WP_CORE_PERMISSIONS = [
+        'wpRead'          => 'edit_posts',
+        'wpWriteContent'  => 'edit_posts',
+        'wpMedia'         => 'upload_files',
+        'wpUsersRead'     => 'list_users',
+        'wpUsersWrite'    => 'create_users',
+        'wpComments'      => 'moderate_comments',
+        'wpSettingsRead'  => 'manage_options',
+        'wpSettingsWrite' => 'manage_options',
+        'wpSite'          => 'manage_options',
+        'wpTheme'         => 'edit_theme_options',
+        // Third-party adapters (gated additionally by plugin presence).
+        'wcRead'          => 'edit_shop_orders',
+        'wcWrite'         => 'edit_shop_orders',
+        'seoRead'         => 'edit_posts',
+        'seoWrite'        => 'edit_posts',
+        'formsRead'       => 'manage_options',
+        'lmsRead'         => 'edit_posts',
+        'lmsWrite'        => 'manage_options',
+        'membershipRead'  => 'manage_options',
+        'membershipWrite' => 'manage_options',
+    ];
+
+    /**
      * @param array<string, mixed> $tool
      */
     private function tool_available(array $tool): bool
     {
-        $workflow_capabilities = WorkflowDependency::capabilities();
         $permission = (string) ($tool['permission'] ?? '');
 
-        return (bool) ($workflow_capabilities[$permission] ?? false);
+        // Backend-presence gate: a phpService tool is available only when its
+        // resolver filter has a registered handler. This is what makes the
+        // suite tools (pfm_* via projectflash_management_agent_api, the workflow
+        // file tools via projectflash_agent_vfs_bridge) auto-hide wherever their
+        // bridge is not loaded — a site without the suite, OR a derived
+        // standalone distribution that omits the suite files — with no separate
+        // catalog. The transversal filters are always registered, so those
+        // tools are unaffected.
+        $filter = is_array($tool['phpService'] ?? null) ? (string) ($tool['phpService']['filter'] ?? '') : '';
+        if ($filter !== '' && function_exists('has_filter') && !has_filter($filter)) {
+            return false;
+        }
+
+        // Third-party adapter tools only exist when their plugin family is
+        // present — no dangling wc_*/seo_*/forms_* tools on sites without
+        // those plugins. Presence detection is PFA-owned (never PFW's).
+        $requires = (string) ($tool['requiresPlugin'] ?? '');
+        if ($requires !== ''
+            && class_exists('\\ProjectFlash\\Agent\\ThirdParty\\ThirdPartyPresence')
+            && !\ProjectFlash\Agent\ThirdParty\ThirdPartyPresence::has($requires)
+        ) {
+            return false;
+        }
+
+        // Suite (workflow) tools keep their exact gating — untouched.
+        $workflow_capabilities = WorkflowDependency::capabilities();
+        if (array_key_exists($permission, $workflow_capabilities)) {
+            return (bool) ($workflow_capabilities[$permission] ?? false);
+        }
+
+        // WP-core + third-party tools gate on a real WordPress capability.
+        $wp_cap = self::WP_CORE_PERMISSIONS[$permission] ?? null;
+        if ($wp_cap !== null) {
+            return function_exists('current_user_can') ? (bool) current_user_can($wp_cap) : false;
+        }
+
+        return false;
     }
 
     /**

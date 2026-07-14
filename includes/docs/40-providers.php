@@ -31,7 +31,7 @@
  *
  * ## Adding a provider
  *
- * **Project Flash → Agent → Providers → Add Provider**:
+ * **Setyenv → Agent → Providers → Add Provider**:
  *
  * 1. Pick a preset. The form auto-fills the recommended fields.
  * 2. Override or accept the defaults:
@@ -54,7 +54,7 @@
  * ## Provider health
  *
  * The plugin runs a daily background probe against every configured
- * provider and exposes the result in **Project Flash → Agent →
+ * provider and exposes the result in **Setyenv → Agent →
  * Health** as one of `healthy`, `degraded`, or `failing`, with the
  * last probe time, latency and (if any) the error message. This lets
  * you spot a key that has been revoked or a provider that is
@@ -94,7 +94,7 @@
  *
  * ## Add the provider
  *
- * **Project Flash → Agent → Providers → Add Provider → OpenAI**.
+ * **Setyenv → Agent → Providers → Add Provider → OpenAI**.
  *
  * Required fields:
  *
@@ -149,7 +149,7 @@
  *
  * ## Add the provider
  *
- * **Project Flash → Agent → Providers → Add Provider → Anthropic**.
+ * **Setyenv → Agent → Providers → Add Provider → Anthropic**.
  *
  * Required:
  *
@@ -209,7 +209,7 @@
  *
  * ## Adding one
  *
- * **Project Flash → Agent → Providers → Add Provider → Generic
+ * **Setyenv → Agent → Providers → Add Provider → Generic
  * OpenAI-compatible**.
  *
  * Required:

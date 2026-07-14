@@ -19,7 +19,7 @@
  *
  * ## Budgets
  *
- * Configure per-provider in **Project Flash → Agent → Settings →
+ * Configure per-provider in **Setyenv → Agent → Settings →
  * Budgets**:
  *
  * - **Daily token budget** — a hard cap on input + output tokens for
@@ -29,7 +29,7 @@
  *
  * When a budget is hit, the agent refuses new turns against that
  * provider with `error: budget_exceeded` and the admin sees a notice
- * in **Project Flash → Agent → Health**. Budgets reset on the configured
+ * in **Setyenv → Agent → Health**. Budgets reset on the configured
  * cadence.
  *
  * ## Rate limits

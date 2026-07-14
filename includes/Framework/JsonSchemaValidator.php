@@ -107,10 +107,10 @@ final class JsonSchemaValidator
                     "%s must be one of [%s], got %s.",
                     self::label($path),
                     implode(', ', array_map(
-                        static fn($v) => is_scalar($v) ? var_export($v, true) : json_encode($v),
+                        static fn($v) => wp_json_encode($v),
                         $schema['enum'],
                     )),
-                    is_scalar($value) ? var_export($value, true) : json_encode($value),
+                    wp_json_encode($value),
                 );
             }
         }

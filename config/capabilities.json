@@ -1,6 +1,12 @@
 {
   "schemaVersion": 1,
-  "states": ["planned", "scaffolded", "api_callable", "tested", "product_ready"],
+  "states": [
+    "planned",
+    "scaffolded",
+    "api_callable",
+    "tested",
+    "product_ready"
+  ],
   "capabilities": [
     {
       "key": "truth.capability_matrix",
@@ -10,9 +16,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["config/capabilities.json", "scripts/validate-capabilities.mjs"],
-      "tests": ["scripts/validate-capabilities.mjs"],
-      "evidence": ["npm.cmd run validate:capabilities"],
+      "sourceFiles": [
+        "config/capabilities.json",
+        "scripts/validate-capabilities.mjs"
+      ],
+      "tests": [
+        "scripts/validate-capabilities.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run validate:capabilities"
+      ],
       "notes": "Build fails when declared capabilities lack verifiable state, source files, or required tests."
     },
     {
@@ -22,7 +35,10 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows", "wp-pfworkflow/v1/templates"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows",
+        "wp-pfworkflow/v1/templates"
+      ],
       "sourceFiles": [
         "includes/WorkflowDependency.php",
         "includes/AdminPage.php",
@@ -35,7 +51,10 @@
         "tests/runtime-workflow-dependency-smoke.php",
         "tests/runtime-workflow-inactive-check.php"
       ],
-      "evidence": ["npm.cmd run test:dependency", "npm.cmd run smoke:dependency:docker"],
+      "evidence": [
+        "npm.cmd run test:dependency",
+        "npm.cmd run smoke:dependency:docker"
+      ],
       "notes": "Detects active workflow plugin from PFW_REST_NAMESPACE/class, reads namespace from WordPress when available, and falls back only when absent."
     },
     {
@@ -54,9 +73,16 @@
         "wp-pfworkflow/v1/workflows/{id}/run",
         "wp-pfworkflow/v1/workflows/{id}/logs"
       ],
-      "sourceFiles": ["assets/src/api.ts", "assets/src/types.ts"],
-      "tests": ["scripts/test-workflow-api-client.mjs"],
-      "evidence": ["npm.cmd run test:api-client"],
+      "sourceFiles": [
+        "assets/src/api.ts",
+        "assets/src/types.ts"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client"
+      ],
       "notes": "Mock tests execute the compiled TypeScript client and verify endpoints, request bodies, nonce, normalized errors, retry, abort and timeline."
     },
     {
@@ -66,10 +92,21 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows"],
-      "sourceFiles": ["assets/src/api.ts", "assets/src/App.tsx"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-dependency-smoke.php"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:dependency:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts",
+        "assets/src/App.tsx"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-dependency-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:dependency:docker"
+      ],
       "notes": "Runtime smoke verifies GET /wp-pfworkflow/v1/workflows returns HTTP 200 inside WordPress Docker."
     },
     {
@@ -79,10 +116,21 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}"],
-      "sourceFiles": ["assets/src/api.ts", "assets/src/App.tsx"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-api-smoke.php"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:workflow-api:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts",
+        "assets/src/App.tsx"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-api-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:workflow-api:docker"
+      ],
       "notes": "Mock test verifies endpoint shape; Docker smoke verifies GET on a temporary workflow created from a real template."
     },
     {
@@ -92,10 +140,21 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/templates"],
-      "sourceFiles": ["assets/src/api.ts", "assets/src/App.tsx"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-dependency-smoke.php"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:dependency:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/templates"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts",
+        "assets/src/App.tsx"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-dependency-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:dependency:docker"
+      ],
       "notes": "Runtime smoke verifies GET /wp-pfworkflow/v1/templates returns HTTP 200 and exposes templates array. The agent does not duplicate workflow template catalog data."
     },
     {
@@ -105,10 +164,23 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows"],
-      "sourceFiles": ["assets/src/api.ts", "assets/src/App.tsx"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-api-smoke.php", "scripts/test-ui-sprint-4-5.cjs"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:workflow-api:docker", "npm.cmd run test:ui"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts",
+        "assets/src/App.tsx"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-api-smoke.php",
+        "scripts/test-ui-sprint-4-5.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:workflow-api:docker",
+        "npm.cmd run test:ui"
+      ],
       "notes": "Uses graph returned by Workflow API template catalog; Docker smoke creates a temporary draft workflow and deletes it afterward. Playwright verifies template preview does not POST and Create draft loads the created workflow id."
     },
     {
@@ -118,10 +190,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}/validate"],
-      "sourceFiles": ["assets/src/api.ts"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-api-smoke.php"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:workflow-api:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}/validate"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-api-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:workflow-api:docker"
+      ],
       "notes": "Docker smoke validates the graph from a real template after creating a temporary draft workflow."
     },
     {
@@ -131,10 +213,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}/test-run"],
-      "sourceFiles": ["assets/src/api.ts"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-api-smoke.php"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:workflow-api:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}/test-run"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-api-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:workflow-api:docker"
+      ],
       "notes": "Docker smoke calls test-run on a temporary workflow. This is dry-run, not real run."
     },
     {
@@ -144,10 +236,18 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}/run"],
-      "sourceFiles": ["assets/src/api.ts"],
-      "tests": ["scripts/test-workflow-api-client.mjs"],
-      "evidence": ["npm.cmd run test:api-client"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}/run"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client"
+      ],
       "notes": "Mock test verifies endpoint, request and response handling. Docker smoke intentionally does not execute real run to avoid workflow side effects."
     },
     {
@@ -157,10 +257,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}/logs"],
-      "sourceFiles": ["assets/src/api.ts"],
-      "tests": ["scripts/test-workflow-api-client.mjs", "tests/runtime-workflow-api-smoke.php"],
-      "evidence": ["npm.cmd run test:api-client", "npm.cmd run smoke:workflow-api:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}/logs"
+      ],
+      "sourceFiles": [
+        "assets/src/api.ts"
+      ],
+      "tests": [
+        "scripts/test-workflow-api-client.mjs",
+        "tests/runtime-workflow-api-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:api-client",
+        "npm.cmd run smoke:workflow-api:docker"
+      ],
       "notes": "Mock test verifies query params; Docker smoke verifies logs endpoint returns an array."
     },
     {
@@ -170,10 +280,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/catalog"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/catalog"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent tool calls the real Workflow REST catalog route. The agent does not bundle or duplicate the node catalog."
     },
     {
@@ -183,10 +303,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/studio/context"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/studio/context"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can inspect Workflow studio context, token language, site data and current Workflow capabilities through Workflow REST."
     },
     {
@@ -196,10 +326,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/studio/options"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/studio/options"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can list async option providers exposed by Workflow instead of hardcoding option sources."
     },
     {
@@ -209,10 +349,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/studio/options/{source}"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/studio/options/{source}"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can resolve dynamic option values through Workflow REST using provider keys returned by /studio/options."
     },
     {
@@ -222,10 +372,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/nodes/{key}"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/nodes/{key}"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can inspect a node contract and execution metadata before proposing or running node-level operations."
     },
     {
@@ -235,10 +395,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/nodes/{key}/dry-run"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/nodes/{key}/dry-run"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can dry-run a node through Workflow REST. This tool is read-only and must not be treated as execution."
     },
     {
@@ -248,10 +418,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/nodes/{key}/execute"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/nodes/{key}/execute"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can request isolated node execution through Workflow REST, but the tool is side-effectful and runtime confirmation is required."
     },
     {
@@ -261,10 +441,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}/export"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}/export"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can export workflows through the real Workflow REST export route."
     },
     {
@@ -274,10 +464,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can update workflows through Workflow REST, but the tool is side-effectful and runtime confirmation is required."
     },
     {
@@ -287,10 +487,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/import"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/import"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can import workflows through Workflow REST, but the tool is side-effectful and runtime confirmation is required."
     },
     {
@@ -300,10 +510,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/workflows/{id}/executions/{executionId}/support"],
-      "sourceFiles": ["config/agent-tools.json", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfworkflow/v1/workflows/{id}/executions/{executionId}/support"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent can fetch Workflow execution support diagnostics by workflow id and execution id."
     },
     {
@@ -313,10 +533,19 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/turn-v2"],
-      "sourceFiles": ["assets/src/App.tsx", "assets/src/ProviderWizard.tsx"],
-      "tests": ["tests/runtime-chat-sessions-smoke.php"],
-      "evidence": ["npm.cmd run smoke:agent-runtime:docker"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/turn-v2"
+      ],
+      "sourceFiles": [
+        "assets/src/App.tsx",
+        "assets/src/ProviderWizard.tsx"
+      ],
+      "tests": [
+        "tests/runtime-chat-sessions-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-runtime:docker"
+      ],
       "notes": "The visible chat input posts to /agent-runtime/turn with {providerId, model, message}. When no provider is active the column shows the ProviderWizard instead of the composer. Side-effect tools surface inline Confirmar/Cancelar buttons backed by the runtime confirmation gate. The legacy command parser was removed."
     },
     {
@@ -326,10 +555,23 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/turn-v2"],
-      "sourceFiles": ["assets/src/App.tsx", "assets/src/styles.css", "includes/FrameworkRuntime.php"],
-      "tests": ["tests-e2e/chat-basic.spec.cjs", "tests-e2e/chat-multiturn.spec.cjs", "tests-e2e/chat-confirmation.spec.cjs"],
-      "evidence": ["npx playwright test tests-e2e/chat-basic.spec.cjs", "live cert iter 2 (deepseek-v4-flash): round-trip + multi-round tool calls + side-effect confirmation gate verified end-to-end"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/turn-v2"
+      ],
+      "sourceFiles": [
+        "assets/src/App.tsx",
+        "assets/src/styles.css",
+        "includes/FrameworkRuntime.php"
+      ],
+      "tests": [
+        "tests-e2e/chat-basic.spec.cjs",
+        "tests-e2e/chat-multiturn.spec.cjs",
+        "tests-e2e/chat-confirmation.spec.cjs"
+      ],
+      "evidence": [
+        "npx playwright test tests-e2e/chat-basic.spec.cjs",
+        "live cert iter 2 (deepseek-v4-flash): round-trip + multi-round tool calls + side-effect confirmation gate verified end-to-end"
+      ],
       "notes": "Functional agent chat shell: drives the Framework Loop via /agent-runtime/turn-v2 (round-trip, multi-round tool calls, side-effect confirmation gate). Promoted from scaffolded after end-to-end certification (Slice 7 iter 2)."
     },
     {
@@ -344,8 +586,13 @@
         "assets/src/App.tsx",
         "assets/src/styles.css"
       ],
-      "tests": ["scripts/test-ui-sprint-4-5.cjs"],
-      "evidence": ["npm.cmd run test:ui", ".release/playwright/sprint-4-5-desktop.png"],
+      "tests": [
+        "scripts/test-ui-sprint-4-5.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:ui",
+        ".release/playwright/sprint-4-5-desktop.png"
+      ],
       "notes": "Playwright verifies render with nodes/connections, read-only inspector, blocked connection creation, local-only node movement, workflow switch cleanup and desktop screenshot."
     },
     {
@@ -355,10 +602,21 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfworkflow/v1/templates", "wp-pfworkflow/v1/workflows"],
-      "sourceFiles": ["assets/src/App.tsx", "scripts/test-ui-sprint-4-5.cjs"],
-      "tests": ["scripts/test-ui-sprint-4-5.cjs"],
-      "evidence": ["npm.cmd run test:ui", ".release/playwright/sprint-4-5-desktop.png"],
+      "endpoints": [
+        "wp-pfworkflow/v1/templates",
+        "wp-pfworkflow/v1/workflows"
+      ],
+      "sourceFiles": [
+        "assets/src/App.tsx",
+        "scripts/test-ui-sprint-4-5.cjs"
+      ],
+      "tests": [
+        "scripts/test-ui-sprint-4-5.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:ui",
+        ".release/playwright/sprint-4-5-desktop.png"
+      ],
       "notes": "Template list, search/filter and preview use data received from Workflow API. The test rejects hardcoded behavior by serving mock templates and asserting preview causes no POST while Create draft calls POST /workflows."
     },
     {
@@ -368,7 +626,9 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-presets"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-presets"
+      ],
       "sourceFiles": [
         "config/provider-presets.json",
         "docs/api-provider-strategy.md",
@@ -376,8 +636,14 @@
         "includes/RestApi.php",
         "assets/src/ProviderWizard.tsx"
       ],
-      "tests": ["scripts/test-provider-presets.mjs", "tests/runtime-provider-credentials-smoke.php"],
-      "evidence": ["npm.cmd run test:providers", "npm.cmd run smoke:providers:docker"],
+      "tests": [
+        "scripts/test-provider-presets.mjs",
+        "tests/runtime-provider-credentials-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:providers",
+        "npm.cmd run smoke:providers:docker"
+      ],
       "notes": "Registry is loaded through Agent REST API. Tests reject defaultModels and non-empty modelHints so models cannot be hardcoded as source of truth."
     },
     {
@@ -401,10 +667,17 @@
         "wp-pfagent/v1/agent-runtime/tools",
         "wp-pfagent/v1/agent-runtime/turn-v2"
       ],
-      "sourceFiles": ["assets/src/api.ts", "assets/src/types.ts"],
-      "tests": ["scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run test:agent-api"],
-      "notes": "Mock tests verify exact endpoints, nonce, request bodies, ProjectFlash contract fetch, OpenAPI contract fetch, agent tool catalog fetch, model discovery, manual model entry, provider health, LLM gateway calls, agent runtime turn and normalized permission errors."
+      "sourceFiles": [
+        "assets/src/api.ts",
+        "assets/src/types.ts"
+      ],
+      "tests": [
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-api"
+      ],
+      "notes": "Mock tests verify exact endpoints, nonce, request bodies, Setyenv contract fetch, OpenAPI contract fetch, agent tool catalog fetch, model discovery, manual model entry, provider health, LLM gateway calls, agent runtime turn and normalized permission errors."
     },
     {
       "key": "providers.settings_ui",
@@ -422,9 +695,17 @@
         "wp-pfagent/v1/provider-models/{provider}/manual",
         "wp-pfagent/v1/provider-health/{provider}"
       ],
-      "sourceFiles": ["assets/src/ProviderWizard.tsx", "assets/src/App.tsx", "assets/src/styles.css"],
-      "tests": ["scripts/test-provider-settings-ui.cjs"],
-      "evidence": ["npm.cmd run test:provider-ui"],
+      "sourceFiles": [
+        "assets/src/ProviderWizard.tsx",
+        "assets/src/App.tsx",
+        "assets/src/styles.css"
+      ],
+      "tests": [
+        "scripts/test-provider-settings-ui.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:provider-ui"
+      ],
       "notes": "Playwright verifies provider UI loads presets from REST, starts not_configured, saves without rendering full key, validates, deletes, avoids localStorage secrets and makes no LLM generation calls. Model display uses Agent API responses rather than bundled lists."
     },
     {
@@ -439,9 +720,17 @@
         "wp-pfagent/v1/provider-credentials/{provider}",
         "wp-pfagent/v1/provider-credentials/{provider}/rotate"
       ],
-      "sourceFiles": ["includes/CredentialStore.php", "includes/Capabilities.php", "includes/RestApi.php"],
-      "tests": ["tests/runtime-provider-credentials-smoke.php"],
-      "evidence": ["npm.cmd run smoke:providers:docker"],
+      "sourceFiles": [
+        "includes/CredentialStore.php",
+        "includes/Capabilities.php",
+        "includes/RestApi.php"
+      ],
+      "tests": [
+        "tests/runtime-provider-credentials-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:providers:docker"
+      ],
       "notes": "Docker smoke verifies manage_options protection, AES-256-GCM metadata, no full API key in REST responses or stored option JSON, delete and redacted status payloads."
     },
     {
@@ -451,10 +740,26 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-credentials/{provider}/test"],
-      "sourceFiles": ["includes/CredentialStore.php", "includes/ProviderModelDiscovery.php", "includes/ProviderHealth.php", "includes/RestApi.php", "assets/src/ProviderWizard.tsx"],
-      "tests": ["tests/runtime-provider-credentials-smoke.php", "tests/runtime-provider-health-smoke.php", "scripts/test-provider-settings-ui.cjs"],
-      "evidence": ["npm.cmd run smoke:providers:docker", "npm.cmd run smoke:provider-health:docker", "npm.cmd run test:provider-ui"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-credentials/{provider}/test"
+      ],
+      "sourceFiles": [
+        "includes/CredentialStore.php",
+        "includes/ProviderModelDiscovery.php",
+        "includes/ProviderHealth.php",
+        "includes/RestApi.php",
+        "assets/src/ProviderWizard.tsx"
+      ],
+      "tests": [
+        "tests/runtime-provider-credentials-smoke.php",
+        "tests/runtime-provider-health-smoke.php",
+        "scripts/test-provider-settings-ui.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:providers:docker",
+        "npm.cmd run smoke:provider-health:docker",
+        "npm.cmd run test:provider-ui"
+      ],
       "notes": "Connection test now delegates to provider health, which uses backend model discovery endpoint only. It does not call chat/completions, responses, messages, generateContent or other generation endpoints."
     },
     {
@@ -464,10 +769,24 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-models/{provider}"],
-      "sourceFiles": ["includes/ProviderModelDiscovery.php", "includes/RestApi.php", "assets/src/api.ts", "assets/src/types.ts", "assets/src/ProviderWizard.tsx"],
-      "tests": ["tests/runtime-provider-model-discovery-smoke.php", "scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run smoke:model-discovery:docker", "npm.cmd run test:agent-api"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-models/{provider}"
+      ],
+      "sourceFiles": [
+        "includes/ProviderModelDiscovery.php",
+        "includes/RestApi.php",
+        "assets/src/api.ts",
+        "assets/src/types.ts",
+        "assets/src/ProviderWizard.tsx"
+      ],
+      "tests": [
+        "tests/runtime-provider-model-discovery-smoke.php",
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:model-discovery:docker",
+        "npm.cmd run test:agent-api"
+      ],
       "notes": "Docker smoke verifies OpenAI-compatible, Anthropic-compatible and Gemini-compatible model discovery from API-shaped responses. It rejects provider auth failures and returns no fallback list."
     },
     {
@@ -477,10 +796,20 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-models/{provider}"],
-      "sourceFiles": ["includes/ProviderModelDiscovery.php", "includes/RestApi.php", "assets/src/ProviderWizard.tsx"],
-      "tests": ["tests/runtime-provider-model-discovery-smoke.php"],
-      "evidence": ["npm.cmd run smoke:model-discovery:docker"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-models/{provider}"
+      ],
+      "sourceFiles": [
+        "includes/ProviderModelDiscovery.php",
+        "includes/RestApi.php",
+        "assets/src/ProviderWizard.tsx"
+      ],
+      "tests": [
+        "tests/runtime-provider-model-discovery-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:model-discovery:docker"
+      ],
       "notes": "Cache uses a 600-second TTL and marks returned catalog/model entries as cache. The smoke asserts the cached read does not perform a provider HTTP request."
     },
     {
@@ -490,10 +819,23 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-models/{provider}/manual"],
-      "sourceFiles": ["includes/ProviderModelDiscovery.php", "includes/RestApi.php", "assets/src/api.ts", "assets/src/ProviderWizard.tsx"],
-      "tests": ["tests/runtime-provider-model-discovery-smoke.php", "scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run smoke:model-discovery:docker", "npm.cmd run test:agent-api"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-models/{provider}/manual"
+      ],
+      "sourceFiles": [
+        "includes/ProviderModelDiscovery.php",
+        "includes/RestApi.php",
+        "assets/src/api.ts",
+        "assets/src/ProviderWizard.tsx"
+      ],
+      "tests": [
+        "tests/runtime-provider-model-discovery-smoke.php",
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:model-discovery:docker",
+        "npm.cmd run test:agent-api"
+      ],
       "notes": "Manual model entry is accepted only for explicit manual-capable discovery modes such as api_or_manual and rejected for API-only presets."
     },
     {
@@ -503,10 +845,25 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-health/{provider}"],
-      "sourceFiles": ["includes/ProviderHealth.php", "includes/ProviderModelDiscovery.php", "includes/CredentialStore.php", "includes/RestApi.php", "assets/src/api.ts", "assets/src/ProviderWizard.tsx"],
-      "tests": ["tests/runtime-provider-health-smoke.php", "scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run smoke:provider-health:docker", "npm.cmd run test:agent-api"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-health/{provider}"
+      ],
+      "sourceFiles": [
+        "includes/ProviderHealth.php",
+        "includes/ProviderModelDiscovery.php",
+        "includes/CredentialStore.php",
+        "includes/RestApi.php",
+        "assets/src/api.ts",
+        "assets/src/ProviderWizard.tsx"
+      ],
+      "tests": [
+        "tests/runtime-provider-health-smoke.php",
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:provider-health:docker",
+        "npm.cmd run test:agent-api"
+      ],
       "notes": "Docker smoke verifies connected, auth, quota, rate limit, invalid model and network classifications, plus validation state updates without leaking secrets."
     },
     {
@@ -516,10 +873,24 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/provider-runtime/{provider}/smoke"],
-      "sourceFiles": ["includes/ProviderRuntime.php", "includes/ProviderModelDiscovery.php", "includes/CredentialStore.php", "includes/RestApi.php", "assets/src/api.ts"],
-      "tests": ["tests/runtime-provider-generation-smoke.php", "scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run smoke:provider-generation:docker", "npm.cmd run test:agent-api"],
+      "endpoints": [
+        "wp-pfagent/v1/provider-runtime/{provider}/smoke"
+      ],
+      "sourceFiles": [
+        "includes/ProviderRuntime.php",
+        "includes/ProviderModelDiscovery.php",
+        "includes/CredentialStore.php",
+        "includes/RestApi.php",
+        "assets/src/api.ts"
+      ],
+      "tests": [
+        "tests/runtime-provider-generation-smoke.php",
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:provider-generation:docker",
+        "npm.cmd run test:agent-api"
+      ],
       "notes": "Mock Docker smoke verifies model discovery plus one generation call for OpenAI-compatible, Anthropic-compatible and Gemini-compatible families, parses outputs and checks REST payloads do not leak secrets. Real-provider smoke is optional because it depends on local stored credentials and external provider balances."
     },
     {
@@ -529,11 +900,18 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "none",
-      "endpoints": [
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/Framework/Llm/Gateway.php",
+        "includes/Framework/Llm/OpenAiCompatibleGateway.php",
+        "includes/Framework/Loop.php"
       ],
-      "sourceFiles": ["includes/Framework/Llm/Gateway.php", "includes/Framework/Llm/OpenAiCompatibleGateway.php", "includes/Framework/Loop.php"],
-      "tests": ["tests/runtime-compaction-real-deepseek.php"],
-      "evidence": ["php tests/runtime-compaction-real-deepseek.php"],
+      "tests": [
+        "tests/runtime-compaction-real-deepseek.php"
+      ],
+      "evidence": [
+        "php tests/runtime-compaction-real-deepseek.php"
+      ],
       "notes": "The live LLM gateway is the Framework one (Framework\\Llm\\Gateway), driven by the Loop. Certified end-to-end in runtime-compaction-real-deepseek, where the Loop calls gateway->complete() against the real DeepSeek API and completes multi-round turns. The old SPA-side complete/toolCall/stream surface against /llm/* was removed in the Framework migration (those endpoints no longer exist)."
     },
     {
@@ -543,7 +921,9 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/contract"],
+      "endpoints": [
+        "wp-pfagent/v1/contract"
+      ],
       "sourceFiles": [
         "includes/AgentContract.php",
         "includes/RestApi.php",
@@ -551,8 +931,14 @@
         "assets/src/types.ts",
         "tests/runtime-agent-contract-smoke.php"
       ],
-      "tests": ["scripts/test-agent-api-client.mjs", "tests/runtime-agent-contract-smoke.php"],
-      "evidence": ["npm.cmd run test:agent-api", "npm.cmd run smoke:agent-contract:docker"],
+      "tests": [
+        "scripts/test-agent-api-client.mjs",
+        "tests/runtime-agent-contract-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-api",
+        "npm.cmd run smoke:agent-contract:docker"
+      ],
       "notes": "Exports schema, routes, permissions, capability matrix, provider preset metadata, agent tools and Workflow dependency status without credential values. Docker smoke verifies permission guard, route registration parity and secret redaction."
     },
     {
@@ -562,7 +948,9 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/contract/openapi"],
+      "endpoints": [
+        "wp-pfagent/v1/contract/openapi"
+      ],
       "sourceFiles": [
         "includes/AgentContract.php",
         "includes/RestApi.php",
@@ -570,9 +958,15 @@
         "assets/src/types.ts",
         "tests/runtime-agent-contract-smoke.php"
       ],
-      "tests": ["scripts/test-agent-api-client.mjs", "tests/runtime-agent-contract-smoke.php"],
-      "evidence": ["npm.cmd run test:agent-api", "npm.cmd run smoke:agent-contract:docker"],
-      "notes": "Exports OpenAPI 3.1 paths, security scheme, operation metadata and component schemas from the same route inventory used by the ProjectFlash contract. Docker smoke verifies route parity and no credential leaks."
+      "tests": [
+        "scripts/test-agent-api-client.mjs",
+        "tests/runtime-agent-contract-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-api",
+        "npm.cmd run smoke:agent-contract:docker"
+      ],
+      "notes": "Exports OpenAPI 3.1 paths, security scheme, operation metadata and component schemas from the same route inventory used by the Setyenv contract. Docker smoke verifies route parity and no credential leaks."
     },
     {
       "key": "agent.internal_docs",
@@ -581,7 +975,9 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/internal-docs"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/internal-docs"
+      ],
       "sourceFiles": [
         "includes/AgentInternalDocs.php",
         "includes/AgentContract.php",
@@ -589,8 +985,14 @@
         "assets/src/api.ts",
         "assets/src/types.ts"
       ],
-      "tests": ["tests/runtime-agent-support-smoke.php", "scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run smoke:agent-support:docker", "npm.cmd run test:agent-api"],
+      "tests": [
+        "tests/runtime-agent-support-smoke.php",
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-support:docker",
+        "npm.cmd run test:agent-api"
+      ],
       "notes": "Generates documentation from the live Agent contract on each request, including route/tool/provider summaries without stored credential values."
     },
     {
@@ -600,7 +1002,9 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/fix-suggestions"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/fix-suggestions"
+      ],
       "sourceFiles": [
         "includes/AgentFixAdvisor.php",
         "includes/RestApi.php",
@@ -608,8 +1012,14 @@
         "assets/src/api.ts",
         "assets/src/types.ts"
       ],
-      "tests": ["tests/runtime-agent-support-smoke.php", "scripts/test-agent-api-client.mjs"],
-      "evidence": ["npm.cmd run smoke:agent-support:docker", "npm.cmd run test:agent-api"],
+      "tests": [
+        "tests/runtime-agent-support-smoke.php",
+        "scripts/test-agent-api-client.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-support:docker",
+        "npm.cmd run test:agent-api"
+      ],
       "notes": "Returns rule-based suggestions from supplied errors, evidence and timeline. It does not invent fixes through LLM text."
     },
     {
@@ -623,9 +1033,26 @@
         "wp-pfagent/v1/agent-runtime/tools",
         "wp-pfagent/v1/agent-runtime/turn-v2"
       ],
-      "sourceFiles": ["config/agent-tools.json", "includes/FrameworkRuntime.php", "includes/AgentToolRegistry.php", "includes/WorkflowApiBridge.php", "includes/Framework/Llm/Gateway.php", "includes/RestApi.php", "assets/src/api.ts", "assets/src/types.ts"],
-      "tests": ["scripts/test-agent-api-client.mjs", "scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run smoke:agent-runtime:docker", "npm.cmd run smoke:agent-tooling:docker", "npm.cmd run test:agent-api", "npm.cmd run test:agent-tools"],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/FrameworkRuntime.php",
+        "includes/AgentToolRegistry.php",
+        "includes/WorkflowApiBridge.php",
+        "includes/Framework/Llm/Gateway.php",
+        "includes/RestApi.php",
+        "assets/src/api.ts",
+        "assets/src/types.ts"
+      ],
+      "tests": [
+        "scripts/test-agent-api-client.mjs",
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-runtime:docker",
+        "npm.cmd run smoke:agent-tooling:docker",
+        "npm.cmd run test:agent-api",
+        "npm.cmd run test:agent-tools"
+      ],
       "notes": "Docker smoke verifies LLM-selected declared tools, rejection of undeclared tools, Workflow API execution, timeline events, confirmation before side effects, and no Workflow API call without provider credential."
     },
     {
@@ -652,9 +1079,16 @@
         "wp-pfagent/v1/contract",
         "wp-pfagent/v1/contract/openapi"
       ],
-      "sourceFiles": ["includes/RateLimiter.php", "includes/RestApi.php"],
-      "tests": ["tests/runtime-security-negative-smoke.php"],
-      "evidence": ["npm.cmd run smoke:security-negative:docker"],
+      "sourceFiles": [
+        "includes/RateLimiter.php",
+        "includes/RestApi.php"
+      ],
+      "tests": [
+        "tests/runtime-security-negative-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:security-negative:docker"
+      ],
       "notes": "Per-user fixed-window limiter backed by WordPress transients. Buckets: reads (60/min), config (20/min), llm (10/min), agent_turn (10/min). Returns HTTP 429 with retryAfter when exhausted. Defaults are filterable via pfa_rate_limit_defaults."
     },
     {
@@ -672,9 +1106,18 @@
         "wp-pfagent/v1/contract/openapi",
         "wp-pfagent/v1/agent-runtime/internal-docs"
       ],
-      "sourceFiles": ["includes/RestApi.php", "includes/Capabilities.php", "includes/CredentialStore.php", "includes/RateLimiter.php"],
-      "tests": ["tests/runtime-security-negative-smoke.php"],
-      "evidence": ["npm.cmd run smoke:security-negative:docker"],
+      "sourceFiles": [
+        "includes/RestApi.php",
+        "includes/Capabilities.php",
+        "includes/CredentialStore.php",
+        "includes/RateLimiter.php"
+      ],
+      "tests": [
+        "tests/runtime-security-negative-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:security-negative:docker"
+      ],
       "notes": "Single smoke that proves: every admin route rejects anonymous callers, cookie-auth without X-WP-Nonce returns 401/403, cookie-auth with valid nonce returns 200, rate limiter returns HTTP 429 after the bucket is exhausted, oversized POST bodies return HTTP 413, stored credential keys never appear in REST responses or in the option_value column, side-effect tools remain flagged for the runtime confirmation gate."
     },
     {
@@ -688,9 +1131,15 @@
         "wp-pfagent/v1/agent-runtime/turn-v2",
         "wp-pfagent/v1/agent-runtime/fix-suggestions"
       ],
-      "sourceFiles": ["includes/RestApi.php"],
-      "tests": ["tests/runtime-security-negative-smoke.php"],
-      "evidence": ["npm.cmd run smoke:security-negative:docker"],
+      "sourceFiles": [
+        "includes/RestApi.php"
+      ],
+      "tests": [
+        "tests/runtime-security-negative-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:security-negative:docker"
+      ],
       "notes": "POST handlers that accept prompts, tool definitions or fix-suggestion payloads reject any body larger than 524288 bytes with HTTP 413 pfa_payload_too_large. Defends against frontend bugs and accidental large pastes; the per-route rate limiter still applies."
     },
     {
@@ -700,10 +1149,20 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/beta-readiness"],
-      "sourceFiles": ["includes/BetaReadiness.php", "includes/RestApi.php", "includes/AgentContract.php"],
-      "tests": ["tests/runtime-beta-readiness-smoke.php"],
-      "evidence": ["npm.cmd run smoke:beta-readiness:docker"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/beta-readiness"
+      ],
+      "sourceFiles": [
+        "includes/BetaReadiness.php",
+        "includes/RestApi.php",
+        "includes/AgentContract.php"
+      ],
+      "tests": [
+        "tests/runtime-beta-readiness-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:beta-readiness:docker"
+      ],
       "notes": "GET /agent-runtime/beta-readiness returns pass/fail per severe criterion of Sprint 20: no_hardcoded_primary_screen, no_done_without_real_api, user_can_inspect_agent_actions, partials_are_honest, declared_routes_are_registered. Plus per-state totals, partial capabilities list, providers summary (no keys) and workflow dependency state. The smoke asserts ready=true and that only ui.chat_shell is allowed at scaffolded; everything else must be tested."
     },
     {
@@ -713,10 +1172,23 @@
       "uiVisible": true,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/beta-readiness"],
-      "sourceFiles": ["assets/src/Diagnostic.tsx", "assets/src/App.tsx", "assets/src/api.ts", "assets/src/types.ts", "assets/src/styles.css"],
-      "tests": ["scripts/test-beta-walkthrough.cjs"],
-      "evidence": ["npm.cmd run test:beta-walkthrough", ".release/playwright/sprint-20-beta-walkthrough.png"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/beta-readiness"
+      ],
+      "sourceFiles": [
+        "assets/src/Diagnostic.tsx",
+        "assets/src/App.tsx",
+        "assets/src/api.ts",
+        "assets/src/types.ts",
+        "assets/src/styles.css"
+      ],
+      "tests": [
+        "scripts/test-beta-walkthrough.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:beta-walkthrough",
+        ".release/playwright/sprint-20-beta-walkthrough.png"
+      ],
       "notes": "Diagnostic tab consumes /agent-runtime/beta-readiness and renders status badge (beta ready vs partial), each severe criterion with PASS/FAIL flag, capability matrix totals, list of partial capabilities (only ui.chat_shell today), workflow dependency state and configured providers (no keys). Walkthrough Playwright captures the rendered tab into sprint-20-beta-walkthrough.png."
     },
     {
@@ -727,9 +1199,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["scripts/test-beta-walkthrough.cjs"],
-      "tests": ["scripts/test-beta-walkthrough.cjs"],
-      "evidence": ["npm.cmd run test:beta-walkthrough", ".release/playwright/sprint-20-beta-walkthrough.png"],
+      "sourceFiles": [
+        "scripts/test-beta-walkthrough.cjs"
+      ],
+      "tests": [
+        "scripts/test-beta-walkthrough.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:beta-walkthrough",
+        ".release/playwright/sprint-20-beta-walkthrough.png"
+      ],
       "notes": "Playwright smoke walks the full beta scenario end-to-end with mocked REST: open drawer, select Agent tab, send message, observe ActionInspector status=completed plus executions and timeline, switch to Diagnostic tab, observe ready badge plus 5/5 PASS criteria. Asserts that exactly one /agent-runtime/turn POST landed and that the chat session was persisted via /chat-sessions/{id}/messages. Final screenshot captures the diagnostic state."
     },
     {
@@ -747,8 +1226,14 @@
         "tests/runtime-release-package-smoke.php",
         "wp-pfagent.php"
       ],
-      "tests": ["scripts/test-release-package.mjs", "tests/runtime-release-package-smoke.php"],
-      "evidence": ["npm.cmd run test:release-package", "npm.cmd run smoke:release-package:docker"],
+      "tests": [
+        "scripts/test-release-package.mjs",
+        "tests/runtime-release-package-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run test:release-package",
+        "npm.cmd run smoke:release-package:docker"
+      ],
       "notes": "scripts/build-release.mjs reads .distignore (fnmatch-style globs), stages every included file under .release/staging/wp-pfagent/, then writes .release/wp-pfagent-<version>.zip. On Windows the ZIP is built through the .NET ZipArchive API directly so entry names use POSIX forward slashes (PHP ZipArchive on Linux requires this to recreate folders). Two smokes verify: the Node smoke extracts the ZIP and asserts required files, forbidden files, dist bundles, plugin header and absence of API-key shapes; the Docker smoke does the same plus php -l on every PHP file and walks the require_once tree from wp-pfagent.php to confirm every target exists in the ZIP."
     },
     {
@@ -764,8 +1249,14 @@
         "assets/src/App.tsx",
         "assets/src/styles.css"
       ],
-      "tests": ["scripts/test-ui-sprint-16.cjs"],
-      "evidence": ["npm.cmd run test:ui-sprint-16", ".release/playwright/sprint-16-wide.png", ".release/playwright/sprint-16-medium.png"],
+      "tests": [
+        "scripts/test-ui-sprint-16.cjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:ui-sprint-16",
+        ".release/playwright/sprint-16-wide.png",
+        ".release/playwright/sprint-16-medium.png"
+      ],
       "notes": "AgentConsole reuses a banner component for errors with role=alert, exposes Ctrl+Enter to send and Escape to clear, declares aria-label on every primary control, and shows a real loading spinner while the turn is in flight. App.tsx listens for Escape to close the open drawer. styles.css defines focus-visible outlines on tabs and buttons plus a @720px breakpoint that stacks the shell, hides redundant inspector columns and forces buttons to full width. Playwright smoke captures sprint-16-wide.png (1440x900) and sprint-16-medium.png (768x900), and asserts no truncated buttons, no console-extends-beyond-drawer overflow, aria labels on send/textarea, and Esc closes the drawer."
     },
     {
@@ -786,8 +1277,12 @@
         "includes/RestApi.php",
         "wp-pfagent.php"
       ],
-      "tests": ["tests/runtime-observability-smoke.php"],
-      "evidence": ["npm.cmd run smoke:observability:docker"],
+      "tests": [
+        "tests/runtime-observability-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:observability:docker"
+      ],
       "notes": "Custom table wp_pfa_trace_log keyed on trace_id (UUIDv4), schema v2. AgentRuntime emits started/success/failed/needs_confirmation/rejected rows for kind=agent_turn, success/failed rows for kind=workflow_api, and success/failed rows for kind=llm_call (one per LlmGateway tool_call + one per final complete) carrying tokens_total + cost_micros per call. RestApi emits rate_limited rows for kind=rate_limit and failed rows for kind=body_size. Every persisted message + context_json is run through ChatSessions::redact_secrets at write time. Schema v2 added tokens_total INT and cost_micros BIGINT columns; pfa_trace_log_schema_version option triggers reinstall on upgrade."
     },
     {
@@ -797,10 +1292,19 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/support-export"],
-      "sourceFiles": ["includes/RestApi.php", "includes/TraceLogger.php"],
-      "tests": ["tests/runtime-observability-smoke.php"],
-      "evidence": ["npm.cmd run smoke:observability:docker"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/support-export"
+      ],
+      "sourceFiles": [
+        "includes/RestApi.php",
+        "includes/TraceLogger.php"
+      ],
+      "tests": [
+        "tests/runtime-observability-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:observability:docker"
+      ],
       "notes": "GET /agent-runtime/support-export returns agent contract summary, workflow dependency state, environment (wpVersion, phpVersion, locale, timezone, multisite, debug), provider statuses with maskedKey only, recent traces (last 50 of current user), recent failures (last 20), and 24h aggregate metrics. The smoke asserts no raw API key string and no sk-... shape leaks anywhere in the export payload."
     },
     {
@@ -810,10 +1314,19 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/metrics"],
-      "sourceFiles": ["includes/RestApi.php", "includes/TraceLogger.php"],
-      "tests": ["tests/runtime-observability-smoke.php"],
-      "evidence": ["npm.cmd run smoke:observability:docker"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/metrics"
+      ],
+      "sourceFiles": [
+        "includes/RestApi.php",
+        "includes/TraceLogger.php"
+      ],
+      "tests": [
+        "tests/runtime-observability-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:observability:docker"
+      ],
       "notes": "GET /agent-runtime/metrics?windowHours=N (1..168) returns totals.byKind, byStatus, byProvider, totalRows, totalTokens, totalCostMicros, tokensByProvider and costMicrosByProvider for the current user inside the window. Defaults to 24 hours. costMicros is integer (1/1,000,000 of currency unit); today the gateway reports cost.amount=null so values stay 0 until pricing lands."
     },
     {
@@ -834,8 +1347,12 @@
         "assets/src/api.ts",
         "assets/src/types.ts"
       ],
-      "tests": ["tests/runtime-chat-sessions-smoke.php"],
-      "evidence": ["npm.cmd run smoke:chat-sessions:docker"],
+      "tests": [
+        "tests/runtime-chat-sessions-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:chat-sessions:docker"
+      ],
       "notes": "REST + storage layer for chat sessions. CPT pfa_chat_session, post_status=private, owned by post_author. CRUD + append-messages REST endpoints. Default access policy denies cross-user reads/writes; pfa_chat_session_can_access filter allows hosts to grant cross-author access. Messages are redacted at save time for sk-..., sk-ant-api03-..., AIza..., glpat-..., ghp_..., xox*-... and Bearer ... patterns. Body-size guard at 512 KiB on create/patch/append. Delete is force-true. UI integration in App.tsx is parked: the previous AgentConsole wired auto-append per turn but was removed when the main chat moved to /agent-runtime/turn; the REST surface remains the persistent layer external consumers (and a future App.tsx re-wire) will use."
     },
     {
@@ -845,13 +1362,19 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/turn-v2"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/turn-v2"
+      ],
       "sourceFiles": [
         "includes/FrameworkRuntime.php",
         "includes/WorkflowApiBridge.php"
       ],
-      "tests": ["tests/runtime-observability-smoke.php"],
-      "evidence": ["npm.cmd run smoke:action-inspector:docker"],
+      "tests": [
+        "tests/runtime-observability-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:action-inspector:docker"
+      ],
       "notes": "Each execution returned by /agent-runtime/turn carries startedAt, endedAt, durationMs and status. Read-only tools (workflow_get_contract, workflow_list, workflow_get) have diff=null. Modifying tool workflow_apply includes diff with real before/after snapshots: payload.workflow.id<=0 yields before=null + changeType=created, positive id yields a real before snapshot via agent_workflow_full + changeType=updated. Snapshots come from the wp-pfworkflow PHP-internal service, not REST. Tool failures do not report status=completed."
     },
     {
@@ -861,10 +1384,21 @@
       "uiVisible": false,
       "functional": true,
       "endpointPolicy": "required",
-      "endpoints": ["wp-pfagent/v1/agent-runtime/tools"],
-      "sourceFiles": ["config/agent-tools.json", "includes/AgentToolRegistry.php", "includes/WorkflowApiBridge.php"],
-      "tests": ["scripts/test-agent-tool-contracts.mjs"],
-      "evidence": ["npm.cmd run test:agent-tools", "npm.cmd run smoke:agent-tooling:docker"],
+      "endpoints": [
+        "wp-pfagent/v1/agent-runtime/tools"
+      ],
+      "sourceFiles": [
+        "config/agent-tools.json",
+        "includes/AgentToolRegistry.php",
+        "includes/WorkflowApiBridge.php"
+      ],
+      "tests": [
+        "scripts/test-agent-tool-contracts.mjs"
+      ],
+      "evidence": [
+        "npm.cmd run test:agent-tools",
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "Agent surface is 4 tools (workflow_get_contract, workflow_list, workflow_get, workflow_apply) backed by the wp-pfworkflow PHP-internal service exposed via apply_filters('projectflash_workflow_agent_api', null). Tool catalog validation accepts either documented REST endpoints or a phpService block. Docker smoke verifies success, envelope shape ({content, contextForYou}), service-failure propagation, and id<=0/positive create-or-update semantics through workflow_apply."
     },
     {
@@ -875,9 +1409,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowApiBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-workflow-bridge-smoke.php"],
-      "evidence": ["npm.cmd run smoke:agent-tooling:docker"],
+      "sourceFiles": [
+        "includes/WorkflowApiBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-workflow-bridge-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "PHP-internal call to agent_contract() on the workflow service. Returns the type catalog, compatibility matrix, typed contract for every node, and global rules wrapped as { content, contextForYou }. Bootstrap-only: agent prompts the LLM to fetch once per conversation and reuse it from context."
     },
     {
@@ -888,9 +1429,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowApiBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-workflow-bridge-smoke.php"],
-      "evidence": ["npm.cmd run smoke:agent-tooling:docker"],
+      "sourceFiles": [
+        "includes/WorkflowApiBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-workflow-bridge-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-tooling:docker"
+      ],
       "notes": "PHP-internal call to agent_workflow_list($filters). Returns ALL workflows as full round-trippable payloads (not ids). Outer envelope and each item are { content, contextForYou } — recursive. Filters: status, query."
     },
     {
@@ -901,9 +1449,17 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowApiBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-workflow-bridge-smoke.php"],
-      "evidence": ["npm.cmd run smoke:agent-tooling:docker", "npm.cmd run smoke:action-inspector:docker"],
+      "sourceFiles": [
+        "includes/WorkflowApiBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-workflow-bridge-smoke.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-tooling:docker",
+        "npm.cmd run smoke:action-inspector:docker"
+      ],
       "notes": "PHP-internal call to agent_workflow_full($id). Returns one full round-trippable workflow envelope including honestStatus per node. Used by snapshot_workflow() for diff capture in the action inspector."
     },
     {
@@ -914,9 +1470,19 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowApiBridge.php", "includes/FrameworkRuntime.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-workflow-bridge-smoke.php", "tests/runtime-compaction-real-deepseek.php"],
-      "evidence": ["npm.cmd run smoke:agent-tooling:docker", "npm.cmd run smoke:action-inspector:docker"],
+      "sourceFiles": [
+        "includes/WorkflowApiBridge.php",
+        "includes/FrameworkRuntime.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-workflow-bridge-smoke.php",
+        "tests/runtime-compaction-real-deepseek.php"
+      ],
+      "evidence": [
+        "npm.cmd run smoke:agent-tooling:docker",
+        "npm.cmd run smoke:action-inspector:docker"
+      ],
       "notes": "PHP-internal call to agent_workflow_apply($payload). The id inside payload.workflow.id determines behavior: id<=0 (typically -1) creates, positive id updates. Side-effecting; the AgentRuntime confirmation gate fires before invocation. Construction only; no execution semantics."
     },
     {
@@ -927,9 +1493,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/ManagementApiBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-pfm-bridge-smoke.php"],
-      "evidence": ["tests/runtime-pfm-bridge-smoke.php"],
+      "sourceFiles": [
+        "includes/ManagementApiBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
+      "evidence": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
       "notes": "PHP-internal call to agent_contract() via projectflash_management_agent_api filter. Returns the field-type catalog + EQL operator vocabulary + supported resource kinds, wrapped as { content, contextForYou }."
     },
     {
@@ -940,9 +1513,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/ManagementApiBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-pfm-bridge-smoke.php"],
-      "evidence": ["tests/runtime-pfm-bridge-smoke.php"],
+      "sourceFiles": [
+        "includes/ManagementApiBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
+      "evidence": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
       "notes": "PHP-internal call to agent_list(kind, filters) via projectflash_management_agent_api filter. kind chooses the resource family (entity, record, action, application, module, group, role, page)."
     },
     {
@@ -953,9 +1533,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/ManagementApiBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-pfm-bridge-smoke.php"],
-      "evidence": ["tests/runtime-pfm-bridge-smoke.php"],
+      "sourceFiles": [
+        "includes/ManagementApiBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
+      "evidence": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
       "notes": "PHP-internal call to agent_get(kind, ref) via projectflash_management_agent_api filter. Returns the round-trippable payload for one resource (same shape pfm_apply accepts back)."
     },
     {
@@ -966,9 +1553,17 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/ManagementApiBridge.php", "includes/FrameworkRuntime.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-pfm-bridge-smoke.php"],
-      "evidence": ["tests/runtime-pfm-bridge-smoke.php"],
+      "sourceFiles": [
+        "includes/ManagementApiBridge.php",
+        "includes/FrameworkRuntime.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
+      "evidence": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
       "notes": "PHP-internal call to agent_apply(kind, payload). Side-effecting; the AgentRuntime confirmation gate fires before invocation. Construction only; no execution semantics."
     },
     {
@@ -979,9 +1574,17 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/ManagementApiBridge.php", "includes/FrameworkRuntime.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-pfm-bridge-smoke.php"],
-      "evidence": ["tests/runtime-pfm-bridge-smoke.php"],
+      "sourceFiles": [
+        "includes/ManagementApiBridge.php",
+        "includes/FrameworkRuntime.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
+      "evidence": [
+        "tests/runtime-pfm-bridge-smoke.php"
+      ],
       "notes": "PHP-internal call to agent_delete(kind, ref, options). Side-effecting; the confirmation gate fires before invocation. Gated by the SAME AgentCapabilityGuard as agent_apply (delete_<kind>), audited via the pfm.record.deleted / repository events, and cascade-aware (business_rule delete refused → deactivate instead; entity delete drops records + layout; record delete clears inbound relations). One ref = one target; no bulk delete."
     },
     {
@@ -1003,8 +1606,12 @@
         "includes/Sourcecode/DecompileCache.php",
         "docs/WORKFLOW_SOURCE_LANGUAGE.md"
       ],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "JavaScript-subset DSL used internally between the authoring LLM and pfagent. The customer never sees the source. Auto-generates /lib/nodes.d.ts from wp-pfworkflow's contract. Roundtrip smoke verifies compile + decompile + recompile yields structurally equivalent graphs."
     },
     {
@@ -1025,8 +1632,12 @@
         "assets/src/App.tsx",
         "assets/src/api.ts"
       ],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "LLM file tools (list_files / read_file / write_file / edit_file / move_file / delete_file) operate on a virtual workspace whose contents the customer never sees. Write/edit update an in-progress draft that compiles to a live preview graph; the customer commits via the Apply button which calls POST /vfs/apply. Drafts persisted in option storage so reopening the chat restores them."
     },
     {
@@ -1037,9 +1648,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowVfsBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "sourceFiles": [
+        "includes/WorkflowVfsBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "Enumerates the LLM virtual workspace; /lib/nodes.d.ts, /workflows/*, /templates/* with metadata."
     },
     {
@@ -1050,9 +1668,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowVfsBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "sourceFiles": [
+        "includes/WorkflowVfsBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "Returns the current source for a workflow file (draft if one exists; otherwise the postmeta-cached live source)."
     },
     {
@@ -1063,9 +1688,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowVfsBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "sourceFiles": [
+        "includes/WorkflowVfsBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "Updates a draft + compiled preview without touching the live workflow. Returns typed compile errors on bad source."
     },
     {
@@ -1076,9 +1708,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowVfsBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "sourceFiles": [
+        "includes/WorkflowVfsBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "Surgical string replacement requiring the snippet to be unique in the file; compiles the result and updates draft+preview."
     },
     {
@@ -1089,9 +1728,16 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowVfsBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "sourceFiles": [
+        "includes/WorkflowVfsBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "Renames a workflow's live name on the underlying record; side-effect, gated by the runtime confirmation modal."
     },
     {
@@ -1102,10 +1748,917 @@
       "functional": true,
       "endpointPolicy": "none",
       "endpoints": [],
-      "sourceFiles": ["includes/WorkflowVfsBridge.php", "config/agent-tools.json"],
-      "tests": ["tests/runtime-variables-vfs-smoke.php"],
-      "evidence": ["php tests/runtime-variables-vfs-smoke.php"],
+      "sourceFiles": [
+        "includes/WorkflowVfsBridge.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/runtime-variables-vfs-smoke.php"
+      ],
+      "evidence": [
+        "php tests/runtime-variables-vfs-smoke.php"
+      ],
       "notes": "Deletes the underlying workflow; side-effect, gated by the runtime confirmation modal."
+    },
+    {
+      "key": "wpcore.wp_post_list",
+      "label": "WP-core tool wp_post_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List/search WordPress posts, pages or any custom post type. Filter by type, status, author, search text, date order. Read-only."
+    },
+    {
+      "key": "wpcore.wp_post_get",
+      "label": "WP-core tool wp_post_get",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Read one post/page/CPT by id (or slug + post_type): fields, terms and public meta. Read-only."
+    },
+    {
+      "key": "wpcore.wp_post_create",
+      "label": "WP-core tool wp_post_create",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Create a post/page/CPT. Defaults to draft. Content is sanitised. Side-effect."
+    },
+    {
+      "key": "wpcore.wp_post_update",
+      "label": "WP-core tool wp_post_update",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Update an existing post/page/CPT (title, content, excerpt, status). Side-effect."
+    },
+    {
+      "key": "wpcore.wp_post_trash",
+      "label": "WP-core tool wp_post_trash",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Move a post/page/CPT to the trash (not permanent deletion). Side-effect."
+    },
+    {
+      "key": "wpcore.wp_taxonomy_list",
+      "label": "WP-core tool wp_taxonomy_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "With no argument, list public taxonomies. With 'taxonomy', list that taxonomy's terms. Read-only."
+    },
+    {
+      "key": "wpcore.wp_term_create",
+      "label": "WP-core tool wp_term_create",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Create a taxonomy term (category, tag or custom). Side-effect."
+    },
+    {
+      "key": "wpcore.wp_term_assign",
+      "label": "WP-core tool wp_term_assign",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Assign terms to a post. Terms may be ids or names/slugs. Side-effect."
+    },
+    {
+      "key": "wpcore.wp_media_list",
+      "label": "WP-core tool wp_media_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List the media library (filter by search text or mime type). Read-only."
+    },
+    {
+      "key": "wpcore.wp_media_get",
+      "label": "WP-core tool wp_media_get",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Read one media attachment's metadata (url, alt, dimensions). Read-only."
+    },
+    {
+      "key": "wpcore.wp_user_list",
+      "label": "WP-core tool wp_user_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List users (filter by role or search). Never returns passwords. Read-only."
+    },
+    {
+      "key": "wpcore.wp_user_get",
+      "label": "WP-core tool wp_user_get",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Read one user's profile by id or login. Never returns the password. Read-only."
+    },
+    {
+      "key": "wpcore.wp_user_create",
+      "label": "WP-core tool wp_user_create",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Create a user (username, email, role). Password is auto-generated and never disclosed. Role grants are guarded against privilege escalation. Side-effect."
+    },
+    {
+      "key": "wpcore.wp_user_update",
+      "label": "WP-core tool wp_user_update",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Update a user's profile or role (role changes need promote_users and are escalation-guarded). Passwords are not changeable here. Side-effect."
+    },
+    {
+      "key": "wpcore.wp_comment_list",
+      "label": "WP-core tool wp_comment_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List comments (filter by post, status, search). Read-only."
+    },
+    {
+      "key": "wpcore.wp_comment_moderate",
+      "label": "WP-core tool wp_comment_moderate",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Moderate a comment: approve, hold, spam, trash, or reply. Side-effect."
+    },
+    {
+      "key": "wpcore.wp_option_get",
+      "label": "WP-core tool wp_option_get",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Read a basic site setting (only an allow-list of general options; suite/plugin options are not exposed). Read-only."
+    },
+    {
+      "key": "wpcore.wp_option_set",
+      "label": "WP-core tool wp_option_set",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Change a basic site setting (only an allow-list of general options; suite/plugin options cannot be touched). Side-effect."
+    },
+    {
+      "key": "wpcore.wp_site_info",
+      "label": "WP-core tool wp_site_info",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Site overview: WordPress version, active theme, language, content counts, active plugins. Read-only."
+    },
+    {
+      "key": "wpcore.wp_menu_list",
+      "label": "WP-core tool wp_menu_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List navigation menus and their items. Read-only."
+    },
+    {
+      "key": "thirdparty.wc_read",
+      "label": "Third-party tool wc_read",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Read WooCommerce data: list recent orders or products, or one by id. Read-only. Only when WooCommerce is active."
+    },
+    {
+      "key": "thirdparty.wc_order_note",
+      "label": "Third-party tool wc_order_note",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Add a note to a WooCommerce order (private, or customer-visible). Side-effect. Only when WooCommerce is active."
+    },
+    {
+      "key": "thirdparty.seo_get",
+      "label": "Third-party tool seo_get",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Read the SEO title, meta description and focus keyword of a post/page. Works with Yoast, Rank Math or SEOPress (auto-detected). Read-only."
+    },
+    {
+      "key": "thirdparty.seo_set",
+      "label": "Third-party tool seo_set",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Optimize a post/page's SEO: set the SEO title, meta description and/or focus keyword. Works with Yoast, Rank Math or SEOPress. Side-effect."
+    },
+    {
+      "key": "thirdparty.forms_list",
+      "label": "Third-party tool forms_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "List forms across the installed form plugins (Contact Form 7, Fluent Forms, Gravity Forms, WPForms), noting which support stored entries. Read-only."
+    },
+    {
+      "key": "thirdparty.forms_entries",
+      "label": "Third-party tool forms_entries",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "List a form's stored entries (Fluent Forms / Gravity Forms; Contact Form 7 stores none). Read-only."
+    },
+    {
+      "key": "wpcore.wp_post_meta_set",
+      "label": "wpcore tool wp_post_meta_set",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Set a PUBLIC custom field (post meta) on a post. Protected keys (starting with _) are refused. Side-effect."
+    },
+    {
+      "key": "wpcore.wp_media_sideload",
+      "label": "wpcore tool wp_media_sideload",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Download a remote http(s) image/file URL into the media library. SSRF-guarded (rejects private/loopback hosts). Side-effect."
+    },
+    {
+      "key": "wpcore.wp_menu_manage",
+      "label": "wpcore tool wp_menu_manage",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "Create a navigation menu (action=create_menu) or append an item to one (action=add_item, with a post_id or a url). Side-effect."
+    },
+    {
+      "key": "wpcore.wp_widget_list",
+      "label": "wpcore tool wp_widget_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List widgets grouped by sidebar. Read-only."
+    },
+    {
+      "key": "wpcore.wp_plugins_list",
+      "label": "wpcore tool wp_plugins_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List installed plugins and their active state. Read-only."
+    },
+    {
+      "key": "wpcore.wp_posttypes_list",
+      "label": "wpcore tool wp_posttypes_list",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/WpCore/WpCoreAgentApi.php",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/wpcore-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/wpcore-tools-smoke.php"
+      ],
+      "notes": "List registered post types and their taxonomies (discover any plugin's content; then use the wp_post_* tools with the post_type). Read-only."
+    },
+    {
+      "key": "thirdparty.wc_order_update",
+      "label": "thirdparty tool wc_order_update",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Change a WooCommerce order's status (processing/completed/on-hold/…). Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_order_cancel",
+      "label": "thirdparty tool wc_order_cancel",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Cancel a WooCommerce order. Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_order_create",
+      "label": "thirdparty tool wc_order_create",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Create a pending WooCommerce order, optionally with a customer and line items. Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_order_line",
+      "label": "thirdparty tool wc_order_line",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Add or remove a product line on a WooCommerce order. Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_apply_coupon",
+      "label": "thirdparty tool wc_apply_coupon",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Apply a coupon code to a WooCommerce order. Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_stock_set",
+      "label": "thirdparty tool wc_stock_set",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Set a product's stock quantity (and derived stock status). Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_product_upsert",
+      "label": "thirdparty tool wc_product_upsert",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Create or edit a simple WooCommerce product (name, price, sku, description, status). Side-effect."
+    },
+    {
+      "key": "thirdparty.wc_refund_request",
+      "label": "thirdparty tool wc_refund_request",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Record a refund REQUEST on an order for a human to process. NEVER issues the refund automatically (our policy). Side-effect."
+    },
+    {
+      "key": "thirdparty.forms_entry_manage",
+      "label": "thirdparty tool forms_entry_manage",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Manage a stored form entry: read/unread, spam/unspam, trash, star/unstar, or add a note (Gravity Forms, Fluent Forms). Side-effect."
+    },
+    {
+      "key": "thirdparty.ld_read",
+      "label": "thirdparty tool ld_read",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Read LearnDash courses, lessons, or a user's enrollments. Read-only."
+    },
+    {
+      "key": "thirdparty.ld_enroll",
+      "label": "thirdparty tool ld_enroll",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Enroll or unenroll a user in a LearnDash course. Side-effect."
+    },
+    {
+      "key": "thirdparty.mp_read",
+      "label": "thirdparty tool mp_read",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Read MemberPress membership products, or a member's active memberships. Read-only."
+    },
+    {
+      "key": "thirdparty.mp_access",
+      "label": "thirdparty tool mp_access",
+      "state": "tested",
+      "uiVisible": false,
+      "functional": true,
+      "endpointPolicy": "none",
+      "endpoints": [],
+      "sourceFiles": [
+        "includes/ThirdParty/",
+        "config/agent-tools.json"
+      ],
+      "tests": [
+        "tests/thirdparty-tools-smoke.php"
+      ],
+      "evidence": [
+        "php tests/thirdparty-tools-smoke.php"
+      ],
+      "notes": "Grant or revoke a member's access to a membership (creates/expires a manual transaction). Sensitive; side-effect."
     }
   ]
 }

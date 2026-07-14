@@ -19,6 +19,10 @@ namespace ProjectFlash\Agent\Framework\Llm;
  */
 final class GatewayFactory
 {
+    // Exceptions are internal factory/config errors (unknown provider family,
+    // missing settings), caught by the runtime and surfaced as JSON/logs —
+    // never echoed as HTML.
+    // phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
     public function __construct(private readonly ?ModelCatalog $catalog = null)
     {
     }

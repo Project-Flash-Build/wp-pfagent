@@ -31,6 +31,14 @@ use ProjectFlash\Agent\Framework\Storage\Store;
  */
 final class WpDbStore implements Store
 {
+    // This class is the dedicated store for the plugin's OWN custom tables
+    // (wp_pfaf_conversations/messages/tool_calls/traces). Every query binds its
+    // VALUES through $wpdb->prepare(); the only interpolation is the fixed table
+    // prefix ($wpdb->prefix, never user input) and computed `%s` placeholder
+    // lists — so the prepared-SQL sniffs mis-fire here. Direct queries on custom
+    // tables are unavoidable (no WP API), and per-request agent state is not a
+    // meaningful object-cache candidate. Justified, class-scoped.
+    // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     private string $prefix;
 
     public function __construct(private readonly \wpdb $wpdb)

@@ -5,7 +5,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-pfagent\n"
 "POT-Creation-Date: 2026-05-17T16:38:13+00:00\n"
 "PO-Revision-Date: 2026-05-28 11:58+0200\n"
-"Last-Translator: Project Flash Build <build@project-flash.com>\n"
+"Last-Translator: Setyenv Build <build@setyenv.com>\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
@@ -15,1342 +15,1529 @@ msgstr ""
 "X-Domain: wp-pfagent\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
-#. Plugin Name of the plugin
-#: wp-pfagent.php includes/AdminPage.php:25 includes/AdminPage.php:109
-msgid "WP PFAgent"
-msgstr "WP PFAgent"
+msgid "\"%s\" will be permanently deleted along with its messages. This action cannot be undone."
+msgstr "\"%s\" ve mesajları kalıcı olarak silinecek. Bu eylem geri alınamaz."
 
-#. Description of the plugin
-#: wp-pfagent.php
-msgid "Agent console for ProjectFlash products."
-msgstr "ProjectFlash ürünleri için ajan konsolu."
-
-#. Author of the plugin
-#: wp-pfagent.php
-msgid "ProjectFlash"
-msgstr "ProjectFlash"
-
-#: includes/AdminPage.php:26
-msgid "PF Agent"
-msgstr "PF Agent"
-
-#: includes/AdminPage.php:110
-msgid "Back to admin"
-msgstr "Yönetime dön"
-
-#: includes/AdminPage.php:111 includes/AdminPage.php:176
-msgid ""
-"WP PFAgent assets are missing. Run npm install and npm run build inside the "
-"plugin directory."
-msgstr ""
-"WP PFAgent varlıkları eksik. Eklenti dizininde npm install ve npm run build "
-"çalıştırın."
-
-#: includes/AdminPage.php:141
-msgid "WP PFAgent assets are not built."
-msgstr "WP PFAgent varlıkları derlenmemiş."
-
-#: includes/AdminPage.php:169
-msgid "You do not have permission to manage WP PFAgent."
-msgstr "WP PFAgent'ı yönetme izniniz yok."
-
-#: includes/AgentContract.php:168
-msgid "Agent capability manifest is missing."
-msgstr "Ajan yetenek manifestosu eksik."
-
-#: includes/AgentContract.php:173
-msgid "Agent capability manifest is invalid."
-msgstr "Ajan yetenek manifestosu geçersiz."
-
-#: includes/AgentRuntime.php:40
-msgid "providerId is required."
-msgstr "providerId gereklidir."
-
-#: includes/AgentRuntime.php:59
-msgid "message is required."
-msgstr "message gereklidir."
-
-#: includes/AgentRuntime.php:145
-msgid "No tool was selected by the model."
-msgstr "Model tarafından hiçbir araç seçilmedi."
-
-#: includes/AgentRuntime.php:146
-msgid ""
-"Tools ran but the model returned an empty reply. The data is in the "
-"executions panel."
-msgstr ""
-"Araçlar çalıştı ancak model boş bir yanıt döndürdü. Veri yürütmeler "
-"panelinde."
-
-#: includes/AgentRuntime.php:161
-msgid "The model returned a malformed tool call."
-msgstr "Model hatalı biçimlendirilmiş bir araç çağrısı döndürdü."
-
-#: includes/AgentRuntime.php:184
-msgid "The model requested a tool that is not declared or allowed."
-msgstr "Model, bildirilmemiş veya izin verilmemiş bir araç istedi."
-
-#: includes/AgentRuntime.php:260
-msgid ""
-"This action has side effects and requires confirmation before execution."
-msgstr "Bu eylemin yan etkileri vardır ve yürütülmeden önce onay gerektirir."
-
-#: includes/AgentRuntime.php:364
-msgid "I gathered some data but the model did not produce a final reply."
-msgstr "Biraz veri topladım ancak model son bir yanıt üretmedi."
-
-#: includes/AgentRuntime.php:379
-msgid "confirmationId is required when confirmed=true."
-msgstr "confirmed=true olduğunda confirmationId gereklidir."
-
-#: includes/AgentRuntime.php:384
-msgid "Pending confirmation was not found or has expired."
-msgstr "Bekleyen onay bulunamadı veya süresi doldu."
-
-#: includes/AgentRuntime.php:703
-msgid "Workflow tool execution completed, but final LLM response failed."
-msgstr ""
-"Workflow aracının yürütülmesi tamamlandı ancak son LLM yanıtı başarısız "
-"oldu."
-
-#: includes/AgentToolRegistry.php:42
-msgid "The requested tool is not in the declared agent tool registry."
-msgstr "İstenen araç, bildirilen ajan araç kayıt defterinde yok."
-
-#: includes/AgentToolRegistry.php:52
-msgid "Agent tool contract file is missing."
-msgstr "Ajan aracı sözleşme dosyası eksik."
-
-#: includes/AgentToolRegistry.php:57
-msgid "Agent tool contract file is invalid."
-msgstr "Ajan aracı sözleşme dosyası geçersiz."
-
-#: includes/AgentToolRegistry.php:148
-msgid "Agent tool entries must be objects."
-msgstr "Ajan araç girişleri nesne olmalıdır."
-
-#: includes/ChatSessions.php:136
-msgid "A logged-in user is required."
-msgstr "Oturum açmış bir kullanıcı gereklidir."
-
-#. translators: %s: UTC timestamp used as default chat session title
-#: includes/ChatSessions.php:145
-#, php-format
-msgid "Session %s"
-msgstr "Oturum %s"
-
-#: includes/ChatSessions.php:176 includes/ChatSessions.php:223
-#: includes/ChatSessions.php:310 includes/ChatSessions.php:365
-msgid "Chat session not found."
-msgstr "Sohbet oturumu bulunamadı."
-
-#: includes/ChatSessions.php:200
-msgid "label cannot be empty."
-msgstr "label boş olamaz."
-
-#: includes/ChatSessions.php:242
-msgid "Failed to delete the chat session."
-msgstr "Sohbet oturumu silinemedi."
-
-#: includes/ChatSessions.php:264
-msgid "messages array is required."
-msgstr "messages dizisi gereklidir."
-
-#: includes/ChatSessions.php:289
-msgid "No valid messages were provided."
-msgstr "Geçerli mesaj sağlanmadı."
-
-#. translators: 1: maximum bytes allowed, 2: actual bytes received
-#: includes/ChatSessions.php:350 includes/RestApi.php:78
-#, php-format
-msgid "Request body exceeds %1$d bytes (got %2$d)."
-msgstr "İstek gövdesi %1$d baytı aşıyor (alınan: %2$d)."
-
-#: includes/ChatSessions.php:374
-msgid "You do not have access to this chat session."
-msgstr "Bu sohbet oturumuna erişiminiz yok."
-
-#: includes/ConversationCompactor.php:132
-#, php-format
-msgid ""
-"[Summary of prior work — %d turns folded, ~%d tokens reduced past the "
-"%d-token threshold]"
-msgstr ""
-"[Önceki çalışmanın özeti — %d tur sıkıştırıldı, ~%d token, %d-token eşiğinin"
-" ötesinde azaltıldı]"
-
-#: includes/CredentialStore.php:50 includes/CredentialStore.php:67
-#: includes/CredentialStore.php:117 includes/CredentialStore.php:135
-#: includes/CredentialStore.php:228 includes/CredentialStore.php:266
-#: includes/ProviderHealth.php:37 includes/ProviderModelDiscovery.php:28
-#: includes/ProviderModelDiscovery.php:86
-msgid "Provider preset was not found."
-msgstr "Sağlayıcı ön ayarı bulunamadı."
-
-#: includes/CredentialStore.php:72
-msgid "API key is required and must be at least 8 characters."
-msgstr "API anahtarı gereklidir ve en az 8 karakter olmalıdır."
-
-#: includes/CredentialStore.php:76
-msgid "Credential encryption is not available on this WordPress runtime."
-msgstr ""
-"Bu WordPress çalışma zamanında kimlik bilgisi şifrelemesi mevcut değil."
-
-#: includes/CredentialStore.php:99
-msgid "Credential stored but connection has not been validated."
-msgstr "Kimlik bilgisi saklandı ancak bağlantı doğrulanmadı."
-
-#: includes/CredentialStore.php:141 includes/CredentialStore.php:234
-#: includes/CredentialStore.php:272 includes/CredentialStore.php:309
-msgid "Provider is not configured."
-msgstr "Sağlayıcı yapılandırılmamış."
-
-#: includes/CredentialStore.php:151
-msgid "Provider family does not support connection testing yet."
-msgstr "Sağlayıcı ailesi henüz bağlantı testini desteklemiyor."
-
-#. translators: %s: redacted underlying error message
-#: includes/CredentialStore.php:172
-#, php-format
-msgid "Connection failed: %s"
-msgstr "Bağlantı başarısız: %s"
-
-#: includes/CredentialStore.php:186
-msgid "Connection validated through provider model discovery."
-msgstr "Bağlantı, sağlayıcı model keşfi aracılığıyla doğrulandı."
-
-#. translators: %d: HTTP status code
-#: includes/CredentialStore.php:194
-#, php-format
-msgid "Connection test returned HTTP %d without a valid models payload."
-msgstr "Bağlantı testi geçerli bir model yükü olmadan HTTP %d döndürdü."
-
-#: includes/CredentialStore.php:239
-msgid "Provider family is not supported for runtime calls."
-msgstr "Sağlayıcı ailesi çalışma zamanı çağrıları için desteklenmiyor."
-
-#: includes/CredentialStore.php:278
-msgid "Connection validation updated."
-msgstr "Bağlantı doğrulaması güncellendi."
-
-#: includes/CredentialStore.php:347
-msgid "Credential encryption failed."
-msgstr "Kimlik bilgisi şifrelemesi başarısız oldu."
-
-#: includes/CredentialStore.php:364
-msgid "Stored credential cipher is unsupported."
-msgstr "Saklanan kimlik bilgisi şifresi desteklenmiyor."
-
-#: includes/CredentialStore.php:371
-msgid "Stored credential payload is invalid."
-msgstr "Saklanan kimlik bilgisi yükü geçersiz."
-
-#: includes/CredentialStore.php:381
-msgid "Credential decryption failed."
-msgstr "Kimlik bilgisi şifresi çözülemedi."
-
-#: includes/CredentialStore.php:448
-msgid ""
-"Provider family does not expose a models endpoint for connection testing."
-msgstr "Sağlayıcı ailesi bağlantı testi için bir model uç noktası sunmuyor."
-
-#: includes/CredentialStore.php:482
-msgid "Provider requires additional settings before testing connection."
-msgstr "Sağlayıcı, bağlantıyı test etmeden önce ek ayarlar gerektirir."
-
-#: includes/CredentialStore.php:486 includes/ProviderModelDiscovery.php:430
-#: includes/ProviderRuntime.php:431
-msgid "Provider base URL must be an HTTP URL."
-msgstr "Sağlayıcı taban URL'si bir HTTP URL'si olmalıdır."
-
-#: includes/LlmGateway.php:124
-msgid "At least one tool definition is required for toolCall."
-msgstr "toolCall için en az bir araç tanımı gereklidir."
-
-#: includes/LlmGateway.php:761 includes/ProviderModelDiscovery.php:68
-#: includes/ProviderRuntime.php:132
-msgid "Provider model discovery returned no models."
-msgstr "Sağlayıcı model keşfi hiç model döndürmedi."
-
-#: includes/LlmGateway.php:784 includes/ProviderRuntime.php:163
-msgid "Provider model discovery returned no text generation model candidate."
-msgstr "Sağlayıcı model keşfi metin üretimi modeli adayı döndürmedi."
-
-#: includes/PhpStreamTransport.php:26
-msgid ""
-"PHP stream transport is not available because allow_url_fopen is disabled."
-msgstr "allow_url_fopen devre dışı olduğundan PHP akış aktarımı mevcut değil."
-
-#: includes/PhpStreamTransport.php:45
-msgid "PHP stream transport could not open provider stream."
-msgstr "PHP akış aktarımı sağlayıcı akışını açamadı."
-
-#: includes/PhpStreamTransport.php:74
-msgid "PHP stream transport failed while reading provider stream."
-msgstr "PHP akış aktarımı sağlayıcı akışını okurken başarısız oldu."
-
-#: includes/PhpStreamTransport.php:81
-msgid "Provider stream timed out."
-msgstr "Sağlayıcı akışı zaman aşımına uğradı."
-
-#: includes/ProviderModelDiscovery.php:40
-msgid ""
-"Provider does not expose API model discovery. Manual model entries are "
-"required for this preset."
-msgstr ""
-"Sağlayıcı API model keşfini sunmuyor. Bu ön ayar için manuel model girdileri"
-" gerekli."
-
-#: includes/ProviderModelDiscovery.php:91
-msgid "Manual model entries are not allowed for this provider preset."
-msgstr "Bu sağlayıcı ön ayarı için manuel model girdilerine izin verilmiyor."
-
-#: includes/ProviderModelDiscovery.php:116
-msgid "At least one manual model id is required."
-msgstr "En az bir manuel model id'si gereklidir."
-
-#: includes/ProviderModelDiscovery.php:139 includes/ProviderRuntime.php:321
-msgid "Provider family does not expose the required runtime endpoint."
-msgstr "Sağlayıcı ailesi gereken çalışma zamanı uç noktasını sunmuyor."
-
-#: includes/ProviderModelDiscovery.php:426 includes/ProviderRuntime.php:427
-msgid "Provider requires additional settings before runtime call."
-msgstr "Sağlayıcı, çalışma zamanı çağrısından önce ek ayarlar gerektirir."
-
-#: includes/ProviderPresets.php:18
-msgid "Provider presets file is missing."
-msgstr "Sağlayıcı ön ayarları dosyası eksik."
-
-#: includes/ProviderPresets.php:23
-msgid "Provider presets file is not valid JSON."
-msgstr "Sağlayıcı ön ayarları dosyası geçerli JSON değil."
-
-#: includes/ProviderPresets.php:70
-msgid "Provider presets schemaVersion must be 1."
-msgstr "Sağlayıcı ön ayarlarının schemaVersion'ı 1 olmalıdır."
-
-#: includes/ProviderPresets.php:74
-msgid "Provider presets must define families and presets."
-msgstr "Sağlayıcı ön ayarları families ve presets tanımlamalıdır."
-
-#: includes/ProviderPresets.php:79
-msgid "Provider preset entries must be keyed objects."
-msgstr "Sağlayıcı ön ayarı girdileri anahtarlı nesneler olmalıdır."
-
-#: includes/ProviderPresets.php:83
-msgid "Provider presets require label, family and baseUrl."
-msgstr "Sağlayıcı ön ayarları label, family ve baseUrl gerektirir."
-
-#: includes/ProviderPresets.php:87
-msgid "Provider preset references an unknown family."
-msgstr "Sağlayıcı ön ayarı bilinmeyen bir family'e referans veriyor."
-
-#: includes/ProviderPresets.php:91
-msgid "Provider presets must not define defaultModels."
-msgstr "Sağlayıcı ön ayarları defaultModels tanımlamamalıdır."
-
-#: includes/ProviderPresets.php:95
-msgid ""
-"Provider modelHints must remain non-authoritative and empty; real models "
-"come from discovery, cache or explicit manual entry."
-msgstr ""
-"Sağlayıcı modelHints yetkili olmayan ve boş kalmalıdır; gerçek modeller "
-"keşif, önbellek veya açık manuel girdiden gelir."
-
-#: includes/ProviderRuntime.php:45
-msgid "Provider family is not supported for generation yet."
-msgstr "Sağlayıcı ailesi üretim için henüz desteklenmiyor."
-
-#: includes/RateLimiter.php:65
-#, php-format
-msgid "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds."
-msgstr "\"%s\" için hız sınırına ulaşıldı (%d / %ds). %ds içinde yeniden deneyin."
-
-#: includes/RestApi.php:90
-msgid "oversized request body"
-msgstr "boyutu aşan istek gövdesi"
-
-#: includes/TraceLogger.php:88
-#, php-format
-msgid "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
-msgstr "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
-
-#: includes/WorkflowApiBridge.php:31
-msgid "WP PFWorkflow plugin is not active."
-msgstr "WP PFWorkflow eklentisi etkin değil."
-
-#: includes/WorkflowApiBridge.php:44
-msgid "Tool is not executable by Workflow API bridge."
-msgstr "Araç, Workflow API köprüsü tarafından yürütülebilir değil."
-
-#: includes/WorkflowApiBridge.php:56
-msgid "workflowId is required."
-msgstr "workflowId gereklidir."
-
-#: includes/WorkflowApiBridge.php:70
-msgid "payload is required."
-msgstr "payload gereklidir."
-
-#: includes/WorkflowApiBridge.php:135
-msgid "wp-pfworkflow agent-ready service is not available."
-msgstr "wp-pfworkflow agent-ready hizmeti mevcut değil."
-
-#: assets/src/Diagnostic.tsx:194
 msgid "$0 (no pricing configured)"
 msgstr "$0 (fiyatlandırma yapılandırılmamış)"
 
-#: assets/src/ProviderWizard.tsx:186
-#, javascript-format
-msgid "%1$d turn(s) · last %2$s"
-msgstr "%1$d tur · son %2$s"
-
-#: assets/src/App.tsx:849 assets/src/App.tsx:882
-#, javascript-format
-msgid "%1$s / %2$d nodes / %3$d wires"
-msgstr "%1$s / %2$d düğüm / %3$d bağlantı"
-
-#: assets/src/Diagnostic.tsx:108
-#, javascript-format
-msgid "%1$s tokens, %2$s"
-msgstr "%1$s token, %2$s"
-
-#: assets/src/App.tsx:709
-#, javascript-format
-msgid "%d execution(s)"
-msgstr "%d yürütme"
-
-#: assets/src/Diagnostic.tsx:128
-#, javascript-format
-msgid "%d issue(s)"
-msgstr "%d sorun"
-
-#: assets/src/App.tsx:785
-#, javascript-format
-msgid "%d nodes"
-msgstr "%d düğüm"
-
-#: assets/src/App.tsx:786
-#, javascript-format
-msgid "%d wires"
-msgstr "%d bağlantı"
-
-#: assets/src/ProviderWizard.tsx:289
-msgid "(manual)"
-msgstr "(manuel)"
-
-#: assets/src/ProviderWizard.tsx:218
-msgid "+ Add new credential"
-msgstr "+ Yeni kimlik bilgisi ekle"
-
-#: assets/src/App.tsx:638
-msgid "+ New"
-msgstr "+ Yeni"
-
-#: assets/src/ProviderWizard.tsx:197
-msgid "1. Pick a credential"
-msgstr "1. Bir kimlik bilgisi seçin"
-
-#: assets/src/ProviderWizard.tsx:231
-msgid "1b. New credential"
-msgstr "1b. Yeni kimlik bilgisi"
-
-#: assets/src/ProviderWizard.tsx:277
-msgid "2. Model"
-msgstr "2. Model"
-
-#: assets/src/ProviderWizard.tsx:251
-msgid "API key"
-msgstr "API anahtarı"
-
-#: assets/src/ActionInspector.tsx:22 assets/src/ActionInspector.tsx:34
-#: assets/src/ActionInspector.tsx:46 assets/src/ActionInspector.tsx:60
-msgid "Action Inspector"
-msgstr "Eylem denetleyici"
-
-#: assets/src/App.tsx:511
-msgid "Action cancelled by the user."
-msgstr "Eylem kullanıcı tarafından iptal edildi."
-
-#: assets/src/App.tsx:368 assets/src/App.tsx:410
-#, javascript-format
-msgid "Action failed: %s"
-msgstr "Eylem başarısız: %s"
-
-#: assets/src/Diagnostic.tsx:167
-#, javascript-format
-msgid "Active (%s)"
-msgstr "Etkin (%s)"
-
-#: assets/src/App.tsx:537
-#, javascript-format
-msgid "Active LLM: %1$s · %2$s."
-msgstr "Etkin LLM: %1$s · %2$s."
-
-#: assets/src/ActionInspector.tsx:206
-msgid "After"
-msgstr "Sonra"
-
-#: assets/src/App.tsx:475
-#, javascript-format
-msgid "Agent runtime failed: %s"
-msgstr "Ajan çalışma zamanı başarısız: %s"
-
-#: assets/src/App.tsx:858
-msgid "All"
-msgstr "Tümü"
-
-#: assets/src/ActionInspector.tsx:163 assets/src/App.tsx:694
-msgid "Arguments"
-msgstr "Argümanlar"
-
-#: assets/src/App.tsx:765
-msgid "Ask the agent…"
-msgstr "Ajana sor…"
-
-#: assets/src/ProviderWizard.tsx:269
-msgid "Back"
-msgstr "Geri"
-
-#: assets/src/App.tsx:602
-msgid "Back to WP admin"
-msgstr "WP yönetimine dön"
-
-#: assets/src/ActionInspector.tsx:198
-msgid "Before"
-msgstr "Önce"
-
-#: assets/src/App.tsx:912
-msgid "Can manage"
-msgstr "Yönetebilir"
-
-#: assets/src/App.tsx:910
-msgid "Can view"
-msgstr "Görüntüleyebilir"
-
-#: assets/src/App.tsx:702 assets/src/ProviderWizard.tsx:222
-#: assets/src/ProviderWizard.tsx:333
-msgid "Cancel"
-msgstr "İptal"
-
-#: assets/src/Diagnostic.tsx:138
-msgid "Capability matrix"
-msgstr "Yetenek matrisi"
-
-#: assets/src/App.tsx:629
-msgid "Change"
-msgstr "Değiştir"
-
-#: assets/src/ProviderWizard.tsx:329
-msgid "Change provider"
-msgstr "Sağlayıcıyı değiştir"
-
-#: assets/src/App.tsx:899
-msgid ""
-"Chat history is local to this screen. Provider keys are never stored in "
-"browser storage."
-msgstr ""
-"Sohbet geçmişi bu ekrana özeldir. Sağlayıcı anahtarları asla tarayıcı "
-"deposunda saklanmaz."
-
-#: assets/src/App.tsx:302
-msgid "Checking Workflow API endpoints…"
-msgstr "Workflow API uç noktaları kontrol ediliyor…"
-
-#: assets/src/App.tsx:901
-msgid "Clear local history"
-msgstr "Yerel geçmişi temizle"
-
-#: assets/src/App.tsx:815
-msgid "Close"
-msgstr "Kapat"
-
-#: assets/src/ProviderWizard.tsx:166
-msgid "Configure LLM"
-msgstr "LLM'yi yapılandır"
-
-#: assets/src/Diagnostic.tsx:173
-#, javascript-format
-msgid "Configured providers (%d)"
-msgstr "Yapılandırılmış sağlayıcılar (%d)"
-
-#: assets/src/App.tsx:699 assets/src/ProviderWizard.tsx:317
-msgid "Confirm"
-msgstr "Onayla"
-
-#: assets/src/ActionInspector.tsx:68
-msgid "Confirmation pending:"
-msgstr "Onay bekleniyor:"
-
-#: assets/src/App.tsx:689
-msgid "Confirmation required"
-msgstr "Onay gerekli"
-
-#: assets/src/ProviderWizard.tsx:179
-msgid "Continue a previous conversation or proceed to start a new one."
-msgstr "Önceki bir konuşmaya devam edin veya yenisini başlatın."
-
-#: assets/src/ProviderWizard.tsx:178
-msgid "Conversation"
-msgstr "Konuşma"
-
-#: assets/src/Diagnostic.tsx:88
-#, javascript-format
-msgid "Cost and tokens (last %dh)"
-msgstr "Maliyet ve token (son %dh)"
-
-#: assets/src/ActionInspector.tsx:208
-msgid "Could not capture the resulting state."
-msgstr "Sonuç durumu yakalanamadı."
-
-#: assets/src/App.tsx:799
-msgid "Create draft"
-msgstr "Taslak oluştur"
-
-#: assets/src/App.tsx:400
-#, javascript-format
-msgid ""
-"Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" "
-"and loaded it."
-msgstr ""
-"%4$s \"%5$s\" şablonundan workflow #%1$d \"%2$s\" oluşturuldu (durum: %3$s) "
-"ve yüklendi."
-
-#: assets/src/App.tsx:287
-msgid "Current user cannot view workflows. API calls were skipped."
-msgstr ""
-"Geçerli kullanıcı workflow'ları görüntüleyemez. API çağrıları atlandı."
-
-#: assets/src/App.tsx:827 assets/src/Diagnostic.tsx:35
-#: assets/src/Diagnostic.tsx:46 assets/src/Diagnostic.tsx:66
-msgid "Diagnostic"
-msgstr "Tanılama"
-
-#: assets/src/App.tsx:1000
-msgid "Done."
-msgstr "Tamam."
-
-#: assets/src/App.tsx:756 assets/src/Diagnostic.tsx:50
-#: assets/src/ProviderWizard.tsx:172
-msgid "Error:"
-msgstr "Hata:"
-
-#: assets/src/Diagnostic.tsx:94
-msgid "Estimated cost"
-msgstr "Tahmini maliyet"
-
-#: assets/src/Diagnostic.tsx:97
-msgid "Events recorded"
-msgstr "Kaydedilen olaylar"
-
-#: assets/src/ActionInspector.tsx:168
-msgid "Evidence"
-msgstr "Kanıt"
-
-#: assets/src/ActionInspector.tsx:73
-#, javascript-format
-msgid "Executions (%d)"
-msgstr "Yürütmeler (%d)"
-
-#: assets/src/Diagnostic.tsx:123
-msgid "FAIL"
-msgstr "BAŞARISIZ"
-
-#: assets/src/Diagnostic.tsx:83
-#, javascript-format
-msgid "Generated at %s."
-msgstr "%s tarihinde oluşturuldu."
-
-#: assets/src/Diagnostic.tsx:168
-msgid "Inactive (fallback in use)"
-msgstr "Etkin değil (yedek kullanılıyor)"
-
-#: assets/src/App.tsx:442
-#, javascript-format
-msgid "LLM error: %1$s — %2$s"
-msgstr "LLM hatası: %1$s — %2$s"
-
-#: assets/src/App.tsx:804
-msgid "Load a workflow or preview a template."
-msgstr "Bir workflow yükleyin veya bir şablonu önizleyin."
-
-#: assets/src/App.tsx:358
-#, javascript-format
-msgid "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d)."
-msgstr ""
-"Workflow #%1$d \"%2$s\" yüklendi (durum: %3$s, düğüm: %4$d, bağlantı: %5$d)."
-
-#: assets/src/Diagnostic.tsx:37
-msgid "Loading beta readiness report…"
-msgstr "Beta hazırlık raporu yükleniyor…"
-
-#: assets/src/ProviderWizard.tsx:282
-msgid "Loading models…"
-msgstr "Modeller yükleniyor…"
-
-#: assets/src/App.tsx:767
-msgid "Message to the agent"
-msgstr "Ajana mesaj"
-
-#: assets/src/ProviderWizard.tsx:285
-msgid "Model"
-msgstr "Model"
-
-#: assets/src/ProviderWizard.tsx:296
-msgid "Model (manual)"
-msgstr "Model (manuel)"
-
-#: assets/src/App.tsx:906
-msgid "Namespace"
-msgstr "Namespace"
-
-#: assets/src/App.tsx:526 assets/src/App.tsx:573
-msgid "New conversation"
-msgstr "Yeni konuşma"
-
-#: assets/src/App.tsx:579
-msgid "New conversation."
-msgstr "Yeni konuşma."
-
-#: assets/src/ProviderWizard.tsx:199
-msgid "No credentials in the store yet. Add one to continue."
-msgstr "Mağazada henüz kimlik bilgisi yok. Devam etmek için bir tane ekleyin."
-
-#: assets/src/Diagnostic.tsx:175
-msgid "No credentials stored yet. Configure one from Settings."
-msgstr "Henüz saklanmış kimlik bilgisi yok. Ayarlardan bir tane yapılandırın."
-
-#: assets/src/ActionInspector.tsx:200
-msgid "No prior state existed (creation or import)."
-msgstr "Önceki durum yoktu (oluşturma veya içe aktarma)."
-
-#: assets/src/App.tsx:1008
-msgid "No response from the runtime."
-msgstr "Çalışma zamanından yanıt yok."
-
-#: assets/src/ActionInspector.tsx:75
-msgid "No tool was executed in this turn."
-msgstr "Bu turda hiçbir araç yürütülmedi."
-
-#: assets/src/App.tsx:595
-msgid "No workflow loaded"
-msgstr "Yüklü workflow yok"
-
-#: assets/src/App.tsx:731
-msgid "Open in viewer"
-msgstr "Görüntüleyicide aç"
-
-#: assets/src/App.tsx:615
-msgid "Open menu"
-msgstr "Menüyü aç"
-
-#: assets/src/App.tsx:729
-#, javascript-format
-msgid "Open workflow %d in the viewer"
-msgstr "Workflow %d'yi görüntüleyicide aç"
-
-#: assets/src/Diagnostic.tsx:123
-msgid "PASS"
-msgstr "TAMAM"
-
-#: assets/src/Diagnostic.tsx:150
-msgid "Partial capabilities"
-msgstr "Kısmi yetenekler"
-
-#: assets/src/Diagnostic.tsx:102
-msgid "Per provider"
-msgstr "Sağlayıcı başına"
-
-#: assets/src/ProviderWizard.tsx:157
-msgid "Pick a model or enter the id manually."
-msgstr "Bir model seçin veya id'yi manuel olarak girin."
-
-#: assets/src/ProviderWizard.tsx:129
-msgid "Pick a provider and paste the API key."
-msgstr "Bir sağlayıcı seçin ve API anahtarını yapıştırın."
-
-#: assets/src/App.tsx:941
-msgid ""
-"Pick an LLM provider to get started. Your credentials live encrypted inside "
-"the WordPress store."
-msgstr ""
-"Başlamak için bir LLM sağlayıcı seçin. Kimlik bilgileriniz WordPress "
-"mağazasında şifreli olarak saklanır."
-
-#: assets/src/App.tsx:886
-msgid "Preview before creating"
-msgstr "Oluşturmadan önce önizle"
-
-#: assets/src/App.tsx:381
-#, javascript-format
-msgid ""
-"Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No "
-"workflow was created yet."
-msgstr ""
-"%1$s \"%2$s\" şablonu için önizleme yüklendi (%3$d düğüm, %4$d bağlantı). "
-"Henüz workflow oluşturulmadı."
-
-#: assets/src/ProviderWizard.tsx:233
-msgid "Provider"
-msgstr "Sağlayıcı"
-
-#: assets/src/App.tsx:621
-msgid "Provider · model"
-msgstr "Sağlayıcı · model"
-
-#: assets/src/ProviderWizard.tsx:279
-msgid "Provider:"
-msgstr "Sağlayıcı:"
-
-#: assets/src/App.tsx:645 assets/src/Diagnostic.tsx:78
-msgid "Refresh"
-msgstr "Yenile"
-
-#: assets/src/Diagnostic.tsx:76
-msgid "Refresh diagnostic"
-msgstr "Tanılamayı yenile"
-
-#: assets/src/ActionInspector.tsx:49
-msgid ""
-"Run an action against the agent to see the steps, evidence and diffs here."
-msgstr ""
-"Adımları, kanıtları ve diff'leri burada görmek için ajan üzerinde bir eylem "
-"çalıştırın."
-
-#: assets/src/ProviderWizard.tsx:266
-msgid "Save and continue"
-msgstr "Kaydet ve devam et"
-
-#: assets/src/ProviderWizard.tsx:266
-msgid "Saving…"
-msgstr "Kaydediliyor…"
-
-#: assets/src/App.tsx:835
-msgid "Search…"
-msgstr "Ara…"
-
-#: assets/src/App.tsx:769
-msgid "Send"
-msgstr "Gönder"
-
-#: assets/src/App.tsx:555
-#, javascript-format
-msgid "Session %d is empty."
-msgstr "Oturum %d boş."
-
-#: assets/src/App.tsx:898
-msgid "Session only"
-msgstr "Yalnızca oturum"
-
-#: assets/src/App.tsx:830
-msgid "Settings"
-msgstr "Ayarlar"
-
-#: assets/src/Diagnostic.tsx:119
-msgid "Severe criteria"
-msgstr "Şiddetli kriterler"
-
-#: assets/src/App.tsx:908
-msgid "Source"
-msgstr "Kaynak"
-
-#: assets/src/App.tsx:636
-msgid "Start a new conversation with the active LLM"
-msgstr "Etkin LLM ile yeni bir konuşma başlat"
-
-#: assets/src/App.tsx:594
-msgid "Template Preview"
-msgstr "Şablon önizlemesi"
-
-#: assets/src/App.tsx:856
-msgid "Template categories"
-msgstr "Şablon kategorileri"
-
-#: assets/src/App.tsx:824
-msgid "Templates"
-msgstr "Şablonlar"
-
-#: assets/src/App.tsx:321
-#, javascript-format
-msgid "Templates failed: %s"
-msgstr "Şablonlar başarısız: %s"
-
-#: assets/src/App.tsx:1006
-msgid "The action ran but the final response failed."
-msgstr "Eylem çalıştı ancak son yanıt başarısız oldu."
-
-#: assets/src/ProviderWizard.tsx:263
-msgid ""
-"The key is encrypted (AES-256-GCM) in the WordPress store and never returned"
-" over REST."
-msgstr ""
-"Anahtar, WordPress mağazasında (AES-256-GCM) şifrelenir ve REST üzerinden "
-"asla döndürülmez."
-
-#: assets/src/App.tsx:1004
-msgid "The runtime rejected this call."
-msgstr "Çalışma zamanı bu çağrıyı reddetti."
-
-#: assets/src/App.tsx:747
-msgid "Thinking…"
-msgstr "Düşünüyor…"
-
-#: assets/src/App.tsx:1002
-msgid "This action requires confirmation."
-msgstr "Bu eylem onay gerektirir."
-
-#: assets/src/ProviderWizard.tsx:305
-msgid ""
-"This provider does not allow manual models; check your credential or retry."
-msgstr ""
-"Bu sağlayıcı manuel modellere izin vermez; kimlik bilginizi kontrol edin "
-"veya tekrar deneyin."
-
-#: assets/src/ActionInspector.tsx:175
-msgid "This tool produces no diff (read-only or without workflow state)."
-msgstr "Bu araç diff üretmez (salt okunur veya workflow durumu olmadan)."
-
-#: assets/src/ActionInspector.tsx:86
-#, javascript-format
-msgid "Timeline (%d)"
-msgstr "Zaman çizelgesi (%d)"
-
-#: assets/src/ActionInspector.tsx:88
-msgid "Timeline is empty."
-msgstr "Zaman çizelgesi boş."
-
-#: assets/src/ProviderWizard.tsx:167
-msgid "To send messages to the agent you need to pick a provider and a model."
-msgstr "Ajana mesaj göndermek için bir sağlayıcı ve model seçmeniz gerekir."
-
-#: assets/src/App.tsx:691
-msgid "Tool:"
-msgstr "Araç:"
-
-#: assets/src/Diagnostic.tsx:91
-msgid "Total tokens"
-msgstr "Toplam token"
-
-#: assets/src/App.tsx:983
-msgid "Unexpected error."
-msgstr "Beklenmeyen hata."
-
-#: assets/src/ActionInspector.tsx:25
-msgid "Waiting for the agent response…"
-msgstr "Ajan yanıtı bekleniyor…"
-
-#: assets/src/App.tsx:765
-msgid "Waiting for the agent…"
-msgstr "Ajan bekleniyor…"
-
-#: assets/src/App.tsx:904
-msgid "Workflow API"
-msgstr "Workflow API"
-
-#: assets/src/App.tsx:334
-msgid ""
-"Workflow API check failed. See dependency status for the exact endpoint "
-"result."
-msgstr ""
-"Workflow API kontrolü başarısız. Kesin uç nokta sonucu için bağımlılık "
-"durumuna bakın."
-
-#: assets/src/App.tsx:813
-msgid "Workflow API consumer"
-msgstr "Workflow API tüketici"
-
-#: assets/src/App.tsx:174
-msgid "Workflow API has not been checked yet."
-msgstr "Workflow API henüz kontrol edilmedi."
-
-#: assets/src/App.tsx:318
-msgid "Workflow API responded for workflows and templates."
-msgstr "Workflow API workflow ve şablonlar için yanıt verdi."
-
-#: assets/src/App.tsx:594
-msgid "Workflow View"
-msgstr "Workflow görünümü"
-
-#: assets/src/App.tsx:642
-msgid "Workflow companion"
-msgstr "Workflow eşlikçisi"
-
-#: assets/src/Diagnostic.tsx:164
-msgid "Workflow dependency"
-msgstr "Workflow bağımlılığı"
-
-#: assets/src/App.tsx:658
-msgid "Workflow dependency active"
-msgstr "Workflow bağımlılığı etkin"
-
-#: assets/src/App.tsx:658
-msgid "Workflow dependency inactive"
-msgstr "Workflow bağımlılığı etkin değil"
-
-#: assets/src/App.tsx:276
-msgid "Workflow plugin is not active. API calls were skipped."
-msgstr "Workflow eklentisi etkin değil. API çağrıları atlandı."
-
-#: assets/src/App.tsx:652
-msgid ""
-"Workflow plugin was not detected during page bootstrap. API calls may fail "
-"until it is active."
-msgstr ""
-"Workflow eklentisi sayfa başlatma sırasında algılanmadı. Etkin olana kadar "
-"API çağrıları başarısız olabilir."
-
-#: assets/src/App.tsx:821
-msgid "Workflows"
-msgstr "Workflows"
-
-#: assets/src/App.tsx:320
-#, javascript-format
-msgid "Workflows failed: %s"
-msgstr "Workflow'lar başarısız: %s"
-
-#: assets/src/App.tsx:812
-msgid "Workspace"
-msgstr "Çalışma alanı"
-
-#: assets/src/Diagnostic.tsx:61
-msgid "beta partial"
-msgstr "beta kısmi"
-
-#: assets/src/Diagnostic.tsx:61
-msgid "beta ready"
-msgstr "beta hazır"
-
-#: assets/src/App.tsx:717
-#, javascript-format
-msgid "diff: %s"
-msgstr "diff: %s"
-
-#: assets/src/ProviderWizard.tsx:301
-msgid "model-id"
-msgstr "model-id"
-
-#: assets/src/App.tsx:444
-msgid "no message"
-msgstr "mesaj yok"
-
-#: assets/src/App.tsx:443
-msgid "unknown"
-msgstr "bilinmiyor"
-
-#: assets/src/ProviderWizard.tsx:240
-msgid "— Pick one —"
-msgstr "— Seç —"
-
-#: assets/src/ProviderWizard.tsx:694
-#, javascript-format
-msgid ""
-"\"%s\" will be permanently deleted along with its messages. This action "
-"cannot be undone."
-msgstr "\"%s\" ve mesajları kalıcı olarak silinecek. Bu eylem geri alınamaz."
-
-#: assets/src/ProviderWizard.tsx:429
-#, javascript-format
 msgid "%1$d turn(s) · updated %2$s"
 msgstr "%1$d tur · güncellendi %2$s"
 
-#: assets/src/ProviderWizard.tsx:1005
-#, javascript-format
-msgid ""
-"All conversations whose last activity is older than %d days will be "
-"permanently deleted. This action cannot be undone."
-msgstr ""
-"Son etkinliği %d günden eski olan tüm konuşmalar kalıcı olarak silinecek. Bu"
-" eylem geri alınamaz."
+msgid "%1$s %2$s%3$s"
+msgstr "%1$s %2$s%3$s"
 
-#: assets/src/App.tsx:629 assets/src/App.tsx:630
-msgid "Back to conversations"
-msgstr "Konuşmalara dön"
+msgid "%1$s / %2$s tokens (%3$d%%)"
+msgstr "%1$s / %2$s token (%3$d%%)"
 
-#: assets/src/ProviderWizard.tsx:811
-msgid "Base URL"
-msgstr "Taban URL"
+msgid "%1$s coupon%2$s"
+msgstr "%1$s kupon%2$s"
 
-#: assets/src/ProviderWizard.tsx:447
-msgid "Conversation pages"
-msgstr "Konuşma sayfaları"
+msgid "%1$s order%2$s"
+msgstr "%1$s sipariş%2$s"
 
-#: assets/src/App.tsx:655
-msgid "Conversation title"
-msgstr "Konuşma başlığı"
+msgid "%1$s product%2$s"
+msgstr "%1$s ürün%2$s"
 
-#: assets/src/ProviderWizard.tsx:830
-msgid "Credential"
-msgstr "Kimlik bilgisi"
+msgid "%1$s tokens, %2$s"
+msgstr "%1$s token, %2$s"
 
-#: assets/src/ProviderWizard.tsx:476
-msgid "Credentials"
-msgstr "Kimlik bilgileri"
+msgid "%d execution(s)"
+msgstr "%d yürütme"
 
-#: assets/src/ProviderWizard.tsx:742
-#, javascript-format
-msgid ""
-"Credentials for \"%s\" will be removed from the encrypted store. This action"
-" cannot be undone."
-msgstr ""
-"\"%s\" için kimlik bilgileri şifreli mağazadan kaldırılacak. Bu eylem geri "
-"alınamaz."
+msgid "%d issue(s)"
+msgstr "%d sorun"
 
-#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
-msgid "Delete"
-msgstr "Sil"
+msgid "(manual)"
+msgstr "(manuel)"
 
-#: assets/src/ProviderWizard.tsx:413
-#, javascript-format
-msgid "Delete all conversations older than %d days"
-msgstr "%d günden eski tüm konuşmaları sil"
+msgid "+ Add new credential"
+msgstr "+ Yeni kimlik bilgisi ekle"
 
-#: assets/src/ProviderWizard.tsx:438 assets/src/ProviderWizard.tsx:689
-msgid "Delete conversation"
-msgstr "Konuşmayı sil"
+msgid "+ New"
+msgstr "+ Yeni"
 
-#: assets/src/ProviderWizard.tsx:437
-#, javascript-format
-msgid "Delete conversation %s"
-msgstr "%s konuşmasını sil"
+msgid "A coupon code is required."
+msgstr "Bir kupon kodu gereklidir."
 
-#: assets/src/ProviderWizard.tsx:1026
-msgid "Delete conversations"
-msgstr "Konuşmaları sil"
+msgid "A custom rule is in place. Use the advanced editor to change it."
+msgstr "Özel bir kural mevcut. Değiştirmek için gelişmiş düzenleyiciyi kullanın."
 
-#: assets/src/ProviderWizard.tsx:519 assets/src/ProviderWizard.tsx:737
-msgid "Delete credential"
-msgstr "Kimlik bilgisini sil"
+msgid "A form id is required."
+msgstr "Bir form id'si gereklidir."
 
-#: assets/src/ProviderWizard.tsx:518
-#, javascript-format
-msgid "Delete credential %s"
-msgstr "%s kimlik bilgisini sil"
+msgid "A logged-in user is required."
+msgstr "Oturum açmış bir kullanıcı gereklidir."
 
-#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
-msgid "Deleting…"
-msgstr "Siliniyor…"
+msgid "A menu name is required."
+msgstr "Bir menü adı gereklidir."
 
-#: assets/src/ProviderWizard.tsx:813
-msgid "Discovery"
-msgstr "Keşif"
+msgid "A non-empty list of terms is required."
+msgstr "Boş olmayan bir terim listesi gereklidir."
 
-#: assets/src/ProviderWizard.tsx:819
-msgid "Last validation"
-msgstr "Son doğrulama"
+msgid "A note is required."
+msgstr "Bir not gereklidir."
 
-#: assets/src/ProviderWizard.tsx:895
-msgid "Load"
-msgstr "Yükle"
+msgid "A reply needs content."
+msgstr "Bir yanıt için içerik gereklidir."
 
-#: assets/src/ProviderWizard.tsx:508 assets/src/ProviderWizard.tsx:785
-#, javascript-format
-msgid "Manage %s"
-msgstr "%s'yi yönet"
+msgid "A role is required."
+msgstr "Bir rol gereklidir."
 
-#: assets/src/ProviderWizard.tsx:509
-msgid "Manage credential"
-msgstr "Kimlik bilgisini yönet"
+msgid "A stock quantity is required."
+msgstr "Bir stok miktarı gereklidir."
 
-#: assets/src/App.tsx:779
-msgid "Management"
-msgstr "Yönetim"
+msgid "A term name is required."
+msgstr "Bir terim adı gereklidir."
 
-#: assets/src/ProviderWizard.tsx:941
-msgid "Manual model IDs"
-msgstr "Manuel model ID'leri"
+msgid "A title or content is required."
+msgstr "Bir başlık veya içerik gereklidir."
 
-#: assets/src/ProviderWizard.tsx:887
-msgid "Models"
-msgstr "Modeller"
+msgid "A user_id is required to read enrollments."
+msgstr "Kayıtları okumak için bir user_id gereklidir."
 
-#: assets/src/App.tsx:816
-msgid ""
-"Neither Project Flash Workflow nor Project Flash Management is installed."
-msgstr "Ne Project Flash Workflow ne de Project Flash Management yüklü."
+msgid "A valid http(s) URL is required."
+msgstr "Geçerli bir http(s) URL'si gereklidir."
 
-#: assets/src/ProviderWizard.tsx:832
-msgid "New API key"
-msgstr "Yeni API anahtarı"
+msgid "A valid order status is required."
+msgstr "Geçerli bir sipariş durumu gereklidir."
 
-#: assets/src/ProviderWizard.tsx:543
-msgid "New credential"
-msgstr "Yeni kimlik bilgisi"
+msgid "A valid taxonomy is required."
+msgstr "Geçerli bir taksonomi gereklidir."
 
-#: assets/src/ProviderWizard.tsx:465
-msgid "Next page"
-msgstr "Sonraki sayfa"
+msgid "A valid user_id and course_id are required."
+msgstr "Geçerli bir user_id ve course_id gereklidir."
 
-#: assets/src/ProviderWizard.tsx:421
-msgid "No conversations yet."
-msgstr "Henüz konuşma yok."
+msgid "A valid user_id and membership_id are required."
+msgstr "Geçerli bir user_id ve membership_id gereklidir."
 
-#: assets/src/ProviderWizard.tsx:934
-msgid ""
-"No model list loaded yet. Click Load to fetch from the API or Refresh to "
-"bypass cache."
-msgstr ""
-"Model listesi henüz yüklenmedi. API'den çekmek için Yükle'ye veya önbelleği "
-"atlamak için Yenile'ye tıklayın."
+msgid "A valid user_id is required."
+msgstr "Geçerli bir user_id gereklidir."
 
-#: assets/src/ProviderWizard.tsx:929
-msgid "No models returned."
-msgstr "Model döndürülmedi."
+msgid "A valid username and email are required."
+msgstr "Geçerli bir kullanıcı adı ve e-posta gereklidir."
 
-#: assets/src/ProviderWizard.tsx:1049
-msgid "Not configured"
-msgstr "Yapılandırılmadı"
+msgid "A value is required."
+msgstr "Bir değer gereklidir."
 
-#: assets/src/ProviderWizard.tsx:1045
-msgid "Not verified"
-msgstr "Doğrulanmadı"
+msgid "API key"
+msgstr "API anahtarı"
 
-#: assets/src/ProviderWizard.tsx:458
-#, javascript-format
-msgid "Page %1$d of %2$d"
-msgstr "Sayfa %1$d / %2$d"
+msgid "API key is required and must be at least 8 characters."
+msgstr "API anahtarı gereklidir ve en az 8 karakter olmalıdır."
 
-#: assets/src/ProviderWizard.tsx:837
-msgid "Paste API key to confirm changes"
-msgstr "Değişiklikleri onaylamak için API anahtarını yapıştırın"
+msgid "Action cancelled by the user."
+msgstr "Eylem kullanıcı tarafından iptal edildi."
 
-#: assets/src/ProviderWizard.tsx:453
-msgid "Previous page"
-msgstr "Önceki sayfa"
+msgid "Activate a workflow"
+msgstr "Bir workflow'u etkinleştir"
 
-#: assets/src/App.tsx:800
-msgid "Project Flash Management"
-msgstr "Project Flash Management"
+msgid "Activate this workflow so it starts firing on its trigger?"
+msgstr "Bu workflow, tetikleyicisinde çalışmaya başlaması için etkinleştirilsin mi?"
 
-#: assets/src/App.tsx:808
-msgid "Project Flash Workflow"
-msgstr "Project Flash Workflow"
+msgid "Activate workflow \"%s\" so it starts firing on its trigger?"
+msgstr "\"%s\" workflow'u, tetikleyicisinde çalışmaya başlaması için etkinleştirilsin mi?"
 
-#: assets/src/App.tsx:769
-msgid "Project Flash views"
-msgstr "Project Flash görünümleri"
+msgid "Active (%s)"
+msgstr "Etkin (%s)"
 
-#: assets/src/ProviderWizard.tsx:416
-#, javascript-format
-msgid "Purge > %dd"
-msgstr "Temizle > %dd"
-
-#: assets/src/ProviderWizard.tsx:1000
-msgid "Purge old conversations"
-msgstr "Eski konuşmaları temizle"
-
-#: assets/src/ProviderWizard.tsx:416 assets/src/ProviderWizard.tsx:1026
-msgid "Purging…"
-msgstr "Temizleniyor…"
-
-#: assets/src/ProviderWizard.tsx:253
-msgid "Re-enter the API key to save changes."
-msgstr "Değişiklikleri kaydetmek için API anahtarını yeniden girin."
-
-#: assets/src/App.tsx:676 assets/src/App.tsx:677
-msgid "Rename conversation"
-msgstr "Konuşmayı yeniden adlandır"
-
-#: assets/src/ProviderWizard.tsx:863
-msgid "Save"
-msgstr "Kaydet"
-
-#: assets/src/ProviderWizard.tsx:957
-msgid "Save manual list"
-msgstr "Manuel listeyi kaydet"
-
-#: assets/src/App.tsx:663 assets/src/App.tsx:664
-msgid "Save title"
-msgstr "Başlığı kaydet"
-
-#: assets/src/ProviderWizard.tsx:912
-#, javascript-format
-msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
-msgstr "Kaynak: %1$s · alındı %2$s · %3$d model"
-
-#: assets/src/ProviderWizard.tsx:801
-msgid "Status"
-msgstr "Durum"
-
-#: assets/src/ProviderWizard.tsx:807
-msgid "Stored key"
-msgstr "Saklanan anahtar"
-
-#: assets/src/ProviderWizard.tsx:499 assets/src/ProviderWizard.tsx:871
-msgid "Test connection"
-msgstr "Bağlantıyı test et"
-
-#: assets/src/ProviderWizard.tsx:498
-#, javascript-format
-msgid "Test connection for %s"
-msgstr "%s için bağlantıyı test et"
-
-#: assets/src/ProviderWizard.tsx:1047
-msgid "Validation failed"
-msgstr "Doğrulama başarısız"
-
-#: assets/src/ProviderWizard.tsx:1043
-msgid "Verified"
-msgstr "Doğrulandı"
-
-#: assets/src/App.tsx:579 assets/src/App.tsx:580
-msgid "Volver al admin de WordPress"
-msgstr "WordPress yönetimine dön"
-
-#: assets/src/App.tsx:791
-msgid "Workflow"
-msgstr "Workflow"
-
-#: assets/src/ProviderWizard.tsx:808
-msgid "not stored"
-msgstr "saklanmadı"
-
-#: assets/src/ProviderWizard.tsx:945
-msgid "one model id per line"
-msgstr "satır başına bir model id"
-
-#: assets/src/ProviderWizard.tsx:694
-#, javascript-format
-msgid ""
-"\"%s\" will be permanently deleted along with its messages. This action "
-"cannot be undone."
-msgstr "\"%s\" ve mesajları kalıcı olarak silinecek. Bu eylem geri alınamaz."
-
-#: assets/src/App.tsx:611
 msgid "Active LLM"
 msgstr "Etkin LLM"
 
-#: assets/src/App.tsx:618
+msgid "Added"
+msgstr "Eklendi"
+
+msgid "Added an order note%s"
+msgstr "Bir sipariş notu eklendi%s"
+
+msgid "Adjusted"
+msgstr "Ayarlandı"
+
+msgid "Adjusted stock"
+msgstr "Stok ayarlandı"
+
+msgid "Agent capability manifest is invalid."
+msgstr "Ajan yetenek manifestosu geçersiz."
+
+msgid "Agent capability manifest is missing."
+msgstr "Ajan yetenek manifestosu eksik."
+
+msgid "Agent runtime failed: %s"
+msgstr "Ajan çalışma zamanı başarısız: %s"
+
+msgid "Agent tool contract file is invalid."
+msgstr "Ajan aracı sözleşme dosyası geçersiz."
+
+msgid "Agent tool contract file is missing."
+msgstr "Ajan aracı sözleşme dosyası eksik."
+
+msgid "Agent tool entries must be objects."
+msgstr "Ajan araç girişleri nesne olmalıdır."
+
+msgid "All conversations whose last activity is older than %d days will be permanently deleted. This action cannot be undone."
+msgstr "Son etkinliği %d günden eski olan tüm konuşmalar kalıcı olarak silinecek. Bu eylem geri alınamaz."
+
+msgid "Allow"
+msgstr "İzin ver"
+
+msgid "An entry_id and a valid action (read/spam/trash/star/note) are required."
+msgstr "Bir entry_id ve geçerli bir eylem (read/spam/trash/star/note) gereklidir."
+
+msgid "An item_id is required to remove a line."
+msgstr "Bir satırı kaldırmak için bir item_id gereklidir."
+
+msgid "An order id and a note are required."
+msgstr "Bir sipariş id'si ve bir not gereklidir."
+
+msgid "Applied"
+msgstr "Uygulandı"
+
+msgid "Applied a coupon to order%s"
+msgstr "Siparişe bir kupon uygulandı%s"
+
+msgid "Applying changes…"
+msgstr "Değişiklikler uygulanıyor…"
+
+msgid "Ask"
+msgstr "Sor"
+
+msgid "Ask it in plain language to manage your posts, media, users, comments and settings — and your WooCommerce, SEO and forms when those plugins are active. It proposes; you approve every change."
+msgstr "Yazılarınızı, ortam dosyalarınızı, kullanıcılarınızı, yorumlarınızı ve ayarlarınızı — ve o eklentiler etkinken WooCommerce, SEO ve formlarınızı — yönetmesini sade bir dille isteyin. O önerir; her değişikliği siz onaylarsınız."
+
+msgid "Ask it to create entities, draw workflows or explore your data. The agent knows the PFM model and the PFW catalog — it builds whatever you describe."
+msgstr "Ondan varlıklar oluşturmasını, workflow'lar çizmesini veya verilerinizi keşfetmesini isteyin. Ajan, PFM modelini ve PFW kataloğunu bilir — ne tarif ederseniz onu inşa eder."
+
+msgid "Ask the agent…"
+msgstr "Ajana sor…"
+
+msgid "Assigned"
+msgstr "Atandı"
+
+msgid "Assigned terms"
+msgstr "Terimler atandı"
+
+msgid "At least one manual model id is required."
+msgstr "En az bir manuel model id'si gereklidir."
+
+msgid "Back"
+msgstr "Geri"
+
+msgid "Back to WordPress admin"
+msgstr "WordPress yönetimine dön"
+
+msgid "Back to admin"
+msgstr "Yönetime dön"
+
+msgid "Back to conversations"
+msgstr "Konuşmalara dön"
+
+msgid "Balance: %1$s %2$s (topped up %3$s · granted %4$s)"
+msgstr "Bakiye: %1$s %2$s (yüklenen %3$s · verilen %4$s)"
+
+msgid "Base URL"
+msgstr "Taban URL"
+
+msgid "Browse records (customers, orders, anything you store). Read-only."
+msgstr "Kayıtlara göz atın (müşteriler, siparişler, sakladığınız her şey). Salt okunur."
+
+msgid "Browse your workflow library"
+msgstr "Workflow kitaplığınıza göz atın"
+
+msgid "Cache read $/Mtok"
+msgstr "Önbellek okuma $/Mtok"
+
+msgid "Cache write $/Mtok"
+msgstr "Önbellek yazma $/Mtok"
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Cancelled"
+msgstr "İptal edildi"
+
+msgid "Cancelled order%s"
+msgstr "Sipariş iptal edildi%s"
+
+msgid "Capabilities:"
+msgstr "Yetenekler:"
+
+msgid "Capability matrix"
+msgstr "Yetenek matrisi"
+
+msgid "Change"
+msgstr "Değiştir"
+
 msgid "Change LLM"
 msgstr "LLM'yi değiştir"
 
-#: assets/src/ProviderWizard.tsx:742
-#, javascript-format
-msgid ""
-"Credentials for \"%s\" will be removed from the encrypted store. This action"
-" cannot be undone."
-msgstr ""
-"\"%s\" için kimlik bilgileri şifreli mağazadan kaldırılacak. Bu eylem geri "
-"alınamaz."
+msgid "Change a specific section of an existing workflow without rewriting the rest."
+msgstr "Mevcut bir workflow'un belirli bir bölümünü, geri kalanını yeniden yazmadan değiştirin."
 
-#: assets/src/ProviderWizard.tsx:694
-#, javascript-format
-msgid ""
-"\"%s\" will be permanently deleted along with its messages. This action "
-"cannot be undone."
-msgstr "\"%s\" ve mesajları kalıcı olarak silinecek. Bu eylem geri alınamaz."
+msgid "Change provider"
+msgstr "Sağlayıcıyı değiştir"
 
-#: assets/src/App.tsx:625
+msgid "Change the name of a workflow as it appears in your library."
+msgstr "Bir workflow'un kitaplığınızda göründüğü adını değiştirin."
+
+msgid "Chat session not found after creation."
+msgstr "Sohbet oturumu oluşturulduktan sonra bulunamadı."
+
+msgid "Chat session not found."
+msgstr "Sohbet oturumu bulunamadı."
+
+msgid "Checking Workflow API endpoints…"
+msgstr "Workflow API uç noktaları kontrol ediliyor…"
+
+msgid "Close"
+msgstr "Kapat"
+
 msgid "Configure"
 msgstr "Yapılandır"
 
-#: assets/src/ProviderWizard.tsx:742
-#, javascript-format
-msgid ""
-"Credentials for \"%s\" will be removed from the encrypted store. This action"
-" cannot be undone."
-msgstr ""
-"\"%s\" için kimlik bilgileri şifreli mağazadan kaldırılacak. Bu eylem geri "
-"alınamaz."
+msgid "Configure LLM"
+msgstr "LLM'yi yapılandır"
 
-#: assets/src/App.tsx:635
+msgid "Configured providers (%d)"
+msgstr "Yapılandırılmış sağlayıcılar (%d)"
+
+msgid "Confirm"
+msgstr "Onayla"
+
+msgid "Connection failed: %s"
+msgstr "Bağlantı başarısız: %s"
+
+msgid "Connection test returned HTTP %d without a valid models payload."
+msgstr "Bağlantı testi geçerli bir model yükü olmadan HTTP %d döndürdü."
+
+msgid "Connection validated through provider model discovery."
+msgstr "Bağlantı, sağlayıcı model keşfi aracılığıyla doğrulandı."
+
+msgid "Connection validation updated."
+msgstr "Bağlantı doğrulaması güncellendi."
+
+msgid "Contact Form 7 does not store submissions; there are no entries to list."
+msgstr "Contact Form 7 gönderimleri saklamaz; listelenecek girdi yok."
+
+msgid "Context length (tokens)"
+msgstr "Bağlam uzunluğu (token)"
+
+msgid "Context length and max output tokens are required (greater than zero) before confirming the model."
+msgstr "Modeli onaylamadan önce bağlam uzunluğu ve maksimum çıktı token'ı gereklidir (sıfırdan büyük)."
+
+msgid "Context window usage"
+msgstr "Bağlam penceresi kullanımı"
+
+msgid "Continue a previous conversation or proceed to start a new one."
+msgstr "Önceki bir konuşmaya devam edin veya yenisini başlatın."
+
+msgid "Continuing…"
+msgstr "Devam ediliyor…"
+
+msgid "Conversation"
+msgstr "Konuşma"
+
+msgid "Conversation pages"
+msgstr "Konuşma sayfaları"
+
+msgid "Conversation title"
+msgstr "Konuşma başlığı"
+
+msgid "Conversations (30d)"
+msgstr "Konuşmalar (30g)"
+
+msgid "Cost and tokens (last %dh)"
+msgstr "Maliyet ve token (son %dh)"
+
+msgid "Create %1$s \"%2$s\"?"
+msgstr "%1$s \"%2$s\" oluşturulsun mu?"
+
+msgid "Create a new %s?"
+msgstr "Yeni bir %s oluşturulsun mu?"
+
+msgid "Create or change records"
+msgstr "Kayıt oluştur veya değiştir"
+
+msgid "Create or replace a workflow"
+msgstr "Bir workflow oluştur veya değiştir"
+
+msgid "Create record in %1$s%2$s?"
+msgstr "%1$s%2$s içinde kayıt oluşturulsun mu?"
+
+msgid "Create workflow \"%s\"?"
+msgstr "\"%s\" workflow'u oluşturulsun mu?"
+
+msgid "Created"
+msgstr "Oluşturuldu"
+
+msgid "Created %1$s%2$s%3$s"
+msgstr "%1$s%2$s%3$s oluşturuldu"
+
+msgid "Created an order%s"
+msgstr "Bir sipariş oluşturuldu%s"
+
+msgid "Created term%s"
+msgstr "Terim oluşturuldu%s"
+
+msgid "Created user%1$s%2$s"
+msgstr "Kullanıcı oluşturuldu%1$s%2$s"
+
+msgid "Credential"
+msgstr "Kimlik bilgisi"
+
+msgid "Credential decryption failed."
+msgstr "Kimlik bilgisi şifresi çözülemedi."
+
+msgid "Credential encryption failed."
+msgstr "Kimlik bilgisi şifrelemesi başarısız oldu."
+
+msgid "Credential encryption is not available on this WordPress runtime."
+msgstr "Bu WordPress çalışma zamanında kimlik bilgisi şifrelemesi mevcut değil."
+
+msgid "Credential stored but connection has not been validated."
+msgstr "Kimlik bilgisi saklandı ancak bağlantı doğrulanmadı."
+
+msgid "Credentials"
+msgstr "Kimlik bilgileri"
+
+msgid "Credentials for \"%s\" will be removed from the encrypted store. This action cannot be undone."
+msgstr "\"%s\" için kimlik bilgileri şifreli mağazadan kaldırılacak. Bu eylem geri alınamaz."
+
+msgid "Current user cannot view workflows. API calls were skipped."
+msgstr "Geçerli kullanıcı workflow'ları görüntüleyemez. API çağrıları atlandı."
+
+msgid "Custom rule"
+msgstr "Özel kural"
+
+msgid "Database unavailable."
+msgstr "Veritabanı kullanılamıyor."
+
+msgid "Declare a workflow variable"
+msgstr "Bir workflow değişkeni tanımla"
+
+msgid "Default for any other action"
+msgstr "Diğer herhangi bir eylem için varsayılan"
+
+msgid "Default reasoning effort"
+msgstr "Varsayılan akıl yürütme çabası"
+
+msgid "Defaults:"
+msgstr "Varsayılanlar:"
+
+msgid "Define a new variable that workflows can read or write."
+msgstr "Workflow'ların okuyabileceği veya yazabileceği yeni bir değişken tanımlayın."
+
+msgid "Delete"
+msgstr "Sil"
+
+msgid "Delete a workflow"
+msgstr "Bir workflow'u sil"
+
+msgid "Delete all conversations older than %d days"
+msgstr "%d günden eski tüm konuşmaları sil"
+
+msgid "Delete conversation"
+msgstr "Konuşmayı sil"
+
+msgid "Delete conversation %s"
+msgstr "%s konuşmasını sil"
+
+msgid "Delete conversations"
+msgstr "Konuşmaları sil"
+
+msgid "Delete credential"
+msgstr "Kimlik bilgisini sil"
+
+msgid "Delete credential %s"
+msgstr "%s kimlik bilgisini sil"
+
+msgid "Delete this workflow? This cannot be undone."
+msgstr "Bu workflow silinsin mi? Bu geri alınamaz."
+
+msgid "Delete workflow \"%s\"? This cannot be undone."
+msgstr "\"%s\" workflow'u silinsin mi? Bu geri alınamaz."
+
+msgid "Deleted"
+msgstr "Silindi"
+
+msgid "Deleting…"
+msgstr "Siliniyor…"
+
+msgid "Deny"
+msgstr "Reddet"
+
+msgid "Diagnostic"
+msgstr "Tanılama"
+
+msgid "Discover your data model"
+msgstr "Veri modelinizi keşfedin"
+
+msgid "Discovery"
+msgstr "Keşif"
+
+msgid "Done."
+msgstr "Tamam."
+
+msgid "Edit part of a workflow"
+msgstr "Bir workflow'un bir kısmını düzenle"
+
+msgid "Edit the raw rules JSON. Use this for argument-pattern rules that the simple list above cannot express."
+msgstr "Ham kural JSON'unu düzenleyin. Yukarıdaki basit listenin ifade edemediği argüman-desen kuralları için bunu kullanın."
+
+msgid "Enrolled"
+msgstr "Kaydedildi"
+
+msgid "Enrolled a user in a course"
+msgstr "Bir kullanıcı bir kursa kaydedildi"
+
+msgid "Error:"
+msgstr "Hata:"
+
+msgid "Estimated cost"
+msgstr "Tahmini maliyet"
+
+msgid "Events recorded"
+msgstr "Kaydedilen olaylar"
+
+msgid "Exploring the workspace…"
+msgstr "Çalışma alanı keşfediliyor…"
+
+msgid "FAIL"
+msgstr "BAŞARISIZ"
+
+msgid "Failed to create the chat session."
+msgstr "Sohbet oturumu oluşturulamadı."
+
+msgid "Failed to delete the chat session."
+msgstr "Sohbet oturumu silinemedi."
+
+msgid "Failed: "
+msgstr "Başarısız: "
+
+msgid "Fluent Forms submissions table not found."
+msgstr "Fluent Forms gönderimleri tablosu bulunamadı."
+
+msgid "For each thing the agent can do, choose whether it runs straight away, asks you first, or is not allowed at all. \"Ask\" is the safe default."
+msgstr "Ajanın yapabileceği her şey için, hemen mi çalışacağını, önce size mi soracağını, yoksa hiç mi izin verilmeyeceğini seçin. \"Sor\" güvenli varsayılandır."
+
+msgid "Generated at %s."
+msgstr "%s tarihinde oluşturuldu."
+
+msgid "Granted"
+msgstr "Verildi"
+
+msgid "Hide advanced editor"
+msgstr "Gelişmiş düzenleyiciyi gizle"
+
+msgid "Implementing the workflow logic…"
+msgstr "Workflow mantığı uygulanıyor…"
+
+msgid "Imported media%s"
+msgstr "Ortam içe aktarıldı%s"
+
+msgid "Inactive (fallback in use)"
+msgstr "Etkin değil (yedek kullanılıyor)"
+
+msgid "Input $/Mtok"
+msgstr "Girdi $/Mtok"
+
+msgid "LLM error: %1$s — %2$s"
+msgstr "LLM hatası: %1$s — %2$s"
+
+msgid "Last updated: %s"
+msgstr "Son güncelleme: %s"
+
+msgid "Last validation"
+msgstr "Son doğrulama"
+
+msgid "LearnDash is not installed on this site."
+msgstr "LearnDash bu sitede yüklü değil."
+
+msgid "List records"
+msgstr "Kayıtları listele"
+
+msgid "Listed"
+msgstr "Listelendi"
+
+msgid "Listed forms"
+msgstr "Formlar listelendi"
+
+msgid "Listed plugins"
+msgstr "Eklentiler listelendi"
+
+msgid "Listing resources…"
+msgstr "Kaynaklar listeleniyor…"
+
+msgid "Load"
+msgstr "Yükle"
+
+msgid "Loading a resource…"
+msgstr "Bir kaynak yükleniyor…"
+
+msgid "Loading beta readiness report…"
+msgstr "Beta hazırlık raporu yükleniyor…"
+
+msgid "Loading models…"
+msgstr "Modeller yükleniyor…"
+
+msgid "Look at which entities, fields and actions you have configured. Read-only."
+msgstr "Hangi varlıkları, alanları ve eylemleri yapılandırdığınıza bakın. Salt okunur."
+
+msgid "Look inside a single workflow without making changes."
+msgstr "Değişiklik yapmadan tek bir workflow'un içine bakın."
+
+msgid "Looking up the data model…"
+msgstr "Veri modeli aranıyor…"
+
+msgid "Manage %s"
+msgstr "%s'yi yönet"
+
+msgid "Manage credential"
+msgstr "Kimlik bilgisini yönet"
+
+msgid "Management"
+msgstr "Yönetim"
+
+msgid "Manual model IDs"
+msgstr "Manuel model ID'leri"
+
+msgid "Manual model entries are not allowed for this provider preset."
+msgstr "Bu sağlayıcı ön ayarı için manuel model girdilerine izin verilmiyor."
+
+msgid "Max output (tokens)"
+msgstr "Maksimum çıktı (token)"
+
+msgid "MemberPress is not installed on this site."
+msgstr "MemberPress bu sitede yüklü değil."
+
+msgid "Message to the agent"
+msgstr "Ajana mesaj"
+
+msgid "Messages (30d)"
+msgstr "Mesajlar (30g)"
+
+msgid "Modalities:"
+msgstr "Modaliteler:"
+
+msgid "Model"
+msgstr "Model"
+
+msgid "Model (manual)"
+msgstr "Model (manuel)"
+
+msgid "Models"
+msgstr "Modeller"
+
+msgid "Moderated"
+msgstr "Denetlendi"
+
+msgid "Moderated a comment"
+msgstr "Bir yorum denetlendi"
+
+msgid "New API key"
+msgstr "Yeni API anahtarı"
+
+msgid "New conversation"
+msgstr "Yeni konuşma"
+
+msgid "New conversation."
+msgstr "Yeni konuşma."
+
+msgid "New credential"
+msgstr "Yeni kimlik bilgisi"
+
+msgid "Next page"
+msgstr "Sonraki sayfa"
+
 msgid "No LLM configured."
 msgstr "Yapılandırılmış LLM yok."
+
+msgid "No SEO plugin is installed on this site."
+msgstr "Bu sitede hiçbir SEO eklentisi yüklü değil."
+
+msgid "No conversations yet."
+msgstr "Henüz konuşma yok."
+
+msgid "No credentials in the store yet. Add one to continue."
+msgstr "Mağazada henüz kimlik bilgisi yok. Devam etmek için bir tane ekleyin."
+
+msgid "No credentials stored yet. Configure one from Settings."
+msgstr "Henüz saklanmış kimlik bilgisi yok. Ayarlardan bir tane yapılandırın."
+
+msgid "No model list loaded yet. Click Load to fetch from the API or Refresh to bypass cache."
+msgstr "Model listesi henüz yüklenmedi. API'den çekmek için Yükle'ye veya önbelleği atlamak için Yenile'ye tıklayın."
+
+msgid "No models returned."
+msgstr "Model döndürülmedi."
+
+msgid "No response from the runtime."
+msgstr "Çalışma zamanından yanıt yok."
+
+msgid "No updatable fields were provided."
+msgstr "Güncellenebilir alan sağlanmadı."
+
+msgid "Not configured"
+msgstr "Yapılandırılmadı"
+
+msgid "Not verified"
+msgstr "Doğrulanmadı"
+
+msgid "Notes are not supported for Fluent Forms entries here."
+msgstr "Burada Fluent Forms girdileri için notlar desteklenmiyor."
+
+msgid "Only public custom fields can be set (protected keys are refused)."
+msgstr "Yalnızca herkese açık özel alanlar ayarlanabilir (korumalı anahtarlar reddedilir)."
+
+msgid "Open a record"
+msgstr "Bir kaydı aç"
+
+msgid "Open a workflow to read it"
+msgstr "Okumak için bir workflow aç"
+
+msgid "Open agent"
+msgstr "Ajanı aç"
+
+msgid "Open this in WordPress admin"
+msgstr "Bunu WordPress yönetiminde aç"
+
+msgid "Optimized SEO%1$s%2$s"
+msgstr "SEO optimize edildi%1$s%2$s"
+
+msgid "Other capability — see this site's integrator for details."
+msgstr "Diğer yetenek — ayrıntılar için bu sitenin entegratörüne başvurun."
+
+msgid "Output $/Mtok"
+msgstr "Çıktı $/Mtok"
+
+msgid "PASS"
+msgstr "TAMAM"
+
+msgid "PF Agent"
+msgstr "PF Agent"
+
+msgid "PF Management"
+msgstr "PF Management"
+
+msgid "PF Workflow"
+msgstr "PF Workflow"
+
+msgid "Page %1$d of %2$d"
+msgstr "Sayfa %1$d / %2$d"
+
+msgid "Partial capabilities"
+msgstr "Kısmi yetenekler"
+
+msgid "Paste API key to confirm changes"
+msgstr "Değişiklikleri onaylamak için API anahtarını yapıştırın"
+
+msgid "Per provider"
+msgstr "Sağlayıcı başına"
+
+msgid "Permission rules"
+msgstr "İzin kuralları"
+
+msgid "Permissions"
+msgstr "İzinler"
+
+msgid "Pick a model or enter the id manually."
+msgstr "Bir model seçin veya id'yi manuel olarak girin."
+
+msgid "Pick a provider and paste the API key."
+msgstr "Bir sağlayıcı seçin ve API anahtarını yapıştırın."
+
+msgid "Pick an LLM provider to get started. Your credentials live encrypted inside the WordPress store."
+msgstr "Başlamak için bir LLM sağlayıcı seçin. Kimlik bilgileriniz WordPress mağazasında şifreli olarak saklanır."
+
+msgid "Pre-filled when the provider API exposes caps; required otherwise. Stored on the credential so the runtime never has to guess."
+msgstr "Sağlayıcı API'si model sınırlarını sunduğunda önceden doldurulur; aksi halde gereklidir. Çalışma zamanının asla tahmin etmek zorunda kalmaması için kimlik bilgisinde saklanır."
+
+msgid "Previous page"
+msgstr "Önceki sayfa"
+
+msgid "Provide a post_id or a url for the menu item."
+msgstr "Menü öğesi için bir post_id veya bir url sağlayın."
+
+msgid "Provide at least one SEO field to set (title, description, focus_keyword, canonical, noindex, og_title, og_description)."
+msgstr "Ayarlamak için en az bir SEO alanı sağlayın (title, description, focus_keyword, canonical, noindex, og_title, og_description)."
+
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+msgid "Provider base URL must be an HTTP URL."
+msgstr "Sağlayıcı taban URL'si bir HTTP URL'si olmalıdır."
+
+msgid "Provider discovery failed recently and is on cooldown."
+msgstr "Sağlayıcı keşfi yakın zamanda başarısız oldu ve bekleme süresinde."
+
+msgid "Provider does not expose API model discovery. Manual model entries are required for this preset."
+msgstr "Sağlayıcı API model keşfini sunmuyor. Bu ön ayar için manuel model girdileri gerekli."
+
+msgid "Provider family declares no discovery endpoints."
+msgstr "Sağlayıcı ailesi hiçbir keşif uç noktası bildirmiyor."
+
+msgid "Provider family does not expose a models endpoint for connection testing."
+msgstr "Sağlayıcı ailesi bağlantı testi için bir model uç noktası sunmuyor."
+
+msgid "Provider family does not expose the required runtime endpoint."
+msgstr "Sağlayıcı ailesi gereken çalışma zamanı uç noktasını sunmuyor."
+
+msgid "Provider family does not support connection testing yet."
+msgstr "Sağlayıcı ailesi henüz bağlantı testini desteklemiyor."
+
+msgid "Provider family is not supported for generation yet."
+msgstr "Sağlayıcı ailesi üretim için henüz desteklenmiyor."
+
+msgid "Provider family is not supported for runtime calls."
+msgstr "Sağlayıcı ailesi çalışma zamanı çağrıları için desteklenmiyor."
+
+msgid "Provider is not configured."
+msgstr "Sağlayıcı yapılandırılmamış."
+
+msgid "Provider model discovery returned no models."
+msgstr "Sağlayıcı model keşfi hiç model döndürmedi."
+
+msgid "Provider model discovery returned no text generation model candidate."
+msgstr "Sağlayıcı model keşfi metin üretimi modeli adayı döndürmedi."
+
+msgid "Provider modelHints must remain non-authoritative and empty; real models come from discovery, cache or explicit manual entry."
+msgstr "Sağlayıcı modelHints yetkili olmayan ve boş kalmalıdır; gerçek modeller keşif, önbellek veya açık manuel girdiden gelir."
+
+msgid "Provider must be configured before saving models."
+msgstr "Modelleri kaydetmeden önce sağlayıcı yapılandırılmalıdır."
+
+msgid "Provider preset entries must be keyed objects."
+msgstr "Sağlayıcı ön ayarı girdileri anahtarlı nesneler olmalıdır."
+
+msgid "Provider preset references an unknown family."
+msgstr "Sağlayıcı ön ayarı bilinmeyen bir family'e referans veriyor."
+
+msgid "Provider preset was not found."
+msgstr "Sağlayıcı ön ayarı bulunamadı."
+
+msgid "Provider presets file is missing."
+msgstr "Sağlayıcı ön ayarları dosyası eksik."
+
+msgid "Provider presets file is not valid JSON."
+msgstr "Sağlayıcı ön ayarları dosyası geçerli JSON değil."
+
+msgid "Provider presets must define families and presets."
+msgstr "Sağlayıcı ön ayarları families ve presets tanımlamalıdır."
+
+msgid "Provider presets must not define defaultModels."
+msgstr "Sağlayıcı ön ayarları defaultModels tanımlamamalıdır."
+
+msgid "Provider presets require label, family and baseUrl."
+msgstr "Sağlayıcı ön ayarları label, family ve baseUrl gerektirir."
+
+msgid "Provider presets schemaVersion must be 1."
+msgstr "Sağlayıcı ön ayarlarının schemaVersion'ı 1 olmalıdır."
+
+msgid "Provider requires additional settings before runtime call."
+msgstr "Sağlayıcı, çalışma zamanı çağrısından önce ek ayarlar gerektirir."
+
+msgid "Provider requires additional settings before testing connection."
+msgstr "Sağlayıcı, bağlantıyı test etmeden önce ek ayarlar gerektirir."
+
+msgid "Provider:"
+msgstr "Sağlayıcı:"
+
+msgid "Providers configured"
+msgstr "Yapılandırılmış sağlayıcılar"
+
+msgid "Purge > %dd"
+msgstr "Temizle > %dd"
+
+msgid "Purge old conversations"
+msgstr "Eski konuşmaları temizle"
+
+msgid "Purging…"
+msgstr "Temizleniyor…"
+
+msgid "Ran"
+msgstr "Çalıştırıldı"
+
+msgid "Rate limit reached for \"%1$s\" (%2$d per %3$ds). Retry in %4$ds."
+msgstr "\"%1$s\" için hız sınırına ulaşıldı (%3$ds başına %2$d). %4$ds içinde tekrar deneyin."
+
+msgid "Re-enter the API key to save changes."
+msgstr "Değişiklikleri kaydetmek için API anahtarını yeniden girin."
+
+msgid "Read"
+msgstr "Oku"
+
+msgid "Read LearnDash courses"
+msgstr "LearnDash kurslarını oku"
+
+msgid "Read MemberPress data"
+msgstr "MemberPress verilerini oku"
+
+msgid "Read SEO fields%s"
+msgstr "SEO alanları okundu%s"
+
+msgid "Read WooCommerce data"
+msgstr "WooCommerce verilerini oku"
+
+msgid "Read setting%s"
+msgstr "Ayar okundu%s"
+
+msgid "Read the full content of a single record. Read-only."
+msgstr "Tek bir kaydın tüm içeriğini okuyun. Salt okunur."
+
+msgid "Reading the reference library…"
+msgstr "Referans kitaplığı okunuyor…"
+
+msgid "Reasoning:"
+msgstr "Akıl yürütme:"
+
+msgid "Refresh"
+msgstr "Yenile"
+
+msgid "Refresh diagnostic"
+msgstr "Tanılamayı yenile"
+
+msgid "Refund REQUESTED via the agent%1$s%2$s — NOT yet issued. A person must review and process this refund in WooCommerce."
+msgstr "Ajan aracılığıyla iade TALEP EDİLDİ%1$s%2$s — henüz VERİLMEDİ. Bir kişi bu iadeyi WooCommerce'de incelemeli ve işlemelidir."
+
+msgid "Refund request recorded on the order. It was NOT issued — a person must approve and process it in WooCommerce."
+msgstr "İade talebi siparişe kaydedildi. VERİLMEDİ — bir kişi WooCommerce'de onaylamalı ve işlemelidir."
+
+msgid "Refunded"
+msgstr "İade edildi"
+
+msgid "Remove a workflow from your library permanently."
+msgstr "Bir workflow'u kitaplığınızdan kalıcı olarak kaldırın."
+
+msgid "Removing a file…"
+msgstr "Bir dosya kaldırılıyor…"
+
+msgid "Rename a workflow"
+msgstr "Bir workflow'u yeniden adlandır"
+
+msgid "Rename conversation"
+msgstr "Konuşmayı yeniden adlandır"
+
+msgid "Rename this workflow?"
+msgstr "Bu workflow yeniden adlandırılsın mı?"
+
+msgid "Reorganising files…"
+msgstr "Dosyalar yeniden düzenleniyor…"
+
+msgid "Request body exceeds %1$d bytes (got %2$d)."
+msgstr "İstek gövdesi %1$d baytı aşıyor (alınan: %2$d)."
+
+msgid "Requested a refund%s"
+msgstr "İade talep edildi%s"
+
+msgid "Resuming…"
+msgstr "Sürdürülüyor…"
+
+msgid "Revoked"
+msgstr "Geri alındı"
+
+msgid "Rules JSON"
+msgstr "Kurallar JSON"
+
+msgid "Save"
+msgstr "Kaydet"
+
+msgid "Save a brand-new workflow or fully replace the contents of an existing one."
+msgstr "Yepyeni bir workflow kaydedin veya mevcut birinin içeriğini tamamen değiştirin."
+
+msgid "Save advanced JSON"
+msgstr "Gelişmiş JSON'u kaydet"
+
+msgid "Save and continue"
+msgstr "Kaydet ve devam et"
+
+msgid "Save changes to %1$s \"%2$s\"?"
+msgstr "%1$s \"%2$s\" için değişiklikler kaydedilsin mi?"
+
+msgid "Save changes to a %s?"
+msgstr "Bir %s için değişiklikler kaydedilsin mi?"
+
+msgid "Save changes to workflow \"%s\"?"
+msgstr "\"%s\" workflow'u için değişiklikler kaydedilsin mi?"
+
+msgid "Save manual list"
+msgstr "Manuel listeyi kaydet"
+
+msgid "Save model config"
+msgstr "Model yapılandırmasını kaydet"
+
+msgid "Save new records or modify existing ones (customers, orders, configuration, etc.)."
+msgstr "Yeni kayıtlar kaydedin veya mevcut olanları değiştirin (müşteriler, siparişler, yapılandırma vb.)."
+
+msgid "Save title"
+msgstr "Başlığı kaydet"
+
+msgid "Saved product%1$s%2$s"
+msgstr "Ürün kaydedildi%1$s%2$s"
+
+msgid "Saved."
+msgstr "Kaydedildi."
+
+msgid "Saving…"
+msgstr "Kaydediliyor…"
+
+msgid "See the workflows that exist on this site. Read-only."
+msgstr "Bu sitede var olan workflow'ları görün. Salt okunur."
+
+msgid "Send"
+msgstr "Gönder"
+
+msgid "Send { kind: \"<entity|record|action|application|module|group|role|page>\", payload: { <kind>: {...} } }."
+msgstr "{ kind: \"<entity|record|action|application|module|group|role|page>\", payload: { <kind>: {...} } } gönderin."
+
+msgid "Session %d is empty."
+msgstr "Oturum %d boş."
+
+msgid "Session %s"
+msgstr "Oturum %s"
+
+msgid "Setyenv Agent"
+msgstr "Setyenv Agent"
+
+msgid "Setyenv Management"
+msgstr "Setyenv Management"
+
+msgid "Setyenv Workflow"
+msgstr "Setyenv Workflow"
+
+msgid "Setyenv views"
+msgstr "Setyenv görünümleri"
+
+msgid "Setyenv — setyenv.com"
+msgstr "Setyenv — setyenv.com"
+
+msgid "Setyenv — visit setyenv.com"
+msgstr "Setyenv — setyenv.com'u ziyaret edin"
+
+msgid "Severe criteria"
+msgstr "Şiddetli kriterler"
+
+msgid "Show advanced editor"
+msgstr "Gelişmiş düzenleyiciyi göster"
+
+msgid "Site overview"
+msgstr "Site genel bakışı"
+
+msgid "Snapshot:"
+msgstr "Anlık görüntü:"
+
+msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
+msgstr "Kaynak: %1$s · alındı %2$s · %3$d model"
+
+msgid "Start a new conversation with the active LLM"
+msgstr "Etkin LLM ile yeni bir konuşma başlat"
+
+msgid "Starting…"
+msgstr "Başlatılıyor…"
+
+msgid "Status"
+msgstr "Durum"
+
+msgid "Still working…"
+msgstr "Hâlâ çalışıyor…"
+
+msgid "Stored credential cipher is unsupported."
+msgstr "Saklanan kimlik bilgisi şifresi desteklenmiyor."
+
+msgid "Stored credential payload is invalid."
+msgstr "Saklanan kimlik bilgisi yükü geçersiz."
+
+msgid "Stored key"
+msgstr "Saklanan anahtar"
+
+msgid "Summarising older context…"
+msgstr "Eski bağlam özetleniyor…"
+
+msgid "Templates failed: %s"
+msgstr "Şablonlar başarısız: %s"
+
+msgid "Test connection"
+msgstr "Bağlantıyı test et"
+
+msgid "Test connection for %s"
+msgstr "%s için bağlantıyı test et"
+
+msgid "That URL is not allowed (it points at a private or unsafe address)."
+msgstr "Bu URL'ye izin verilmiyor (özel veya güvenli olmayan bir adrese işaret ediyor)."
+
+msgid "That comment does not exist."
+msgstr "Bu yorum mevcut değil."
+
+msgid "That content could not be found."
+msgstr "Bu içerik bulunamadı."
+
+msgid "That content type does not exist."
+msgstr "Bu içerik türü mevcut değil."
+
+msgid "That form plugin does not expose entries here."
+msgstr "Bu form eklentisi burada girdileri sunmuyor."
+
+msgid "That form plugin does not support managing entries here."
+msgstr "Bu form eklentisi burada girdilerin yönetilmesini desteklemiyor."
+
+msgid "That media item does not exist."
+msgstr "Bu ortam öğesi mevcut değil."
+
+msgid "That menu does not exist."
+msgstr "Bu menü mevcut değil."
+
+msgid "That order does not exist."
+msgstr "Bu sipariş mevcut değil."
+
+msgid "That product does not exist."
+msgstr "Bu ürün mevcut değil."
+
+msgid "That role does not exist."
+msgstr "Bu rol mevcut değil."
+
+msgid "That setting cannot be changed through the agent."
+msgstr "Bu ayar ajan aracılığıyla değiştirilemez."
+
+msgid "That setting is not readable through the agent."
+msgstr "Bu ayar ajan aracılığıyla okunamaz."
+
+msgid "That taxonomy does not exist."
+msgstr "Bu taksonomi mevcut değil."
+
+msgid "That user does not exist."
+msgstr "Bu kullanıcı mevcut değil."
+
+msgid "The action ran but the final response failed."
+msgstr "Eylem çalıştı ancak son yanıt başarısız oldu."
+
+msgid "The advanced JSON must be an object."
+msgstr "Gelişmiş JSON bir nesne olmalıdır."
+
+msgid "The agent is about to apply a change. Confirm to proceed."
+msgstr "Ajan bir değişiklik uygulamak üzere. Devam etmek için onaylayın."
+
+msgid "The comment status could not be changed."
+msgstr "Yorum durumu değiştirilemedi."
+
+msgid "The content could not be moved to trash."
+msgstr "İçerik çöp kutusuna taşınamadı."
+
+msgid "The email address is not valid."
+msgstr "E-posta adresi geçerli değil."
+
+msgid "The key is encrypted (AES-256-GCM) in the WordPress store and never returned over REST."
+msgstr "Anahtar, WordPress mağazasında (AES-256-GCM) şifrelenir ve REST üzerinden asla döndürülmez."
+
+msgid "The reply could not be posted."
+msgstr "Yanıt gönderilemedi."
+
+msgid "The requested tool is not in the declared agent tool registry."
+msgstr "İstenen araç, bildirilen ajan araç kayıt defterinde yok."
+
+msgid "The runtime rejected this call."
+msgstr "Çalışma zamanı bu çağrıyı reddetti."
+
+msgid "Thinking…"
+msgstr "Düşünüyor…"
+
+msgid "This action requires confirmation."
+msgstr "Bu eylem onay gerektirir."
+
+msgid "This provider does not allow manual models; check your credential or retry."
+msgstr "Bu sağlayıcı manuel modellere izin vermez; kimlik bilginizi kontrol edin veya tekrar deneyin."
+
+msgid "Tool is not executable by Management API bridge."
+msgstr "Araç, Management API köprüsü tarafından yürütülebilir değil."
+
+msgid "Tool is not executable by Workflow API bridge."
+msgstr "Araç, Workflow API köprüsü tarafından yürütülebilir değil."
+
+msgid "Tool is not executable by the VFS bridge."
+msgstr "Araç, VFS köprüsü tarafından yürütülebilir değil."
+
+msgid "Total tokens"
+msgstr "Toplam token"
+
+msgid "Trashed"
+msgstr "Çöpe taşındı"
+
+msgid "Trashed %1$s%2$s%3$s"
+msgstr "%1$s%2$s%3$s çöpe taşındı"
+
+msgid "Turn on a draft workflow so it starts running when its trigger fires."
+msgstr "Taslak bir workflow'u, tetikleyicisi çalıştığında çalışmaya başlaması için açın."
+
+msgid "Unexpected error."
+msgstr "Beklenmeyen hata."
+
+msgid "Unknown menu action (use create_menu or add_item)."
+msgstr "Bilinmeyen menü eylemi (create_menu veya add_item kullanın)."
+
+msgid "Unknown moderation action."
+msgstr "Bilinmeyen denetleme eylemi."
+
+msgid "Update record in %1$s%2$s?"
+msgstr "%1$s%2$s içindeki kayıt güncellensin mi?"
+
+msgid "Updated"
+msgstr "Güncellendi"
+
+msgid "Updated %1$s meta%2$s"
+msgstr "%1$s meta verisi güncellendi%2$s"
+
+msgid "Updated %1$s%2$s%3$s"
+msgstr "%1$s%2$s%3$s güncellendi"
+
+msgid "Updated a form entry"
+msgstr "Bir form girdisi güncellendi"
+
+msgid "Updated membership access"
+msgstr "Üyelik erişimi güncellendi"
+
+msgid "Updated menu%s"
+msgstr "Menü güncellendi%s"
+
+msgid "Updated order items%s"
+msgstr "Sipariş öğeleri güncellendi%s"
+
+msgid "Updated order%s"
+msgstr "Sipariş güncellendi%s"
+
+msgid "Updated setting%s"
+msgstr "Ayar güncellendi%s"
+
+msgid "Updated stock%s"
+msgstr "Stok güncellendi%s"
+
+msgid "Updated user%1$s%2$s"
+msgstr "Kullanıcı güncellendi%1$s%2$s"
+
+msgid "Used when a future capability is added that you have not set up yet."
+msgstr "Henüz ayarlamadığınız gelecekteki bir yetenek eklendiğinde kullanılır."
+
+msgid "Validation failed"
+msgstr "Doğrulama başarısız"
+
+msgid "Verified"
+msgstr "Doğrulandı"
+
+msgid "Viewed"
+msgstr "Görüntülendi"
+
+msgid "Viewed %s"
+msgstr "%s görüntülendi"
+
+msgid "Viewed comments"
+msgstr "Yorumlar görüntülendi"
+
+msgid "Viewed form entries"
+msgstr "Form girdileri görüntülendi"
+
+msgid "Viewed media item%s"
+msgstr "Ortam öğesi görüntülendi%s"
+
+msgid "Viewed media library"
+msgstr "Ortam kitaplığı görüntülendi"
+
+msgid "Viewed navigation menus"
+msgstr "Gezinme menüleri görüntülendi"
+
+msgid "Viewed taxonomies"
+msgstr "Taksonomiler görüntülendi"
+
+msgid "Viewed users"
+msgstr "Kullanıcılar görüntülendi"
+
+msgid "WP PFAgent"
+msgstr "WP PFAgent"
+
+msgid "WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory."
+msgstr "WP PFAgent varlıkları eksik. Eklenti dizininde npm install ve npm run build çalıştırın."
+
+msgid "WP PFAgent assets are not built."
+msgstr "WP PFAgent varlıkları derlenmemiş."
+
+msgid "WP PFWorkflow plugin is not active."
+msgstr "WP PFWorkflow eklentisi etkin değil."
+
+msgid "WPForms stores form entries only in the Pro version. This site runs WPForms Lite, which does not save entries."
+msgstr "WPForms form girdilerini yalnızca Pro sürümünde saklar. Bu site, girdileri kaydetmeyen WPForms Lite çalıştırıyor."
+
+msgid "Waiting for the agent…"
+msgstr "Ajan bekleniyor…"
+
+msgid "WooCommerce action"
+msgstr "WooCommerce eylemi"
+
+msgid "WooCommerce is not installed on this site."
+msgstr "WooCommerce bu sitede yüklü değil."
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "WordPress action: %s"
+msgstr "WordPress eylemi: %s"
+
+msgid "WordPress actions this turn"
+msgstr "Bu turdaki WordPress eylemleri"
+
+msgid "WordPress admin"
+msgstr "WordPress yönetimi"
+
+msgid "WordPress database is not available."
+msgstr "WordPress veritabanı kullanılamıyor."
+
+msgid "Workflow"
+msgstr "Workflow"
+
+msgid "Workflow API has not been checked yet."
+msgstr "Workflow API henüz kontrol edilmedi."
+
+msgid "Workflow API responded for workflows and templates."
+msgstr "Workflow API workflow ve şablonlar için yanıt verdi."
+
+msgid "Workflow dependency"
+msgstr "Workflow bağımlılığı"
+
+msgid "Workflow plugin is not active. API calls were skipped."
+msgstr "Workflow eklentisi etkin değil. API çağrıları atlandı."
+
+msgid "Workflows failed: %s"
+msgstr "Workflow'lar başarısız: %s"
+
+msgid "Working on it…"
+msgstr "Üzerinde çalışılıyor…"
+
+msgid "You cannot add media."
+msgstr "Ortam ekleyemezsiniz."
+
+msgid "You cannot browse the media library."
+msgstr "Ortam kitaplığına göz atamazsınız."
+
+msgid "You cannot change MemberPress access."
+msgstr "MemberPress erişimini değiştiremezsiniz."
+
+msgid "You cannot change site settings."
+msgstr "Site ayarlarını değiştiremezsiniz."
+
+msgid "You cannot change user roles."
+msgstr "Kullanıcı rollerini değiştiremezsiniz."
+
+msgid "You cannot create this content type."
+msgstr "Bu içerik türünü oluşturamazsınız."
+
+msgid "You cannot create users."
+msgstr "Kullanıcı oluşturamazsınız."
+
+msgid "You cannot edit WooCommerce orders."
+msgstr "WooCommerce siparişlerini düzenleyemezsiniz."
+
+msgid "You cannot edit this content."
+msgstr "Bu içeriği düzenleyemezsiniz."
+
+msgid "You cannot edit users."
+msgstr "Kullanıcıları düzenleyemezsiniz."
+
+msgid "You cannot grant a role with more capabilities than your own."
+msgstr "Kendi yeteneklerinizden daha fazlasına sahip bir rol veremezsiniz."
+
+msgid "You cannot grant the administrator role."
+msgstr "Yönetici rolünü veremezsiniz."
+
+msgid "You cannot list forms."
+msgstr "Formları listeleyemezsiniz."
+
+msgid "You cannot list users."
+msgstr "Kullanıcıları listeleyemezsiniz."
+
+msgid "You cannot manage LearnDash enrollments."
+msgstr "LearnDash kayıtlarını yönetemezsiniz."
+
+msgid "You cannot manage WooCommerce."
+msgstr "WooCommerce'i yönetemezsiniz."
+
+msgid "You cannot manage form entries."
+msgstr "Form girdilerini yönetemezsiniz."
+
+msgid "You cannot manage navigation menus."
+msgstr "Gezinme menülerini yönetemezsiniz."
+
+msgid "You cannot manage terms in this taxonomy."
+msgstr "Bu taksonomideki terimleri yönetemezsiniz."
+
+msgid "You cannot moderate comments."
+msgstr "Yorumları denetleyemezsiniz."
+
+msgid "You cannot publish this content."
+msgstr "Bu içeriği yayımlayamazsınız."
+
+msgid "You cannot read LearnDash data."
+msgstr "LearnDash verilerini okuyamazsınız."
+
+msgid "You cannot read MemberPress data."
+msgstr "MemberPress verilerini okuyamazsınız."
+
+msgid "You cannot read WooCommerce data."
+msgstr "WooCommerce verilerini okuyamazsınız."
+
+msgid "You cannot read form entries."
+msgstr "Form girdilerini okuyamazsınız."
+
+msgid "You cannot read navigation menus."
+msgstr "Gezinme menülerini okuyamazsınız."
+
+msgid "You cannot read site settings."
+msgstr "Site ayarlarını okuyamazsınız."
+
+msgid "You cannot read the media library."
+msgstr "Ortam kitaplığını okuyamazsınız."
+
+msgid "You cannot read the plugin list."
+msgstr "Eklenti listesini okuyamazsınız."
+
+msgid "You cannot read the site overview."
+msgstr "Site genel bakışını okuyamazsınız."
+
+msgid "You cannot read this content."
+msgstr "Bu içeriği okuyamazsınız."
+
+msgid "You cannot read users."
+msgstr "Kullanıcıları okuyamazsınız."
+
+msgid "You cannot read widgets."
+msgstr "Bileşenleri okuyamazsınız."
+
+msgid "You cannot trash this content."
+msgstr "Bu içeriği çöpe taşıyamazsınız."
+
+msgid "You do not have access to this chat session."
+msgstr "Bu sohbet oturumuna erişiminiz yok."
+
+msgid "You do not have permission to manage WP PFAgent."
+msgstr "WP PFAgent'ı yönetme izniniz yok."
+
+msgid "Your natural-language copilot"
+msgstr "Doğal dil yardımcı pilotunuz"
+
+msgid "action"
+msgstr "eylem"
+
+msgid "an entity"
+msgstr "bir varlık"
+
+msgid "application"
+msgstr "uygulama"
+
+msgid "beta partial"
+msgstr "beta kısmi"
+
+msgid "beta ready"
+msgstr "beta hazır"
+
+msgid "conversationId is required."
+msgstr "conversationId gereklidir."
+
+msgid "conversationId, confirmationToken, providerId and model are required."
+msgstr "conversationId, confirmationToken, providerId ve model gereklidir."
+
+msgid "conversationId, providerId and model are required."
+msgstr "conversationId, providerId ve model gereklidir."
+
+msgid "diff: %s"
+msgstr "diff: %s"
+
+msgid "e.g. 128000 — fill in manually"
+msgstr "örn. 128000 — manuel olarak doldurun"
+
+msgid "e.g. 8192 — fill in manually"
+msgstr "örn. 8192 — manuel olarak doldurun"
+
+msgid "entity"
+msgstr "varlık"
+
+msgid "group"
+msgstr "grup"
+
+msgid "kind and ref are required."
+msgstr "kind ve ref gereklidir."
+
+msgid "kind is required (entity, record, action, application, module, group, role, page)."
+msgstr "kind gereklidir (entity, record, action, application, module, group, role, page)."
+
+msgid "label cannot be empty."
+msgstr "label boş olamaz."
+
+msgid "low | medium | high | max"
+msgstr "low | medium | high | max"
+
+msgid "message is required."
+msgstr "message gereklidir."
+
+msgid "model is required for the framework runtime."
+msgstr "framework çalışma zamanı için model gereklidir."
+
+msgid "model-id"
+msgstr "model-id"
+
+msgid "module"
+msgstr "modül"
+
+msgid "no message"
+msgstr "mesaj yok"
+
+msgid "none"
+msgstr "yok"
+
+msgid "not stored"
+msgstr "saklanmadı"
+
+msgid "one model id per line"
+msgstr "satır başına bir model id"
+
+msgid "oversized request body"
+msgstr "boyutu aşan istek gövdesi"
+
+msgid "page"
+msgstr "sayfa"
+
+msgid "payload is required: send { payload: { workflow: { id, name, status }, graph: { schemaVersion: 1, nodes: [], connections: [] } } }."
+msgstr "payload gereklidir: { payload: { workflow: { id, name, status }, graph: { schemaVersion: 1, nodes: [], connections: [] } } } gönderin."
+
+msgid "providerId is required."
+msgstr "providerId gereklidir."
+
+msgid "record"
+msgstr "kayıt"
+
+msgid "required — e.g. 128000"
+msgstr "gerekli — örn. 128000"
+
+msgid "required — e.g. 8192"
+msgstr "gerekli — örn. 8192"
+
+msgid "resource"
+msgstr "kaynak"
+
+msgid "role"
+msgstr "rol"
+
+msgid "role \"%1$s\" is not in the allowed enum (%2$s)."
+msgstr "\"%1$s\" rolü izin verilen enum'da yok (%2$s)."
+
+msgid "rules must be a JSON object."
+msgstr "rules bir JSON nesnesi olmalıdır."
+
+msgid "unknown"
+msgstr "bilinmiyor"
+
+msgid "workflowId is required."
+msgstr "workflowId gereklidir."
+
+msgid "wp-pfmanagement agent-ready service is not available."
+msgstr "wp-pfmanagement agent-ready hizmeti mevcut değil."
+
+msgid "wp-pfworkflow agent-ready service is not available."
+msgstr "wp-pfworkflow agent-ready hizmeti mevcut değil."
+
+msgid "— Pick one —"
+msgstr "— Seç —"
+
+msgid "— none —"
+msgstr "— yok —"

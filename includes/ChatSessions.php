@@ -26,6 +26,12 @@ use WP_REST_Response;
  */
 final class ChatSessions
 {
+    // Manages the plugin's OWN chat-session tables. Every query binds its
+    // VALUES through $wpdb->prepare(); the only interpolation is the fixed table
+    // prefix ($wpdb->prefix, never user input). Direct queries on custom tables
+    // are unavoidable (no WP API) and per-request session reads are not
+    // object-cache candidates. Justified, class-scoped.
+    // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     /**
      * Legacy CPT slug. Kept registered so existing posts remain readable
      * by the migration helper (bin/migrate-cpt-to-pfaf.php) until the
@@ -527,15 +533,32 @@ final class ChatSessions
         $summary = $this->serialize_summary_row($row);
 
         $message_rows = (array) $wpdb->get_results($wpdb->prepare(
-            "SELECT role, content_json, tool_call_id, created_at FROM {$msgs}
+            "SELECT ordinal, role, content_json, tool_call_id, created_at FROM {$msgs}
              WHERE conversation_id = %d
              ORDER BY ordinal ASC",
             $session_id
         ), ARRAY_A);
 
+        // Tool-call executions grouped by the assistant-message ordinal that
+        // produced them, so a reopened conversation shows the same
+        // "N execution(s)" disclosure the live turn did (F4). The empty
+        // mid-loop assistant rows we skip below still carry tool calls, so
+        // we buffer their executions and flush them onto the next visible
+        // narration bubble — exactly how they streamed live.
+        $execByOrdinal = $this->executions_by_ordinal($session_id);
+        $execBuffer = [];
+
         $messages = [];
         foreach ($message_rows as $m) {
             $role = (string) ($m['role'] ?? '');
+            $ordinal = (int) ($m['ordinal'] ?? 0);
+
+            if (isset($execByOrdinal[$ordinal])) {
+                foreach ($execByOrdinal[$ordinal] as $exec) {
+                    $execBuffer[] = $exec;
+                }
+            }
+
             if ($role === 'tool') {
                 // The UI's chat transcript does not render tool result
                 // messages (they're surfaced via the execution timeline
@@ -553,19 +576,83 @@ final class ChatSessions
             // round Loop; surfacing them on rehydration produces a
             // string of empty robot bubbles between the user message and
             // the final reply (exact symptom the operator reported on
-            // reopening a finished conversation).
+            // reopening a finished conversation). Their executions stay in
+            // the buffer for the next visible narration.
             if ($content === '') {
                 continue;
             }
-            $messages[] = [
+            $entry = [
                 'role' => $role,
                 'content' => $content,
                 'at' => (string) ($m['created_at'] ?? ''),
             ];
+            if ($role === 'assistant' && $execBuffer !== []) {
+                $entry['executions'] = $execBuffer;
+                $execBuffer = [];
+            }
+            $messages[] = $entry;
         }
 
         $summary['messages'] = $messages;
         return $summary;
+    }
+
+    /**
+     * Read every tool_call row for the conversation and shape it as the
+     * frontend's AgentRuntimeExecution list, grouped by the assistant
+     * message ordinal that produced it. Mirrors
+     * FrameworkRuntime::collectExecutions so a rehydrated conversation and a
+     * live turn render identical execution blocks.
+     *
+     * @return array<int, list<array<string, mixed>>>
+     */
+    private function executions_by_ordinal(int $session_id): array
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'pfaf_tool_calls';
+        $rows = (array) $wpdb->get_results($wpdb->prepare(
+            "SELECT message_ordinal, tool_name, arguments_json, status, result_json,
+                    state_after_json, error_code, error_message, duration_ms, started_at, ended_at
+             FROM {$table}
+             WHERE conversation_id = %d
+             ORDER BY id ASC",
+            $session_id
+        ), ARRAY_A);
+
+        $out = [];
+        foreach ($rows as $row) {
+            $ordinal = (int) ($row['message_ordinal'] ?? 0);
+            $args = json_decode((string) ($row['arguments_json'] ?? ''), true);
+            // On rehydration we deliberately DROP the heavy `evidence`
+            // (state_after) and `result` payloads: the chat's "N execution(s)"
+            // disclosure only paints tool name / duration / status / errorCode,
+            // and a long conversation would otherwise re-ship tens of KB of
+            // tool results the UI never renders. They stay full on the live turn.
+            $entry = [
+                'tool' => [
+                    'name' => (string) ($row['tool_name'] ?? ''),
+                    'arguments' => is_array($args) ? $args : [],
+                ],
+                'evidence' => new \stdClass(),
+                'result' => null,
+                'diff' => null,
+                'startedAt' => (string) ($row['started_at'] ?? ''),
+                'endedAt' => (string) ($row['ended_at'] ?? ''),
+                'durationMs' => (int) ($row['duration_ms'] ?? 0),
+                'status' => ((string) ($row['status'] ?? '') === 'ok') ? 'success' : 'error',
+            ];
+            $errorCode = (string) ($row['error_code'] ?? '');
+            $errorMessage = (string) ($row['error_message'] ?? '');
+            if ($errorCode !== '') {
+                $entry['errorCode'] = $errorCode;
+            }
+            if ($errorMessage !== '') {
+                $entry['errorMessage'] = $errorMessage;
+            }
+            $out[$ordinal][] = $entry;
+        }
+
+        return $out;
     }
 
     /**

@@ -8,7 +8,7 @@ use WP_Error;
 
 final class ProviderRuntime
 {
-    private const SAFE_PROMPT = 'Reply with one short sentence containing the word ProjectFlash.';
+    private const SAFE_PROMPT = 'Reply with one short sentence containing the word Setyenv.';
 
     public function __construct(
         private readonly CredentialStore $credentials,

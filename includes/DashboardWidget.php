@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ProjectFlash\Agent;
 
 /**
- * Wp-admin Dashboard widget for ProjectFlash Agent. Mirrors the PFM /
+ * Wp-admin Dashboard widget for Setyenv Agent. Mirrors the PFM /
  * PFW tile layout for visual continuity across the family. Surfaces:
  *
  *   - conversation count (last 30 days)
@@ -32,7 +32,7 @@ final class DashboardWidget
         }
         wp_add_dashboard_widget(
             self::WIDGET_ID,
-            __('ProjectFlash Agent', 'wp-pfagent'),
+            __('Setyenv Agent', 'wp-pfagent'),
             [$this, 'render']
         );
     }
@@ -45,25 +45,43 @@ final class DashboardWidget
         // its initial view from operator session state. Cross-plugin
         // footer links jump to the rest of the family instead.
         $admin_url = admin_url('admin.php?page=wp-pfagent');
-        $pfm_url = admin_url('admin.php?page=pfm');
-        $pfw_url = admin_url('admin.php?page=wp-pfworkflow');
+
+        // Presence-aware copy + footer. When the Setyenv suite is present the
+        // widget speaks to modelling data and drawing workflows and links to
+        // PFM/PFW; a standalone install (suite absent) speaks purely to the
+        // WordPress surface and drops the dead cross-plugin links.
+        $has_management = \ProjectFlash\Agent\ManagementDependency::is_active();
+        $has_workflow = \ProjectFlash\Agent\WorkflowDependency::is_active();
 
         [$conversations_30d, $providers_configured, $messages_30d] = $this->collect_stats();
 
         $accent = '#0d9488';
 
+        $tagline = __('Your natural-language copilot', 'wp-pfagent');
+        $blurb = ($has_management || $has_workflow)
+            ? __('Ask it to create entities, draw workflows or explore your data. The agent knows the PFM model and the PFW catalog — it builds whatever you describe.', 'wp-pfagent')
+            : __('Ask it in plain language to manage your posts, media, users, comments and settings — and your WooCommerce, SEO and forms when those plugins are active. It proposes; you approve every change.', 'wp-pfagent');
+
+        // Every dynamic value below is escaped at construction: the hero /
+        // stat / footer builders run each interpolated part through esc_url(),
+        // esc_attr(), esc_html() or esc_html__(), and the accent is a fixed
+        // literal. Plugin Check cannot trace that through the returning
+        // helpers, so the echo/printf sites are flagged; they are safe.
+        // wp_kses_post() is not usable here — it would strip the inline style
+        // and onmouseover/onmouseout hover handlers the widget relies on.
+        // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
         echo '<div class="pf-dw" style="margin:-12px;padding:0;font-family:inherit;">';
         echo $this->hero_block(
             WP_PFAGENT_URL . 'assets/img/logo.png',
             $accent,
-            __('Tu copiloto en lenguaje natural', 'wp-pfagent'),
-            __('Ask it to create entities, draw workflows or explore your data. The agent knows the PFM model and the PFW catalog — it builds whatever you describe.', 'wp-pfagent')
+            $tagline,
+            $blurb
         );
 
         echo '<div class="pf-dw-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#e0e0e0;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;">';
-        echo $this->stat_cell((string) $conversations_30d, __('Conversaciones (30d)', 'wp-pfagent'), $admin_url);
-        echo $this->stat_cell((string) $providers_configured, __('Proveedores configurados', 'wp-pfagent'), $admin_url);
-        echo $this->stat_cell($this->format_short($messages_30d), __('Mensajes (30d)', 'wp-pfagent'), $admin_url);
+        echo $this->stat_cell((string) $conversations_30d, __('Conversations (30d)', 'wp-pfagent'), $admin_url);
+        echo $this->stat_cell((string) $providers_configured, __('Providers configured', 'wp-pfagent'), $admin_url);
+        echo $this->stat_cell($this->format_short($messages_30d), __('Messages (30d)', 'wp-pfagent'), $admin_url);
         echo '</div>';
 
         echo '<div class="pf-dw-actions" style="padding:14px 16px;display:flex;gap:8px;flex-wrap:wrap;">';
@@ -76,12 +94,19 @@ final class DashboardWidget
         );
         echo '</div>';
 
-        echo $this->footer_links([
-            ['icon' => 'dashicons-database-view', 'label' => __('PF Management', 'wp-pfagent'), 'href' => $pfm_url],
-            ['icon' => 'dashicons-networking', 'label' => __('PF Workflow', 'wp-pfagent'), 'href' => $pfw_url],
-        ]);
+        $footer = [];
+        if ($has_management) {
+            $footer[] = ['icon' => 'dashicons-database-view', 'label' => __('PF Management', 'wp-pfagent'), 'href' => admin_url('admin.php?page=pfm')];
+        }
+        if ($has_workflow) {
+            $footer[] = ['icon' => 'dashicons-networking', 'label' => __('PF Workflow', 'wp-pfagent'), 'href' => admin_url('admin.php?page=wp-pfworkflow')];
+        }
+        if ($footer !== []) {
+            echo $this->footer_links($footer);
+        }
 
         echo '</div>';
+        // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**

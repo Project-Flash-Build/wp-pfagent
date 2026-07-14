@@ -27,6 +27,9 @@ namespace ProjectFlash\Agent\Framework\Llm;
  */
 final class ModelCatalog
 {
+    // Exceptions are internal catalog/config errors (bad JSON, missing keys),
+    // caught by the runtime and surfaced as JSON/logs — never echoed as HTML.
+    // phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
     /** @var array<string, array<string, mixed>>|null */
     private ?array $models = null;
 

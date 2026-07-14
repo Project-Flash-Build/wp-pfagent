@@ -2,7 +2,7 @@
   "name": "@projectflash/wp-pfagent",
   "version": "0.1.0",
   "private": true,
-  "description": "Agent console for ProjectFlash WordPress products.",
+  "description": "Agent console for Setyenv WordPress products.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",

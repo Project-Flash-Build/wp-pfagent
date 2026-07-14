@@ -44,6 +44,10 @@ use ProjectFlash\Agent\Framework\Message;
  */
 final class OpenAiCompatibleGateway implements Gateway
 {
+    // Exceptions carry the provider's HTTP/API error text — caught, returned as
+    // a JSON error and matched by ErrorClassifier; never echoed as HTML, so
+    // esc_html would corrupt the classified/displayed text. Justified, scoped.
+    // phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
     /** @var array<string, array{contextLength: int, maxOutputTokens: int}> */
     private array $capsCache = [];
 
@@ -366,20 +370,20 @@ final class OpenAiCompatibleGateway implements Gateway
     /** @return array<string, mixed>|null */
     private function httpGet(string $path): ?array
     {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim($this->baseUrl, '/') . $path,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $this->httpTimeoutSeconds,
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $this->apiKey,
-                'Accept: application/json',
+        // Blocking GET (no streaming) → WordPress HTTP API is equivalent.
+        $response = wp_remote_get(rtrim($this->baseUrl, '/') . $path, [
+            'timeout' => $this->httpTimeoutSeconds,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Accept' => 'application/json',
             ],
         ]);
-        $body = curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
-        if ($body === false || $status >= 400) {
+        if (is_wp_error($response)) {
+            return null;
+        }
+        $body = wp_remote_retrieve_body($response);
+        $status = (int) wp_remote_retrieve_response_code($response);
+        if ($status >= 400) {
             return null;
         }
         $decoded = json_decode((string) $body, true);
@@ -389,26 +393,21 @@ final class OpenAiCompatibleGateway implements Gateway
     /** @param array<string, mixed> $body @return array<string, mixed> */
     private function httpPost(string $path, array $body): array
     {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim($this->baseUrl, '/') . $path,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => (string) json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $this->httpTimeoutSeconds,
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $this->apiKey,
-                'Content-Type: application/json',
-                'Accept: application/json',
+        // Blocking POST (no streaming) → WordPress HTTP API is equivalent.
+        $response = wp_remote_post(rtrim($this->baseUrl, '/') . $path, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ],
+            'body' => (string) json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'timeout' => $this->httpTimeoutSeconds,
         ]);
-        $raw = curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        $err = curl_error($ch);
-        curl_close($ch);
-        if ($raw === false) {
-            throw new \RuntimeException('LLM HTTP failed: ' . $err);
+        if (is_wp_error($response)) {
+            throw new \RuntimeException('LLM HTTP failed: ' . $response->get_error_message());
         }
+        $raw = wp_remote_retrieve_body($response);
+        $status = (int) wp_remote_retrieve_response_code($response);
         if ($status >= 400) {
             $excerpt = substr((string) $raw, 0, 400);
             // Probe the response body for the common "this param is not

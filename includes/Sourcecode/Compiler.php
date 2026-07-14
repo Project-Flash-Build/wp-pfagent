@@ -818,13 +818,14 @@ final class Compiler
         // `let` / `var` cannot declare a flow variable from source. The
         // LLM does not auto-declare variables, does not write defaults
         // and does not pick names — only the operator does that from the
-        // workflow's variable editor. To read an existing variable use
-        // `const X = await variables.<name>.get();` instead.
+        // workflow's variable editor (and the compiler auto-seeds the
+        // operator-tunable pins you OMIT). To read an existing variable,
+        // call its typed getter from /lib/variables.d.ts.
         throw CompileError::compile(
             'let_declares_variable',
             (int) $stmt['line'],
             (int) $stmt['column'],
-            'A `let` / `var` declaration would auto-create a workflow variable, which is not allowed. Read an existing variable with `const ' . $name . ' = await variables.<name>.get();` (variables are declared by the operator in the variable editor, never by the workflow source).'
+            'A `let` / `var` declaration is not allowed — workflow source never declares variables (the operator does, in the variable editor; the compiler auto-seeds operator-tunable pins you OMIT). To READ an existing variable, use its typed getter from /lib/variables.d.ts, e.g. `const ' . $name . ' = await ' . $name . '$Variable$Get();`. Do NOT use `variables.x.get()` (removed).'
         );
     }
 
@@ -1986,7 +1987,7 @@ final class Compiler
                 'literal_on_input_pin',
                 (int) ($valueDescriptor['line'] ?? 0),
                 (int) ($valueDescriptor['column'] ?? 0),
-                sprintf('Arg "%s" on verb "%s" is a literal. Workflows accept no literals; read the value from an existing workflow variable.', $slotKey, $verbKey)
+                sprintf('Arg "%s" on verb "%s" is a literal, but input pins are wires: they take a variable or an upstream output, never a literal constant. If this pin is operator-tunable (filters, cron, templates, thresholds), OMIT it — it auto-seeds a variable. Otherwise read a variable with its getter (see /lib/variables.d.ts): const x = await Name$Variable$Get(); then pass x. Do NOT use `let` (rejected) or `variables.x.get()` (removed). See the AUTHORING RULES at the top of /lib/nodes.d.ts.', $slotKey, $verbKey)
             );
         }
         if ($argKind === 'input' && $kind === 'template') {
@@ -1994,7 +1995,7 @@ final class Compiler
                 'template_on_input_pin',
                 (int) ($valueDescriptor['line'] ?? 0),
                 (int) ($valueDescriptor['column'] ?? 0),
-                sprintf('Arg "%s" on verb "%s" is a template literal. Workflows accept no literals (templates contain literal text).', $slotKey, $verbKey)
+                sprintf('Arg "%s" on verb "%s" is a template literal (still literal text), which cannot land on an input pin. OMIT the pin to auto-seed a tunable variable, or build the text upstream (a text-render node, or a variable read via Name$Variable$Get()) and wire that. See the AUTHORING RULES at the top of /lib/nodes.d.ts.', $slotKey, $verbKey)
             );
         }
 

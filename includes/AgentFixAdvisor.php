@@ -36,7 +36,7 @@ final class AgentFixAdvisor
             'rationale' => 'Agent and credential routes require an authenticated user with the expected WordPress capability and a valid REST nonce.',
             'actions' => [
                 'Refresh the WordPress admin page to get a fresh nonce.',
-                'Verify the current user has manage_options or the mapped ProjectFlash capability.',
+                'Verify the current user has manage_options or the mapped Setyenv capability.',
                 'Retry the exact endpoint and keep the returned HTTP status in the timeline.',
             ],
         ]);

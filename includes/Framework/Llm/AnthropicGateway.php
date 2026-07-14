@@ -24,6 +24,11 @@ use ProjectFlash\Agent\Framework\Message;
  */
 final class AnthropicGateway implements Gateway
 {
+    // Exceptions here carry the provider's HTTP/API error text; they are caught
+    // by the runtime, returned to the client as a JSON error and matched by
+    // ErrorClassifier. They are NEVER echoed as HTML, so esc_html would corrupt
+    // the classified/displayed text. Justified, class-scoped.
+    // phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
     public const DEFAULT_API_VERSION = '2023-06-01';
 
     /** @var array<string, array{contextLength: int, maxOutputTokens: int}> */
@@ -101,24 +106,24 @@ final class AnthropicGateway implements Gateway
      */
     private function fetchCapsFromApi(string $model): ?array
     {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim($this->baseUrl, '/') . '/models/' . rawurlencode($model),
-            CURLOPT_RETURNTRANSFER => true,
-            // F17: bound caps pre-flight to min(5, httpTimeoutSeconds) so
-            // an unreachable host can't burn the full 120s. Main /messages
-            // call still uses the unbounded timeout.
-            CURLOPT_TIMEOUT => max(1, min(5, $this->httpTimeoutSeconds)),
-            CURLOPT_HTTPHEADER => [
-                'x-api-key: ' . $this->apiKey,
-                'anthropic-version: ' . $this->apiVersion,
-                'Accept: application/json',
+        // F17: bound caps pre-flight to min(5, httpTimeoutSeconds) so an
+        // unreachable host can't burn the full 120s. Main /messages call still
+        // uses the unbounded timeout. Blocking request (no streaming), so the
+        // WordPress HTTP API is behavior-equivalent to the old curl.
+        $response = wp_remote_get(rtrim($this->baseUrl, '/') . '/models/' . rawurlencode($model), [
+            'timeout' => max(1, min(5, $this->httpTimeoutSeconds)),
+            'headers' => [
+                'x-api-key' => $this->apiKey,
+                'anthropic-version' => $this->apiVersion,
+                'Accept' => 'application/json',
             ],
         ]);
-        $raw = curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
-        if ($raw === false || $status !== 200) {
+        if (is_wp_error($response)) {
+            return null;
+        }
+        $raw = wp_remote_retrieve_body($response);
+        $status = (int) wp_remote_retrieve_response_code($response);
+        if ($status !== 200) {
             return null;
         }
         $decoded = json_decode((string) $raw, true);
@@ -495,33 +500,28 @@ final class AnthropicGateway implements Gateway
     /** @param array<string, mixed> $body @return array<string, mixed> */
     private function httpPost(string $path, array $body): array
     {
-        $ch = curl_init();
         $headers = [
-            'x-api-key: ' . $this->apiKey,
-            'anthropic-version: ' . $this->apiVersion,
-            'Content-Type: application/json',
-            'Accept: application/json',
+            'x-api-key' => $this->apiKey,
+            'anthropic-version' => $this->apiVersion,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
         ];
         if ($this->betaFeatures !== []) {
-            $headers[] = 'anthropic-beta: ' . implode(',', $this->betaFeatures);
+            $headers['anthropic-beta'] = implode(',', $this->betaFeatures);
         }
 
-        curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim($this->baseUrl, '/') . $path,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => (string) json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $this->httpTimeoutSeconds,
-            CURLOPT_HTTPHEADER => $headers,
+        // Blocking POST (no streaming) → the WordPress HTTP API is
+        // behavior-equivalent to the previous curl call.
+        $response = wp_remote_post(rtrim($this->baseUrl, '/') . $path, [
+            'headers' => $headers,
+            'body' => (string) json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'timeout' => $this->httpTimeoutSeconds,
         ]);
-        $raw = curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        $err = curl_error($ch);
-        curl_close($ch);
-
-        if ($raw === false) {
-            throw new \RuntimeException('Anthropic HTTP failed: ' . $err);
+        if (is_wp_error($response)) {
+            throw new \RuntimeException('Anthropic HTTP failed: ' . $response->get_error_message());
         }
+        $raw = wp_remote_retrieve_body($response);
+        $status = (int) wp_remote_retrieve_response_code($response);
         if ($status >= 400) {
             $excerpt = substr((string) $raw, 0, 400);
             throw new \RuntimeException(sprintf('Anthropic HTTP %d: %s', $status, $excerpt));

@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: WP-PFAgent
- * Description: Open-source AI agent console for the Project Flash suite. Drives WP-PFWorkflow and WP-PFManagement from natural language.
- * Version: 1.0.2
- * Author: Project Flash Build
+ * Description: Open-source AI agent console for the Setyenv suite. Drives WP-PFWorkflow and WP-PFManagement from natural language.
+ * Version: 1.0.8
+ * Author: Setyenv Build
  * Requires PHP: 8.1
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('WP_PFAGENT_VERSION')) {
-    define('WP_PFAGENT_VERSION', '1.0.2');
+    define('WP_PFAGENT_VERSION', '1.0.8');
 }
 if (!defined('WP_PFAGENT_FILE')) {
     define('WP_PFAGENT_FILE', __FILE__);
@@ -39,19 +39,39 @@ require_once WP_PFAGENT_DIR . 'includes/PromptCacheHelper.php';
 require_once WP_PFAGENT_DIR . 'includes/ProviderBackoff.php';
 require_once WP_PFAGENT_DIR . 'includes/ProviderRuntime.php';
 require_once WP_PFAGENT_DIR . 'includes/AgentToolRegistry.php';
-require_once WP_PFAGENT_DIR . 'includes/WorkflowApiBridge.php';
-require_once WP_PFAGENT_DIR . 'includes/ManagementApiBridge.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/CompileError.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Lexer.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Parser.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/VerbCatalog.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/LibraryBuilder.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Compiler.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/Decompiler.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/DecompileCache.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/TemplateDecompileCache.php';
-require_once WP_PFAGENT_DIR . 'includes/Sourcecode/VirtualFileSystem.php';
-require_once WP_PFAGENT_DIR . 'includes/WorkflowVfsBridge.php';
+
+// The Setyenv-suite half — the .pfflow compiler and the PFM/PFW bridges — is
+// loaded only when present. A derived, standalone distribution of this plugin
+// simply omits these files; the requires are guarded so their absence is not a
+// fatal, and the tool registry / SPA then degrade to the WordPress-only surface
+// by presence. The plugin source itself carries the complete set.
+foreach ([
+    'includes/WorkflowApiBridge.php',
+    'includes/ManagementApiBridge.php',
+    'includes/Sourcecode/CompileError.php',
+    'includes/Sourcecode/Lexer.php',
+    'includes/Sourcecode/Parser.php',
+    'includes/Sourcecode/VerbCatalog.php',
+    'includes/Sourcecode/LibraryBuilder.php',
+    'includes/Sourcecode/Compiler.php',
+    'includes/Sourcecode/Decompiler.php',
+    'includes/Sourcecode/DecompileCache.php',
+    'includes/Sourcecode/TemplateDecompileCache.php',
+    'includes/Sourcecode/VirtualFileSystem.php',
+    'includes/WorkflowVfsBridge.php',
+] as $suite_file) {
+    if (file_exists(WP_PFAGENT_DIR . $suite_file)) {
+        require_once WP_PFAGENT_DIR . $suite_file;
+    }
+}
+
+require_once WP_PFAGENT_DIR . 'includes/WpCore/WpCoreAgentApi.php';
+require_once WP_PFAGENT_DIR . 'includes/ThirdParty/ThirdPartyPresence.php';
+require_once WP_PFAGENT_DIR . 'includes/ThirdParty/WooCommerceAgentApi.php';
+require_once WP_PFAGENT_DIR . 'includes/ThirdParty/SeoAgentApi.php';
+require_once WP_PFAGENT_DIR . 'includes/ThirdParty/FormsAgentApi.php';
+require_once WP_PFAGENT_DIR . 'includes/ThirdParty/LearnDashAgentApi.php';
+require_once WP_PFAGENT_DIR . 'includes/ThirdParty/MemberPressAgentApi.php';
 require_once WP_PFAGENT_DIR . 'includes/SystemPrompt.php';
 require_once WP_PFAGENT_DIR . 'includes/AgentContract.php';
 require_once WP_PFAGENT_DIR . 'includes/AgentFixAdvisor.php';
@@ -105,15 +125,13 @@ require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/Prompts.php';
 require_once WP_PFAGENT_DIR . 'includes/Framework/LlmCompactor.php';
 require_once WP_PFAGENT_DIR . 'includes/FrameworkRuntime.php';
 
-// Shared license + update-checker drop-in. Guarded by class_exists so whichever
-// ProjectFlash plugin loads first defines the class and the rest reuse it.
-if (!class_exists(\ProjectFlash\Licensing\LicenseClient::class)) {
-    require_once WP_PFAGENT_DIR . 'includes/Licensing/LicenseClient.php';
-}
-
 register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\TraceLogger', 'install']);
-register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\DecompileCache', 'activate']);
-register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\TemplateDecompileCache', 'activate']);
+// Compiler caches — only when the .pfflow compiler ships (guarded so a derived
+// standalone build without it does not fatal on activation).
+if (class_exists('\\ProjectFlash\\Agent\\Sourcecode\\DecompileCache')) {
+    register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\DecompileCache', 'activate']);
+    register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\Sourcecode\\TemplateDecompileCache', 'activate']);
+}
 // Framework Loop tables (wp_pfaf_conversations/messages/tool_calls/traces).
 // dbDelta is safe to re-run, so this also handles upgrades when schema
 // evolves between plugin versions.
@@ -190,16 +208,6 @@ add_action('plugins_loaded', static function (): void {
     (new \ProjectFlash\Agent\AdminPage())->init();
     (new \ProjectFlash\Agent\DashboardWidget())->init();
 
-    (new \ProjectFlash\Licensing\LicenseClient([
-        'plugin_file' => WP_PFAGENT_FILE,
-        'slug'        => 'wp-pfagent',
-        'name'        => 'WP-PFAgent',
-        'version'     => WP_PFAGENT_VERSION,
-        'option_key'  => 'pfa_license',
-        'text_domain' => 'wp-pfagent',
-        'menu_parent' => 'wp-pfagent',
-    ]))->register();
-
     // One-shot purge of the legacy VFS draft/preview options
     // (pfa_draft_<hash>, pfa_preview_<hash>, pfa_draft_index). The VFS
     // no longer carries a separate draft layer — write_file persists
@@ -224,11 +232,48 @@ add_action('plugins_loaded', static function (): void {
     // write_file / edit_file / move_file / delete_file in agent-tools.json
     // need a registered handler to call into. Without this filter every VFS
     // call returns `bridge_unavailable` and the LLM falls back to emitting
-    // tool calls as plain text into the chat.
-    add_filter('projectflash_agent_vfs_bridge', static function ($service) {
+    // tool calls as plain text into the chat. Guarded on the class so a derived
+    // standalone build (which omits WorkflowVfsBridge) does NOT register the
+    // filter — the tool registry then hides the workflow file tools by presence.
+    if (class_exists('\\ProjectFlash\\Agent\\WorkflowVfsBridge')) {
+        add_filter('projectflash_agent_vfs_bridge', static function ($service) {
+            if (is_object($service)) {
+                return $service;
+            }
+            return new \ProjectFlash\Agent\WorkflowVfsBridge();
+        });
+    }
+
+    // Publish the self-contained WP-core cross-cutting tool module. This is an
+    // INDEPENDENT tool-set (posts / taxonomies / media / users / comments /
+    // settings / navigation) that shares NO code with the suite (PFM/PFW)
+    // bridges — it talks only to WordPress core, and works with the Setyenv
+    // suite absent. The FilterBridgeTool entries for the wp_* tools in
+    // agent-tools.json resolve their handler here.
+    add_filter('pfa_wpcore_agent_api', static function ($service) {
         if (is_object($service)) {
             return $service;
         }
-        return new \ProjectFlash\Agent\WorkflowVfsBridge();
+        return new \ProjectFlash\Agent\WpCore\WpCoreAgentApi();
+    });
+
+    // Publish the lean third-party adapters (phase 2). Each is a SELF-CONTAINED
+    // module talking directly to the plugin's own public API — no PFW
+    // dependency, present only when the plugin is (ThirdPartyPresence gates the
+    // tools). Same isolation contract as the WP-core module.
+    add_filter('pfa_woocommerce_agent_api', static function ($service) {
+        return is_object($service) ? $service : new \ProjectFlash\Agent\ThirdParty\WooCommerceAgentApi();
+    });
+    add_filter('pfa_seo_agent_api', static function ($service) {
+        return is_object($service) ? $service : new \ProjectFlash\Agent\ThirdParty\SeoAgentApi();
+    });
+    add_filter('pfa_forms_agent_api', static function ($service) {
+        return is_object($service) ? $service : new \ProjectFlash\Agent\ThirdParty\FormsAgentApi();
+    });
+    add_filter('pfa_learndash_agent_api', static function ($service) {
+        return is_object($service) ? $service : new \ProjectFlash\Agent\ThirdParty\LearnDashAgentApi();
+    });
+    add_filter('pfa_memberpress_agent_api', static function ($service) {
+        return is_object($service) ? $service : new \ProjectFlash\Agent\ThirdParty\MemberPressAgentApi();
     });
 });

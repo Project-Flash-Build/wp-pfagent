@@ -12,6 +12,15 @@ import { ConversationPicker } from './ConversationPicker';
 import { Diagnostic } from './Diagnostic';
 import { Markdown } from './Markdown';
 import {
+  describeWpExecution,
+  isWpTool,
+  wpAdminUrlForTarget,
+  wpTargetFromExecutions,
+  type WpActivityItem,
+  type WpTarget,
+} from './wpTarget';
+import { WordPressPane, WordPressTabButton } from './WordPressPane';
+import {
   agentTurn,
   appendChatMessages,
   createChatSession,
@@ -52,12 +61,17 @@ interface ActiveState {
   sessionId: number | null;
 }
 
-type IframeTab = 'pfm' | 'pfw';
+// 'wordpress' is the transversal tab: it reflects the agent's DIRECT actions on
+// WP core / third-party plugins. Unlike pfm/pfw it has no dependency gate - WP
+// core is always present - so it is always shown, after pfm/pfw. Additive: the
+// pfm/pfw reflection path is unchanged.
+type IframeTab = 'pfm' | 'pfw' | 'wordpress';
 
 interface IframeState {
   activeTab: IframeTab | null;
   pfmUrl: string | null;
   pfwUrl: string | null;
+  wpUrl: string | null;
 }
 
 interface IframeViewController {
@@ -133,7 +147,10 @@ function loadIframeState(): Partial<IframeState> {
     return {
       // The tab preference DOES survive reloads — the operator
       // expects to land on whichever tab they were looking at.
-      activeTab: parsed.activeTab === 'pfm' || parsed.activeTab === 'pfw' ? parsed.activeTab : null,
+      activeTab:
+        parsed.activeTab === 'pfm' || parsed.activeTab === 'pfw' || parsed.activeTab === 'wordpress'
+          ? parsed.activeTab
+          : null,
       // URLs do NOT survive: stripping the resource-pinning
       // parameters here means a fresh wp-pfagent boot lands the
       // iframes on the bare landing pages of pfm / pfw instead of
@@ -222,6 +239,14 @@ export function App() {
   // (last) line is rendered with a spinner, the rest as a compact
   // history. Internal tool names are NEVER exposed.
   const [progressTrail, setProgressTrail] = useState<string[]>([]);
+  // Which assistant bubbles have their executions <details> expanded, keyed by
+  // the STABLE message id. #7: the executions block used to be an uncontrolled
+  // native <details> whose open state lived in the DOM — while the agent worked
+  // and setMessages re-rendered the list, React could reuse a sibling's DOM node
+  // and the penultimate bubble's open panel got painted with the last bubble's
+  // executions. Tracking open state in React, keyed by message id, makes each
+  // panel's expansion survive re-renders deterministically.
+  const [expandedExec, setExpandedExec] = useState<Set<string>>(() => new Set());
   // Credentials cached on this view so the chat header can look up
   // active.model's contextLength for the context-usage bar without
   // calling the REST API on every render.
@@ -269,6 +294,13 @@ export function App() {
   const initialPfwUrl = pfwActive
     ? ensurePfaPreviewParam(persistedIframe.pfwUrl ?? config.workflowDependency?.adminUrl ?? null)
     : null;
+  // The WordPress iframe shows NATIVE wp-admin (no pfa_preview - that param is a
+  // pfm/pfw read-only overlay; core WP has its own chrome, which is exactly what
+  // we want the operator to recognise). It defaults to the wp-admin dashboard;
+  // a wp_* tool re-points it via the wpTarget channel. URL is not restored
+  // across reloads (same discipline as pfm/pfw), only the base landing.
+  const wpAdminBase = config.adminUrl || '/wp-admin/';
+  const initialWpUrl = wpAdminBase;
   // Active tab on boot is ALWAYS the workflow tab when the workflow
   // plugin is installed, regardless of which tab the operator left
   // active in their previous session. The persisted activeTab is still
@@ -278,10 +310,13 @@ export function App() {
   // management tab made them think the agent had pre-loaded something
   // they hadn't asked for. Mid-session clicks on the management tab
   // still work as ever; we only override the BOOT default.
+  // Boot: workflow tab when PFW is installed (unchanged), else management,
+  // else - when NEITHER suite plugin is present - the transversal WordPress
+  // tab is the main surface.
   const initialActiveTab: IframeTab | null = (() => {
     if (pfwActive) return 'pfw';
     if (pfmActive) return 'pfm';
-    return null;
+    return 'wordpress';
   })();
   const [iframeActiveTab, setIframeActiveTab] = useState<IframeTab | null>(initialActiveTab);
   // Diagnostic view in the right pane. It overlays the iframes (which stay
@@ -291,6 +326,10 @@ export function App() {
   const [showDiagnostic, setShowDiagnostic] = useState<boolean>(false);
   const [pfmUrl, setPfmUrl] = useState<string | null>(initialPfmUrl);
   const [pfwUrl, setPfwUrl] = useState<string | null>(initialPfwUrl);
+  const [wpUrl, setWpUrl] = useState<string | null>(initialWpUrl);
+  // The latest turn's WordPress actions, for the activity strip in the
+  // WordPress tab. Each item links its native wp-admin screen.
+  const [wpActivity, setWpActivity] = useState<WpActivityItem[]>([]);
 
   // Guards handleWizardConfirm against being entered twice (eg. a fast
   // double-click on the wizard's Confirm button) which would otherwise
@@ -307,6 +346,14 @@ export function App() {
   // whether content was non-empty (empty rows are persisted but
   // never rendered, so their ordinal still counts as "seen").
   const lastSeenNarrationOrdinalRef = useRef<number>(-1);
+  // Whether THIS turn actually pushed at least one assistant bubble via live
+  // polling. Must NOT be derived from lastSeenNarrationOrdinalRef, which is
+  // seeded to the conversation's high-water ordinal before any push (so it is
+  // >= 0 from the start on any non-empty conversation). Deriving "did we push"
+  // from that ref made a confirmation/answer with no live narration attach to
+  // the PREVIOUS turn's bubble — the off-by-one that glued the approval and the
+  // new answer onto the prior message. Reset per turn; set only on a real push.
+  const livePushedThisTurnRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (!active || sessionHydrated) {
@@ -376,11 +423,12 @@ export function App() {
         activeTab: iframeActiveTab,
         pfmUrl,
         pfwUrl,
+        wpUrl,
       } satisfies IframeState));
     } catch {
       /* swallow */
     }
-  }, [iframeActiveTab, pfmUrl, pfwUrl]);
+  }, [iframeActiveTab, pfmUrl, pfwUrl, wpUrl]);
 
   // Expose a window-level controller so future LLM tool integrations (or
   // direct browser-console operators) can drive the iframe pane: pick the
@@ -395,6 +443,7 @@ export function App() {
         if (typeof url === 'string' && url !== '') {
           if (tab === 'pfm') setPfmUrl(url);
           if (tab === 'pfw') setPfwUrl(url);
+          if (tab === 'wordpress') setWpUrl(url);
         }
         setIframeActiveTab(tab);
       },
@@ -403,9 +452,10 @@ export function App() {
         if (tab === 'pfw' && !pfwActive) return;
         if (tab === 'pfm') setPfmUrl(url);
         if (tab === 'pfw') setPfwUrl(url);
+        if (tab === 'wordpress') setWpUrl(url);
       },
       snapshot() {
-        return { activeTab: iframeActiveTab, pfmUrl, pfwUrl };
+        return { activeTab: iframeActiveTab, pfmUrl, pfwUrl, wpUrl };
       },
     };
     window.ProjectFlashAgentIframe = controller;
@@ -414,7 +464,7 @@ export function App() {
         delete window.ProjectFlashAgentIframe;
       }
     };
-  }, [iframeActiveTab, pfmUrl, pfwUrl, pfmActive, pfwActive]);
+  }, [iframeActiveTab, pfmUrl, pfwUrl, wpUrl, pfmActive, pfwActive]);
 
   async function refreshCatalogs(): Promise<void> {
     if (!config.workflowDependency.active) {
@@ -507,7 +557,7 @@ export function App() {
     const tailNarrations = Array.isArray(result.assistantTexts)
       ? result.assistantTexts.filter((t) => t.ordinal > lastSeenNarrationOrdinalRef.current && t.content.trim() !== '')
       : [];
-    const livePushedAny = lastSeenNarrationOrdinalRef.current >= 0;
+    const livePushedAny = livePushedThisTurnRef.current;
     const decoration = { executions, pending, errorCode: errorCodeForMessage } as const;
 
     if (tailNarrations.length > 0) {
@@ -525,7 +575,10 @@ export function App() {
         setMessages((items) => attachDecorationToLastAssistant(items, decoration));
       }
     } else if (result.status === 'needs_confirmation' && !result.message && pending) {
-      setMessages((items) => attachPendingToLastAssistant(items, pending, executions));
+      // No narration streamed this turn: host the confirmation in a FRESH
+      // bubble for THIS turn (after this turn's user message), never by
+      // splicing it onto the previous turn's assistant bubble.
+      pushAssistant('', decoration);
     } else if (isFinal) {
       const baseText = result.message || statusFallback(result.status);
       const text =
@@ -552,6 +605,7 @@ export function App() {
       executions ?? [],
       pfmActive ? config.managementDependency?.adminUrl ?? null : null,
       pfwActive ? config.workflowDependency?.adminUrl ?? null : null,
+      wpAdminBase,
     );
     if (previewTarget) {
       if (previewTarget.tab === 'pfm') {
@@ -560,7 +614,19 @@ export function App() {
       if (previewTarget.tab === 'pfw') {
         setPfwUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
       }
+      if (previewTarget.tab === 'wordpress') {
+        setWpUrl((current) => (current === previewTarget.url ? current : previewTarget.url));
+      }
       setIframeActiveTab((current) => (current === previewTarget.tab ? current : previewTarget.tab));
+    }
+
+    // Turn activity strip for the WordPress tab: every wp_*, wc_*, seo_*, forms_*
+    // action this turn, in run order, each linking its native wp-admin screen.
+    if (executions && executions.length > 0) {
+      const wpItems = executions.filter((e) => isWpTool(e.tool.name)).map(describeWpExecution).filter((x): x is WpActivityItem => x !== null);
+      if (wpItems.length > 0) {
+        setWpActivity(wpItems);
+      }
     }
   };
 
@@ -604,6 +670,7 @@ export function App() {
     // true MAX(ordinal) from the server and pins both the polling
     // cursor and the dedup ref to it.
     lastSeenNarrationOrdinalRef.current = -1;
+    livePushedThisTurnRef.current = false;
     let initialCursors = { sinceToolCallId: 0, sinceTraceId: 0, sinceMessageOrdinal: -1 };
     if (payload.conversationId) {
       try {
@@ -649,6 +716,7 @@ export function App() {
         tool,
         pfmActive ? config.managementDependency?.adminUrl ?? null : null,
         pfwActive ? config.workflowDependency?.adminUrl ?? null : null,
+        wpAdminBase,
       );
       if (!target) return;
       // Only update the URL state if it actually changes — without this
@@ -663,6 +731,9 @@ export function App() {
       if (target.tab === 'pfw') {
         setPfwUrl((current) => (current === target.url ? current : target.url));
       }
+      if (target.tab === 'wordpress') {
+        setWpUrl((current) => (current === target.url ? current : target.url));
+      }
       setIframeActiveTab((current) => (current === target.tab ? current : target.tab));
     };
     const pushNarrationLive = (narrations: AgentRuntimeProgressNarration[]) => {
@@ -672,6 +743,7 @@ export function App() {
         const text = (n.content ?? '').trim();
         if (text === '') continue;
         pushAssistant(n.content);
+        livePushedThisTurnRef.current = true;
       }
     };
     const pollingTimer = payload.conversationId
@@ -749,6 +821,7 @@ export function App() {
     // assistant row persisted in the previous turn as a brand-new
     // bubble.
     lastSeenNarrationOrdinalRef.current = -1;
+    livePushedThisTurnRef.current = false;
     let initialCursors = { sinceToolCallId: 0, sinceTraceId: 0, sinceMessageOrdinal: -1 };
     if (active.sessionId) {
       try {
@@ -782,6 +855,7 @@ export function App() {
         tool,
         pfmActive ? config.managementDependency?.adminUrl ?? null : null,
         pfwActive ? config.workflowDependency?.adminUrl ?? null : null,
+        wpAdminBase,
       );
       if (!target) return;
       if (target.tab === 'pfm') {
@@ -789,6 +863,9 @@ export function App() {
       }
       if (target.tab === 'pfw') {
         setPfwUrl((current) => (current === target.url ? current : target.url));
+      }
+      if (target.tab === 'wordpress') {
+        setWpUrl((current) => (current === target.url ? current : target.url));
       }
       setIframeActiveTab((current) => (current === target.tab ? current : target.tab));
     };
@@ -799,6 +876,7 @@ export function App() {
         const text = (n.content ?? '').trim();
         if (text === '') continue;
         pushAssistant(n.content);
+        livePushedThisTurnRef.current = true;
       }
     };
     const pollingTimer = active.sessionId
@@ -966,6 +1044,16 @@ export function App() {
     setIframeActiveTab(tab);
   }, []);
 
+  // Point the WordPress iframe at an activity item's native wp-admin screen and
+  // bring that tab forward (the Date.now() rev forces a re-mount so re-opening
+  // the same screen still reloads it).
+  const showWpTarget = useCallback((target: WpTarget) => {
+    const url = wpAdminUrlForTarget(wpAdminBase, target, Date.now());
+    setWpUrl((current) => (current === url ? current : url));
+    setShowDiagnostic(false);
+    setIframeActiveTab('wordpress');
+  }, [wpAdminBase]);
+
   return (
     <>
       <header className="pfa-fullscreen-bar" role="banner">
@@ -980,27 +1068,25 @@ export function App() {
         <span className="pfa-mark" aria-hidden="true">
           {config.iconUrl ? <img src={config.iconUrl} alt="" /> : <Bot size={18} strokeWidth={2.4} />}
         </span>
-        <span className="pfa-fullscreen-title">WP PFAgent<sup className="pfa-tm" aria-hidden="true">™</sup></span>
-        <span className="pfa-fullscreen-version">v{config.version ?? ''}</span>
+        <span className="pfa-fullscreen-title">{config.name ?? 'WP-PFAgent'}<sup className="pfa-tm" aria-hidden="true">™</sup></span>
+        <div className="pfa-header-right">
+          {config.setyenvLogoUrl ? (
+            <a
+              className="pfa-setyenv-logo"
+              href="https://setyenv.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              title={ __('Setyenv — setyenv.com', 'wp-pfagent') }
+              aria-label={ __('Setyenv — visit setyenv.com', 'wp-pfagent') }
+            >
+              <img src={config.setyenvLogoUrl} alt="Setyenv" />
+            </a>
+          ) : null}
+          <span className="pfa-fullscreen-version">v{config.version ?? ''}</span>
+        </div>
       </header>
     <div className="pfa-shell">
       <aside className="pfa-chat-pane">
-        {!config.workflowDependency.active && (
-          <div className="pfa-dependency-warning">
-            { __('Workflow plugin was not detected during page bootstrap. API calls may fail until it is active.', 'wp-pfagent') }
-          </div>
-        )}
-
-        <section className="pfa-dependency-status" data-active={config.workflowDependency.active ? 'true' : 'false'}>
-          <h3>{config.workflowDependency.active ? __('Workflow dependency active', 'wp-pfagent') : __('Workflow dependency inactive', 'wp-pfagent')}</h3>
-          <p className="pfa-wizard__hint">{config.workflowDependency.namespace} / {config.workflowDependency.source}</p>
-          <div className="pfa-check-grid">
-            <StatusDot label="workflows" status={workflowHealth.workflows} />
-            <StatusDot label="templates" status={workflowHealth.templates} />
-          </div>
-          <p className="pfa-wizard__hint">{workflowHealth.message}</p>
-        </section>
-
         <section className="pfa-active-llm">
           <div className="pfa-active-llm__head">
             <h3>{ __('Active LLM', 'wp-pfagent') }</h3>
@@ -1153,7 +1239,7 @@ export function App() {
                   ))}
                 </div>
               ) : null}
-              {messages.map((item) => (
+              {messages.filter((item) => !isEmptyAssistantRow(item)).map((item) => (
                 <article key={item.id} className="pfa-message" data-role={item.role}>
                   <div className="pfa-message-avatar">{item.role === 'user' ? 'U' : <Bot size={15} />}</div>
                   <div className="pfa-message-body">
@@ -1175,7 +1261,19 @@ export function App() {
                       </div>
                     ) : null}
                     {item.executions && item.executions.length > 0 ? (
-                      <details className="pfa-executions">
+                      <details
+                        className="pfa-executions"
+                        open={expandedExec.has(item.id)}
+                        onToggle={(event) => {
+                          const isOpen = (event.currentTarget as HTMLDetailsElement).open;
+                          setExpandedExec((current) => {
+                            const next = new Set(current);
+                            if (isOpen) next.add(item.id);
+                            else next.delete(item.id);
+                            return next;
+                          });
+                        }}
+                      >
                         <summary>{ sprintf(__('%d execution(s)', 'wp-pfagent'), item.executions.length) }</summary>
                         <ul>
                           {item.executions.map((execution, index) => (
@@ -1254,7 +1352,7 @@ export function App() {
       </aside>
 
       <main className="pfa-iframe-pane">
-        <nav className="pfa-iframe-tabs" role="tablist" aria-label={ __('Project Flash views', 'wp-pfagent') }>
+        <nav className="pfa-iframe-tabs" role="tablist" aria-label={ __('Setyenv views', 'wp-pfagent') }>
           {pfwActive ? (
             <button
               type="button"
@@ -1279,6 +1377,13 @@ export function App() {
               { __('Management', 'wp-pfagent') }
             </button>
           ) : null}
+          {/* WordPress tab: always present (WP core is always installed), shown
+              after the suite tabs. Reflects the agent's direct WP-core / plugin
+              actions. */}
+          <WordPressTabButton
+            active={!showDiagnostic && iframeActiveTab === 'wordpress'}
+            onSelect={() => { setShowDiagnostic(false); handleSwitchTab('wordpress'); }}
+          />
           <button
             type="button"
             role="tab"
@@ -1295,7 +1400,7 @@ export function App() {
             <iframe
               className="pfa-iframe"
               data-active={!showDiagnostic && iframeActiveTab === 'pfm'}
-              title={ __('Project Flash Management', 'wp-pfagent') }
+              title={ __('Setyenv Management', 'wp-pfagent') }
               src={pfmUrl ?? config.managementDependency?.adminUrl ?? 'about:blank'}
             />
           ) : null}
@@ -1303,18 +1408,21 @@ export function App() {
             <iframe
               className="pfa-iframe"
               data-active={!showDiagnostic && iframeActiveTab === 'pfw'}
-              title={ __('Project Flash Workflow', 'wp-pfagent') }
+              title={ __('Setyenv Workflow', 'wp-pfagent') }
               src={pfwUrl ?? config.workflowDependency?.adminUrl ?? 'about:blank'}
             />
           ) : null}
+          {/* WordPress pane — shared component. */}
+          <WordPressPane
+            active={!showDiagnostic && iframeActiveTab === 'wordpress'}
+            wpUrl={wpUrl}
+            wpAdminBase={wpAdminBase}
+            wpActivity={wpActivity}
+            onShowTarget={showWpTarget}
+          />
           {showDiagnostic ? (
             <div className="pfa-iframe-diagnostic">
               <Diagnostic />
-            </div>
-          ) : null}
-          {!pfmActive && !pfwActive && !showDiagnostic ? (
-            <div className="pfa-iframe-empty">
-              <p>{ __('Neither Project Flash Workflow nor Project Flash Management is installed.', 'wp-pfagent') }</p>
             </div>
           ) : null}
         </div>
@@ -1590,10 +1698,32 @@ function inferPreviewTargetFromProgressTool(
   tool: AgentRuntimeProgressTool,
   pfmAdminUrl: string | null,
   pfwAdminUrl: string | null,
-): { tab: 'pfm' | 'pfw'; url: string } | null {
+  wpAdminUrl: string | null,
+): { tab: IframeTab; url: string } | null {
   const name = tool.tool;
   const focus = tool.focus ?? {};
-  if ((name === 'pfm_get' || name === 'pfm_apply' || name === 'pfm_list') && pfmAdminUrl) {
+  // Transversal WordPress family: the runtime stamps focus.wpTarget on wp_*
+  // tools; map it to a native wp-admin screen live. Additive; the workflowId /
+  // kind-ref branches below are untouched.
+  if (isWpTool(name) && wpAdminUrl && focus.wpTarget) {
+    return {
+      tab: 'wordpress',
+      url: wpAdminUrlForTarget(wpAdminUrl, focus.wpTarget as WpTarget, tool.id),
+    };
+  }
+  if (name === 'pfm_get' || name === 'pfm_apply' || name === 'pfm_list') {
+    // A business_rule apply births a paired workflow; when the server surfaces
+    // its id on the focus payload, focus the WORKFLOW tab on it live (mirrors
+    // the end-of-turn path). Takes precedence over the pfm target.
+    const wfId = typeof focus.workflowId === 'number' ? focus.workflowId : 0;
+    if (wfId > 0 && pfwAdminUrl) {
+      const params = new URLSearchParams();
+      params.set('pfa_preview', '1');
+      params.set('workflow_id', String(wfId));
+      params.set('_rev', String(tool.id));
+      return { tab: 'pfw', url: appendQueryString(pfwAdminUrl, params) };
+    }
+    if (!pfmAdminUrl) return null;
     const kind = focus.kind ?? '';
     if (!kind) return null;
     const ref = focus.ref ?? '';
@@ -1601,6 +1731,12 @@ function inferPreviewTargetFromProgressTool(
     params.set('pfa_preview', '1');
     params.set('kind', kind);
     if (ref) params.set('ref', ref);
+    // F3: same per-tool refresh signal the PFW branch uses. Re-editing the SAME
+    // resource twice produces the same kind+ref; without a changing _rev the
+    // iframe src is byte-identical and the management SPA never re-mounts, so it
+    // keeps showing the pre-edit state. tool.id is stable across polls of one
+    // tool but distinct between two edits → the second edit forces a refresh.
+    params.set('_rev', String(tool.id));
     return { tab: 'pfm', url: appendQueryString(pfmAdminUrl, params) };
   }
   if (
@@ -1643,28 +1779,47 @@ function inferPreviewTarget(
   executions: AgentRuntimeExecution[],
   pfmAdminUrl: string | null,
   pfwAdminUrl: string | null,
-): { tab: 'pfm' | 'pfw'; url: string } | null {
+  wpAdminUrl: string | null,
+): { tab: IframeTab; url: string } | null {
   if (executions.length === 0) {
     return null;
   }
-  const sideEffectTools = new Set(['pfm_apply', 'write_file', 'edit_file', 'move_file', 'delete_file', 'activate_workflow']);
+  // Side-effecting tools win (the operator wants to verify a write) - across
+  // ALL three families (pfm/pfw suite + transversal WP). If none ran, the last
+  // successful read wins.
+  const sideEffectTools = new Set([
+    'pfm_apply', 'write_file', 'edit_file', 'move_file', 'delete_file', 'activate_workflow',
+    'wp_post_create', 'wp_post_update', 'wp_post_trash', 'wp_term_create', 'wp_term_assign',
+    'wp_user_create', 'wp_user_update', 'wp_comment_moderate', 'wp_option_set', 'wc_order_note', 'seo_set',
+  ]);
   const reversed = [...executions].reverse();
   const lastSide = reversed.find((e) => e.status === 'success' && sideEffectTools.has(e.tool.name));
   const last = lastSide ?? reversed.find((e) => e.status === 'success');
   if (!last) {
     return null;
   }
-  return buildPreviewTargetFromExecution(last, pfmAdminUrl, pfwAdminUrl);
+  return buildPreviewTargetFromExecution(last, pfmAdminUrl, pfwAdminUrl, wpAdminUrl);
 }
 
 function buildPreviewTargetFromExecution(
   exec: AgentRuntimeExecution,
   pfmAdminUrl: string | null,
   pfwAdminUrl: string | null,
-): { tab: 'pfm' | 'pfw'; url: string } | null {
+  wpAdminUrl: string | null,
+): { tab: IframeTab; url: string } | null {
   const tool = exec.tool.name;
   const args = (exec.tool.arguments ?? {}) as Record<string, unknown>;
   const result = (exec.result ?? {}) as Record<string, unknown>;
+
+  // Transversal WordPress family (wp_*, wc_*, seo_*, forms_*): map the execution to
+  // a native wp-admin screen. Additive - sits alongside the pfm/pfw branches,
+  // never intercepts them.
+  if (isWpTool(tool) && wpAdminUrl) {
+    const target = describeWpExecution(exec)?.target ?? null;
+    if (!target) return null;
+    const rev = Date.parse(exec.startedAt) || Date.now();
+    return { tab: 'wordpress', url: wpAdminUrlForTarget(wpAdminUrl, target, rev) };
+  }
 
   // PFM family: kind + ref straight from args (pfm_get / pfm_apply
   // declare both). For pfm_apply the ref lives inside payload with a
@@ -1675,6 +1830,19 @@ function buildPreviewTargetFromExecution(
   // when ref is missing), so without this extraction the operator
   // saw "Bienvenido" no matter which entity the agent touched.
   if (tool === 'pfm_get' || tool === 'pfm_apply' || tool === 'pfm_list') {
+    // A business_rule apply births/edits a PAIRED workflow. Focus the WORKFLOW
+    // tab on it (takes precedence over the pfm target) so "create a business
+    // rule / flow" actually paints the workflow instead of leaving the workflow
+    // tab on "Waiting for the agent" — the operator's #1 visible complaint.
+    const brWfId = extractBusinessRuleWorkflowId(result);
+    if (brWfId && pfwAdminUrl) {
+      const params = new URLSearchParams();
+      params.set('pfa_preview', '1');
+      params.set('workflow_id', String(brWfId));
+      const rev = Date.parse(exec.startedAt) || Date.now();
+      params.set('_rev', String(rev));
+      return { tab: 'pfw', url: appendQueryString(pfwAdminUrl, params) };
+    }
     if (!pfmAdminUrl) return null;
     const kind = typeof args.kind === 'string' ? args.kind : '';
     let ref: string | null = typeof args.ref === 'string' ? args.ref : null;
@@ -1685,6 +1853,12 @@ function buildPreviewTargetFromExecution(
     params.set('pfa_preview', '1');
     if (kind) params.set('kind', kind);
     if (ref) params.set('ref', ref);
+    // F3: refresh signal so re-editing the SAME resource re-mounts the iframe.
+    // Same kind+ref twice → identical src → the management SPA keeps the pre-edit
+    // state; a changing _rev (this call's start time) forces the fresh load.
+    // Mirrors the PFW branch below.
+    const rev = Date.parse(exec.startedAt) || Date.now();
+    params.set('_rev', String(rev));
     return { tab: 'pfm', url: appendQueryString(pfmAdminUrl, params) };
   }
 
@@ -1758,6 +1932,22 @@ function extractWorkflowIdFromResult(result: Record<string, unknown>): number | 
   const direct = result.workflowId;
   if (typeof direct === 'number' && direct > 0) return direct;
   if (typeof direct === 'string' && /^\d+$/.test(direct)) return Number(direct);
+  return null;
+}
+
+/** A pfm_apply on kind=business_rule births (or re-reads) a PAIRED workflow —
+ *  its id lives at result.content.business_rule.workflow_id (snake_case, nested
+ *  under the tool envelope). Pull it so the workflow tab can focus that workflow
+ *  the moment the agent creates the rule, instead of the tab sitting on
+ *  "Waiting for the agent". Returns null for every other pfm apply. */
+function extractBusinessRuleWorkflowId(result: Record<string, unknown>): number | null {
+  const content = result.content;
+  if (!content || typeof content !== 'object') return null;
+  const br = (content as Record<string, unknown>).business_rule;
+  if (!br || typeof br !== 'object') return null;
+  const wid = (br as Record<string, unknown>).workflow_id;
+  if (typeof wid === 'number' && wid > 0) return wid;
+  if (typeof wid === 'string' && /^\d+$/.test(wid)) return Number(wid);
   return null;
 }
 
@@ -1854,7 +2044,10 @@ function messagesFromSession(sessionMessages: ChatSessionMessage[]): ChatMessage
       id: `${entry.at ?? Date.now()}-${index}`,
       role: entry.role,
       text: entry.content,
-      at: entry.at ?? new Date().toISOString()
+      at: entry.at ?? new Date().toISOString(),
+      // F4: carry executions through on reload so the "N execution(s)" panel
+      // re-renders. Undefined on payloads without them (older backend) → no panel.
+      executions: Array.isArray(entry.executions) && entry.executions.length > 0 ? entry.executions : undefined,
     }));
 }
 
@@ -1865,6 +2058,21 @@ function message(role: ChatMessage['role'], text: string): ChatMessage {
     text,
     at: new Date().toISOString()
   };
+}
+
+/** An assistant row with nothing to show — no text, no pending confirmation, no
+ *  executions, no error. This is what a confirmation bubble collapses to after
+ *  the operator confirms (the pending is consumed and its result renders in the
+ *  turn's answer bubble), so we drop it from the render instead of leaving an
+ *  empty gap. User/system rows always render. */
+function isEmptyAssistantRow(item: ChatMessage): boolean {
+  return (
+    item.role === 'assistant' &&
+    (item.text ?? '').trim() === '' &&
+    !item.pending &&
+    (!item.executions || item.executions.length === 0) &&
+    !item.errorCode
+  );
 }
 
 function StatusDot({ label, status }: { label: string; status: ApiCheckStatus }) {

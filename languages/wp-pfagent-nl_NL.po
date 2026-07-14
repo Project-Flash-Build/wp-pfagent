@@ -5,7 +5,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-pfagent\n"
 "POT-Creation-Date: 2026-05-17T16:38:13+00:00\n"
 "PO-Revision-Date: 2026-05-28 11:58+0200\n"
-"Last-Translator: Project Flash Build <build@project-flash.com>\n"
+"Last-Translator: Setyenv Build <build@setyenv.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
@@ -15,1362 +15,1529 @@ msgstr ""
 "X-Domain: wp-pfagent\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
-#. Plugin Name of the plugin
-#: wp-pfagent.php includes/AdminPage.php:25 includes/AdminPage.php:109
-msgid "WP PFAgent"
-msgstr "WP PFAgent"
+msgid "\"%s\" will be permanently deleted along with its messages. This action cannot be undone."
+msgstr "\"%s\" wordt permanent verwijderd samen met de berichten. Deze actie kan niet ongedaan worden gemaakt."
 
-#. Description of the plugin
-#: wp-pfagent.php
-msgid "Agent console for ProjectFlash products."
-msgstr "Agentconsole voor ProjectFlash-producten."
-
-#. Author of the plugin
-#: wp-pfagent.php
-msgid "ProjectFlash"
-msgstr "ProjectFlash"
-
-#: includes/AdminPage.php:26
-msgid "PF Agent"
-msgstr "PF Agent"
-
-#: includes/AdminPage.php:110
-msgid "Back to admin"
-msgstr "Terug naar admin"
-
-#: includes/AdminPage.php:111 includes/AdminPage.php:176
-msgid ""
-"WP PFAgent assets are missing. Run npm install and npm run build inside the "
-"plugin directory."
-msgstr ""
-"WP PFAgent-assets ontbreken. Voer npm install en npm run build uit binnen de"
-" plug-inmap."
-
-#: includes/AdminPage.php:141
-msgid "WP PFAgent assets are not built."
-msgstr "WP PFAgent-assets zijn niet gebouwd."
-
-#: includes/AdminPage.php:169
-msgid "You do not have permission to manage WP PFAgent."
-msgstr "Je hebt geen toestemming om WP PFAgent te beheren."
-
-#: includes/AgentContract.php:168
-msgid "Agent capability manifest is missing."
-msgstr "Agent-capability-manifest ontbreekt."
-
-#: includes/AgentContract.php:173
-msgid "Agent capability manifest is invalid."
-msgstr "Agent-capability-manifest is ongeldig."
-
-#: includes/AgentRuntime.php:40
-msgid "providerId is required."
-msgstr "providerId is verplicht."
-
-#: includes/AgentRuntime.php:59
-msgid "message is required."
-msgstr "message is verplicht."
-
-#: includes/AgentRuntime.php:145
-msgid "No tool was selected by the model."
-msgstr "Het model heeft geen tool geselecteerd."
-
-#: includes/AgentRuntime.php:146
-msgid ""
-"Tools ran but the model returned an empty reply. The data is in the "
-"executions panel."
-msgstr ""
-"Tools zijn uitgevoerd, maar het model gaf een lege reactie. De gegevens "
-"staan in het uitvoeringenpaneel."
-
-#: includes/AgentRuntime.php:161
-msgid "The model returned a malformed tool call."
-msgstr "Het model heeft een onjuist gevormde tool-aanroep teruggegeven."
-
-#: includes/AgentRuntime.php:184
-msgid "The model requested a tool that is not declared or allowed."
-msgstr "Het model vroeg om een tool die niet is gedeclareerd of toegestaan."
-
-#: includes/AgentRuntime.php:260
-msgid ""
-"This action has side effects and requires confirmation before execution."
-msgstr ""
-"Deze actie heeft neveneffecten en vereist bevestiging vóór uitvoering."
-
-#: includes/AgentRuntime.php:364
-msgid "I gathered some data but the model did not produce a final reply."
-msgstr ""
-"Ik heb wat gegevens verzameld, maar het model heeft geen definitief antwoord"
-" gegeven."
-
-#: includes/AgentRuntime.php:379
-msgid "confirmationId is required when confirmed=true."
-msgstr "confirmationId is verplicht wanneer confirmed=true."
-
-#: includes/AgentRuntime.php:384
-msgid "Pending confirmation was not found or has expired."
-msgstr "In behandeling zijnde bevestiging niet gevonden of verlopen."
-
-#: includes/AgentRuntime.php:703
-msgid "Workflow tool execution completed, but final LLM response failed."
-msgstr ""
-"Uitvoering van workflow-tool voltooid, maar laatste LLM-reactie mislukt."
-
-#: includes/AgentToolRegistry.php:42
-msgid "The requested tool is not in the declared agent tool registry."
-msgstr "De gevraagde tool staat niet in het gedeclareerde agent-toolregister."
-
-#: includes/AgentToolRegistry.php:52
-msgid "Agent tool contract file is missing."
-msgstr "Bestand met agent-toolcontract ontbreekt."
-
-#: includes/AgentToolRegistry.php:57
-msgid "Agent tool contract file is invalid."
-msgstr "Bestand met agent-toolcontract is ongeldig."
-
-#: includes/AgentToolRegistry.php:148
-msgid "Agent tool entries must be objects."
-msgstr "Agent-toolvermeldingen moeten objecten zijn."
-
-#: includes/ChatSessions.php:136
-msgid "A logged-in user is required."
-msgstr "Een ingelogde gebruiker is vereist."
-
-#. translators: %s: UTC timestamp used as default chat session title
-#: includes/ChatSessions.php:145
-#, php-format
-msgid "Session %s"
-msgstr "Sessie %s"
-
-#: includes/ChatSessions.php:176 includes/ChatSessions.php:223
-#: includes/ChatSessions.php:310 includes/ChatSessions.php:365
-msgid "Chat session not found."
-msgstr "Chatsessie niet gevonden."
-
-#: includes/ChatSessions.php:200
-msgid "label cannot be empty."
-msgstr "label kan niet leeg zijn."
-
-#: includes/ChatSessions.php:242
-msgid "Failed to delete the chat session."
-msgstr "Verwijderen van chatsessie mislukt."
-
-#: includes/ChatSessions.php:264
-msgid "messages array is required."
-msgstr "messages-array is verplicht."
-
-#: includes/ChatSessions.php:289
-msgid "No valid messages were provided."
-msgstr "Er zijn geen geldige berichten verstrekt."
-
-#. translators: 1: maximum bytes allowed, 2: actual bytes received
-#: includes/ChatSessions.php:350 includes/RestApi.php:78
-#, php-format
-msgid "Request body exceeds %1$d bytes (got %2$d)."
-msgstr "Aanvraagbody overschrijdt %1$d bytes (ontvangen: %2$d)."
-
-#: includes/ChatSessions.php:374
-msgid "You do not have access to this chat session."
-msgstr "Je hebt geen toegang tot deze chatsessie."
-
-#: includes/ConversationCompactor.php:132
-#, php-format
-msgid ""
-"[Summary of prior work — %d turns folded, ~%d tokens reduced past the "
-"%d-token threshold]"
-msgstr ""
-"[Samenvatting van eerder werk — %d beurten samengevouwen, ~%d tokens "
-"gereduceerd voorbij de %d-tokendrempel]"
-
-#: includes/CredentialStore.php:50 includes/CredentialStore.php:67
-#: includes/CredentialStore.php:117 includes/CredentialStore.php:135
-#: includes/CredentialStore.php:228 includes/CredentialStore.php:266
-#: includes/ProviderHealth.php:37 includes/ProviderModelDiscovery.php:28
-#: includes/ProviderModelDiscovery.php:86
-msgid "Provider preset was not found."
-msgstr "Provider-preset niet gevonden."
-
-#: includes/CredentialStore.php:72
-msgid "API key is required and must be at least 8 characters."
-msgstr "API-sleutel is verplicht en moet minimaal 8 tekens lang zijn."
-
-#: includes/CredentialStore.php:76
-msgid "Credential encryption is not available on this WordPress runtime."
-msgstr ""
-"Encryptie van inloggegevens is niet beschikbaar op deze WordPress-runtime."
-
-#: includes/CredentialStore.php:99
-msgid "Credential stored but connection has not been validated."
-msgstr "Inloggegevens opgeslagen maar verbinding is niet gevalideerd."
-
-#: includes/CredentialStore.php:141 includes/CredentialStore.php:234
-#: includes/CredentialStore.php:272 includes/CredentialStore.php:309
-msgid "Provider is not configured."
-msgstr "Provider is niet geconfigureerd."
-
-#: includes/CredentialStore.php:151
-msgid "Provider family does not support connection testing yet."
-msgstr "De providerfamilie ondersteunt nog geen verbindingstest."
-
-#. translators: %s: redacted underlying error message
-#: includes/CredentialStore.php:172
-#, php-format
-msgid "Connection failed: %s"
-msgstr "Verbinding mislukt: %s"
-
-#: includes/CredentialStore.php:186
-msgid "Connection validated through provider model discovery."
-msgstr "Verbinding gevalideerd via provider-modelontdekking."
-
-#. translators: %d: HTTP status code
-#: includes/CredentialStore.php:194
-#, php-format
-msgid "Connection test returned HTTP %d without a valid models payload."
-msgstr "Verbindingstest gaf HTTP %d terug zonder geldige models-payload."
-
-#: includes/CredentialStore.php:239
-msgid "Provider family is not supported for runtime calls."
-msgstr "Providerfamilie wordt niet ondersteund voor runtime-aanroepen."
-
-#: includes/CredentialStore.php:278
-msgid "Connection validation updated."
-msgstr "Verbindingsvalidatie bijgewerkt."
-
-#: includes/CredentialStore.php:347
-msgid "Credential encryption failed."
-msgstr "Encryptie van inloggegevens mislukt."
-
-#: includes/CredentialStore.php:364
-msgid "Stored credential cipher is unsupported."
-msgstr "Opgeslagen inloggegevens-cipher wordt niet ondersteund."
-
-#: includes/CredentialStore.php:371
-msgid "Stored credential payload is invalid."
-msgstr "Opgeslagen inloggegevens-payload is ongeldig."
-
-#: includes/CredentialStore.php:381
-msgid "Credential decryption failed."
-msgstr "Decryptie van inloggegevens mislukt."
-
-#: includes/CredentialStore.php:448
-msgid ""
-"Provider family does not expose a models endpoint for connection testing."
-msgstr "Providerfamilie biedt geen models-endpoint voor verbindingstest."
-
-#: includes/CredentialStore.php:482
-msgid "Provider requires additional settings before testing connection."
-msgstr ""
-"Provider vereist extra instellingen vóór het testen van de verbinding."
-
-#: includes/CredentialStore.php:486 includes/ProviderModelDiscovery.php:430
-#: includes/ProviderRuntime.php:431
-msgid "Provider base URL must be an HTTP URL."
-msgstr "Provider-basis-URL moet een HTTP-URL zijn."
-
-#: includes/LlmGateway.php:124
-msgid "At least one tool definition is required for toolCall."
-msgstr "Er is ten minste één tool-definitie vereist voor toolCall."
-
-#: includes/LlmGateway.php:761 includes/ProviderModelDiscovery.php:68
-#: includes/ProviderRuntime.php:132
-msgid "Provider model discovery returned no models."
-msgstr "Provider-modelontdekking gaf geen modellen terug."
-
-#: includes/LlmGateway.php:784 includes/ProviderRuntime.php:163
-msgid "Provider model discovery returned no text generation model candidate."
-msgstr ""
-"Provider-modelontdekking gaf geen kandidaat voor een tekstgeneratiemodel "
-"terug."
-
-#: includes/PhpStreamTransport.php:26
-msgid ""
-"PHP stream transport is not available because allow_url_fopen is disabled."
-msgstr ""
-"PHP-streamtransport is niet beschikbaar omdat allow_url_fopen is "
-"uitgeschakeld."
-
-#: includes/PhpStreamTransport.php:45
-msgid "PHP stream transport could not open provider stream."
-msgstr "PHP-streamtransport kon provider-stream niet openen."
-
-#: includes/PhpStreamTransport.php:74
-msgid "PHP stream transport failed while reading provider stream."
-msgstr "PHP-streamtransport faalde tijdens het lezen van provider-stream."
-
-#: includes/PhpStreamTransport.php:81
-msgid "Provider stream timed out."
-msgstr "Provider-stream is verlopen."
-
-#: includes/ProviderModelDiscovery.php:40
-msgid ""
-"Provider does not expose API model discovery. Manual model entries are "
-"required for this preset."
-msgstr ""
-"Provider biedt geen API-modelontdekking. Handmatige modelinvoer is vereist "
-"voor deze preset."
-
-#: includes/ProviderModelDiscovery.php:91
-msgid "Manual model entries are not allowed for this provider preset."
-msgstr "Handmatige modelinvoer is niet toegestaan voor deze provider-preset."
-
-#: includes/ProviderModelDiscovery.php:116
-msgid "At least one manual model id is required."
-msgstr "Er is ten minste één handmatige model-id vereist."
-
-#: includes/ProviderModelDiscovery.php:139 includes/ProviderRuntime.php:321
-msgid "Provider family does not expose the required runtime endpoint."
-msgstr "Providerfamilie biedt het vereiste runtime-endpoint niet."
-
-#: includes/ProviderModelDiscovery.php:426 includes/ProviderRuntime.php:427
-msgid "Provider requires additional settings before runtime call."
-msgstr "Provider vereist extra instellingen vóór runtime-aanroep."
-
-#: includes/ProviderPresets.php:18
-msgid "Provider presets file is missing."
-msgstr "Bestand met provider-presets ontbreekt."
-
-#: includes/ProviderPresets.php:23
-msgid "Provider presets file is not valid JSON."
-msgstr "Bestand met provider-presets is geen geldig JSON."
-
-#: includes/ProviderPresets.php:70
-msgid "Provider presets schemaVersion must be 1."
-msgstr "schemaVersion van provider-presets moet 1 zijn."
-
-#: includes/ProviderPresets.php:74
-msgid "Provider presets must define families and presets."
-msgstr "Provider-presets moeten families en presets definiëren."
-
-#: includes/ProviderPresets.php:79
-msgid "Provider preset entries must be keyed objects."
-msgstr "Provider-presetvermeldingen moeten objecten met sleutels zijn."
-
-#: includes/ProviderPresets.php:83
-msgid "Provider presets require label, family and baseUrl."
-msgstr "Provider-presets vereisen label, family en baseUrl."
-
-#: includes/ProviderPresets.php:87
-msgid "Provider preset references an unknown family."
-msgstr "Provider-preset verwijst naar een onbekende family."
-
-#: includes/ProviderPresets.php:91
-msgid "Provider presets must not define defaultModels."
-msgstr "Provider-presets mogen geen defaultModels definiëren."
-
-#: includes/ProviderPresets.php:95
-msgid ""
-"Provider modelHints must remain non-authoritative and empty; real models "
-"come from discovery, cache or explicit manual entry."
-msgstr ""
-"Provider-modelHints moeten niet-gezaghebbend en leeg blijven; echte modellen"
-" komen uit ontdekking, cache of expliciete handmatige invoer."
-
-#: includes/ProviderRuntime.php:45
-msgid "Provider family is not supported for generation yet."
-msgstr "Providerfamilie wordt nog niet ondersteund voor generatie."
-
-#: includes/RateLimiter.php:65
-#, php-format
-msgid "Rate limit reached for \"%s\" (%d per %ds). Retry in %ds."
-msgstr ""
-"Snelheidslimiet bereikt voor \"%s\" (%d per %ds). Probeer opnieuw over %ds."
-
-#: includes/RestApi.php:90
-msgid "oversized request body"
-msgstr "te grote aanvraagbody"
-
-#: includes/TraceLogger.php:88
-#, php-format
-msgid "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
-msgstr "%04x%04x-%04x-%04x-%04x-%04x%04x%04x"
-
-#: includes/WorkflowApiBridge.php:31
-msgid "WP PFWorkflow plugin is not active."
-msgstr "WP PFWorkflow-plug-in is niet actief."
-
-#: includes/WorkflowApiBridge.php:44
-msgid "Tool is not executable by Workflow API bridge."
-msgstr "Tool is niet uitvoerbaar door Workflow API-bridge."
-
-#: includes/WorkflowApiBridge.php:56
-msgid "workflowId is required."
-msgstr "workflowId is verplicht."
-
-#: includes/WorkflowApiBridge.php:70
-msgid "payload is required."
-msgstr "payload is verplicht."
-
-#: includes/WorkflowApiBridge.php:135
-msgid "wp-pfworkflow agent-ready service is not available."
-msgstr "wp-pfworkflow agent-ready-service is niet beschikbaar."
-
-#: assets/src/Diagnostic.tsx:194
 msgid "$0 (no pricing configured)"
 msgstr "$0 (geen prijs geconfigureerd)"
 
-#: assets/src/ProviderWizard.tsx:186
-#, javascript-format
-msgid "%1$d turn(s) · last %2$s"
-msgstr "%1$d beurt(en) · laatste %2$s"
-
-#: assets/src/App.tsx:849 assets/src/App.tsx:882
-#, javascript-format
-msgid "%1$s / %2$d nodes / %3$d wires"
-msgstr "%1$s / %2$d nodes / %3$d verbindingen"
-
-#: assets/src/Diagnostic.tsx:108
-#, javascript-format
-msgid "%1$s tokens, %2$s"
-msgstr "%1$s tokens, %2$s"
-
-#: assets/src/App.tsx:709
-#, javascript-format
-msgid "%d execution(s)"
-msgstr "%d uitvoering(en)"
-
-#: assets/src/Diagnostic.tsx:128
-#, javascript-format
-msgid "%d issue(s)"
-msgstr "%d probleem(s)"
-
-#: assets/src/App.tsx:785
-#, javascript-format
-msgid "%d nodes"
-msgstr "%d nodes"
-
-#: assets/src/App.tsx:786
-#, javascript-format
-msgid "%d wires"
-msgstr "%d verbindingen"
-
-#: assets/src/ProviderWizard.tsx:289
-msgid "(manual)"
-msgstr "(handmatig)"
-
-#: assets/src/ProviderWizard.tsx:218
-msgid "+ Add new credential"
-msgstr "+ Nieuwe inloggegevens toevoegen"
-
-#: assets/src/App.tsx:638
-msgid "+ New"
-msgstr "+ Nieuw"
-
-#: assets/src/ProviderWizard.tsx:197
-msgid "1. Pick a credential"
-msgstr "1. Kies inloggegevens"
-
-#: assets/src/ProviderWizard.tsx:231
-msgid "1b. New credential"
-msgstr "1b. Nieuwe inloggegevens"
-
-#: assets/src/ProviderWizard.tsx:277
-msgid "2. Model"
-msgstr "2. Model"
-
-#: assets/src/ProviderWizard.tsx:251
-msgid "API key"
-msgstr "API-sleutel"
-
-#: assets/src/ActionInspector.tsx:22 assets/src/ActionInspector.tsx:34
-#: assets/src/ActionInspector.tsx:46 assets/src/ActionInspector.tsx:60
-msgid "Action Inspector"
-msgstr "Actie-inspector"
-
-#: assets/src/App.tsx:511
-msgid "Action cancelled by the user."
-msgstr "Actie geannuleerd door de gebruiker."
-
-#: assets/src/App.tsx:368 assets/src/App.tsx:410
-#, javascript-format
-msgid "Action failed: %s"
-msgstr "Actie mislukt: %s"
-
-#: assets/src/Diagnostic.tsx:167
-#, javascript-format
-msgid "Active (%s)"
-msgstr "Actief (%s)"
-
-#: assets/src/App.tsx:537
-#, javascript-format
-msgid "Active LLM: %1$s · %2$s."
-msgstr "Actieve LLM: %1$s · %2$s."
-
-#: assets/src/ActionInspector.tsx:206
-msgid "After"
-msgstr "Na"
-
-#: assets/src/App.tsx:475
-#, javascript-format
-msgid "Agent runtime failed: %s"
-msgstr "Agent-runtime mislukt: %s"
-
-#: assets/src/App.tsx:858
-msgid "All"
-msgstr "Alle"
-
-#: assets/src/ActionInspector.tsx:163 assets/src/App.tsx:694
-msgid "Arguments"
-msgstr "Argumenten"
-
-#: assets/src/App.tsx:765
-msgid "Ask the agent…"
-msgstr "Vraag de agent…"
-
-#: assets/src/ProviderWizard.tsx:269
-msgid "Back"
-msgstr "Terug"
-
-#: assets/src/App.tsx:602
-msgid "Back to WP admin"
-msgstr "Terug naar WP-admin"
-
-#: assets/src/ActionInspector.tsx:198
-msgid "Before"
-msgstr "Voor"
-
-#: assets/src/App.tsx:912
-msgid "Can manage"
-msgstr "Kan beheren"
-
-#: assets/src/App.tsx:910
-msgid "Can view"
-msgstr "Kan bekijken"
-
-#: assets/src/App.tsx:702 assets/src/ProviderWizard.tsx:222
-#: assets/src/ProviderWizard.tsx:333
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: assets/src/Diagnostic.tsx:138
-msgid "Capability matrix"
-msgstr "Capability-matrix"
-
-#: assets/src/App.tsx:629
-msgid "Change"
-msgstr "Wijzigen"
-
-#: assets/src/ProviderWizard.tsx:329
-msgid "Change provider"
-msgstr "Provider wijzigen"
-
-#: assets/src/App.tsx:899
-msgid ""
-"Chat history is local to this screen. Provider keys are never stored in "
-"browser storage."
-msgstr ""
-"Chatgeschiedenis is lokaal voor dit scherm. Provider-sleutels worden nooit "
-"in browseropslag opgeslagen."
-
-#: assets/src/App.tsx:302
-msgid "Checking Workflow API endpoints…"
-msgstr "Workflow API-endpoints controleren…"
-
-#: assets/src/App.tsx:901
-msgid "Clear local history"
-msgstr "Lokale geschiedenis wissen"
-
-#: assets/src/App.tsx:815
-msgid "Close"
-msgstr "Sluiten"
-
-#: assets/src/ProviderWizard.tsx:166
-msgid "Configure LLM"
-msgstr "LLM configureren"
-
-#: assets/src/Diagnostic.tsx:173
-#, javascript-format
-msgid "Configured providers (%d)"
-msgstr "Geconfigureerde providers (%d)"
-
-#: assets/src/App.tsx:699 assets/src/ProviderWizard.tsx:317
-msgid "Confirm"
-msgstr "Bevestigen"
-
-#: assets/src/ActionInspector.tsx:68
-msgid "Confirmation pending:"
-msgstr "Bevestiging in afwachting:"
-
-#: assets/src/App.tsx:689
-msgid "Confirmation required"
-msgstr "Bevestiging vereist"
-
-#: assets/src/ProviderWizard.tsx:179
-msgid "Continue a previous conversation or proceed to start a new one."
-msgstr "Ga verder met een eerder gesprek of start een nieuwe."
-
-#: assets/src/ProviderWizard.tsx:178
-msgid "Conversation"
-msgstr "Gesprek"
-
-#: assets/src/Diagnostic.tsx:88
-#, javascript-format
-msgid "Cost and tokens (last %dh)"
-msgstr "Kosten en tokens (laatste %dh)"
-
-#: assets/src/ActionInspector.tsx:208
-msgid "Could not capture the resulting state."
-msgstr "Kon de resulterende status niet vastleggen."
-
-#: assets/src/App.tsx:799
-msgid "Create draft"
-msgstr "Concept maken"
-
-#: assets/src/App.tsx:400
-#, javascript-format
-msgid ""
-"Created workflow #%1$d \"%2$s\" (status: %3$s) from template %4$s \"%5$s\" "
-"and loaded it."
-msgstr ""
-"Workflow #%1$d \"%2$s\" gemaakt (status: %3$s) vanuit sjabloon %4$s \"%5$s\""
-" en geladen."
-
-#: assets/src/App.tsx:287
-msgid "Current user cannot view workflows. API calls were skipped."
-msgstr ""
-"Huidige gebruiker kan geen workflows zien. API-aanroepen overgeslagen."
-
-#: assets/src/App.tsx:827 assets/src/Diagnostic.tsx:35
-#: assets/src/Diagnostic.tsx:46 assets/src/Diagnostic.tsx:66
-msgid "Diagnostic"
-msgstr "Diagnose"
-
-#: assets/src/App.tsx:1000
-msgid "Done."
-msgstr "Klaar."
-
-#: assets/src/App.tsx:756 assets/src/Diagnostic.tsx:50
-#: assets/src/ProviderWizard.tsx:172
-msgid "Error:"
-msgstr "Fout:"
-
-#: assets/src/Diagnostic.tsx:94
-msgid "Estimated cost"
-msgstr "Geschatte kosten"
-
-#: assets/src/Diagnostic.tsx:97
-msgid "Events recorded"
-msgstr "Geregistreerde gebeurtenissen"
-
-#: assets/src/ActionInspector.tsx:168
-msgid "Evidence"
-msgstr "Bewijs"
-
-#: assets/src/ActionInspector.tsx:73
-#, javascript-format
-msgid "Executions (%d)"
-msgstr "Uitvoeringen (%d)"
-
-#: assets/src/Diagnostic.tsx:123
-msgid "FAIL"
-msgstr "MISLUKT"
-
-#: assets/src/Diagnostic.tsx:83
-#, javascript-format
-msgid "Generated at %s."
-msgstr "Gegenereerd op %s."
-
-#: assets/src/Diagnostic.tsx:168
-msgid "Inactive (fallback in use)"
-msgstr "Inactief (fallback in gebruik)"
-
-#: assets/src/App.tsx:442
-#, javascript-format
-msgid "LLM error: %1$s — %2$s"
-msgstr "LLM-fout: %1$s — %2$s"
-
-#: assets/src/App.tsx:804
-msgid "Load a workflow or preview a template."
-msgstr "Laad een workflow of bekijk een sjabloon in voorvertoning."
-
-#: assets/src/App.tsx:358
-#, javascript-format
-msgid "Loaded workflow #%1$d \"%2$s\" (status: %3$s, nodes: %4$d, wires: %5$d)."
-msgstr ""
-"Workflow #%1$d \"%2$s\" geladen (status: %3$s, nodes: %4$d, verbindingen: "
-"%5$d)."
-
-#: assets/src/Diagnostic.tsx:37
-msgid "Loading beta readiness report…"
-msgstr "Bèta-gereedheidsrapport laden…"
-
-#: assets/src/ProviderWizard.tsx:282
-msgid "Loading models…"
-msgstr "Modellen laden…"
-
-#: assets/src/App.tsx:767
-msgid "Message to the agent"
-msgstr "Bericht aan de agent"
-
-#: assets/src/ProviderWizard.tsx:285
-msgid "Model"
-msgstr "Model"
-
-#: assets/src/ProviderWizard.tsx:296
-msgid "Model (manual)"
-msgstr "Model (handmatig)"
-
-#: assets/src/App.tsx:906
-msgid "Namespace"
-msgstr "Namespace"
-
-#: assets/src/App.tsx:526 assets/src/App.tsx:573
-msgid "New conversation"
-msgstr "Nieuw gesprek"
-
-#: assets/src/App.tsx:579
-msgid "New conversation."
-msgstr "Nieuw gesprek."
-
-#: assets/src/ProviderWizard.tsx:199
-msgid "No credentials in the store yet. Add one to continue."
-msgstr "Nog geen inloggegevens in de opslag. Voeg er een toe om door te gaan."
-
-#: assets/src/Diagnostic.tsx:175
-msgid "No credentials stored yet. Configure one from Settings."
-msgstr ""
-"Nog geen inloggegevens opgeslagen. Configureer er een via Instellingen."
-
-#: assets/src/ActionInspector.tsx:200
-msgid "No prior state existed (creation or import)."
-msgstr "Er was geen eerdere status (creatie of import)."
-
-#: assets/src/App.tsx:1008
-msgid "No response from the runtime."
-msgstr "Geen reactie van de runtime."
-
-#: assets/src/ActionInspector.tsx:75
-msgid "No tool was executed in this turn."
-msgstr "Er is geen tool uitgevoerd in deze beurt."
-
-#: assets/src/App.tsx:595
-msgid "No workflow loaded"
-msgstr "Geen workflow geladen"
-
-#: assets/src/App.tsx:731
-msgid "Open in viewer"
-msgstr "Openen in viewer"
-
-#: assets/src/App.tsx:615
-msgid "Open menu"
-msgstr "Menu openen"
-
-#: assets/src/App.tsx:729
-#, javascript-format
-msgid "Open workflow %d in the viewer"
-msgstr "Workflow %d openen in de viewer"
-
-#: assets/src/Diagnostic.tsx:123
-msgid "PASS"
-msgstr "OK"
-
-#: assets/src/Diagnostic.tsx:150
-msgid "Partial capabilities"
-msgstr "Gedeeltelijke capabilities"
-
-#: assets/src/Diagnostic.tsx:102
-msgid "Per provider"
-msgstr "Per provider"
-
-#: assets/src/ProviderWizard.tsx:157
-msgid "Pick a model or enter the id manually."
-msgstr "Kies een model of voer de id handmatig in."
-
-#: assets/src/ProviderWizard.tsx:129
-msgid "Pick a provider and paste the API key."
-msgstr "Kies een provider en plak de API-sleutel."
-
-#: assets/src/App.tsx:941
-msgid ""
-"Pick an LLM provider to get started. Your credentials live encrypted inside "
-"the WordPress store."
-msgstr ""
-"Kies een LLM-provider om te beginnen. Je inloggegevens worden versleuteld "
-"bewaard in de WordPress-opslag."
-
-#: assets/src/App.tsx:886
-msgid "Preview before creating"
-msgstr "Voorvertoning vóór aanmaken"
-
-#: assets/src/App.tsx:381
-#, javascript-format
-msgid ""
-"Preview loaded for template %1$s \"%2$s\" (%3$d nodes, %4$d wires). No "
-"workflow was created yet."
-msgstr ""
-"Voorvertoning geladen voor sjabloon %1$s \"%2$s\" (%3$d nodes, %4$d "
-"verbindingen). Er is nog geen workflow aangemaakt."
-
-#: assets/src/ProviderWizard.tsx:233
-msgid "Provider"
-msgstr "Provider"
-
-#: assets/src/App.tsx:621
-msgid "Provider · model"
-msgstr "Provider · model"
-
-#: assets/src/ProviderWizard.tsx:279
-msgid "Provider:"
-msgstr "Provider:"
-
-#: assets/src/App.tsx:645 assets/src/Diagnostic.tsx:78
-msgid "Refresh"
-msgstr "Vernieuwen"
-
-#: assets/src/Diagnostic.tsx:76
-msgid "Refresh diagnostic"
-msgstr "Diagnose vernieuwen"
-
-#: assets/src/ActionInspector.tsx:49
-msgid ""
-"Run an action against the agent to see the steps, evidence and diffs here."
-msgstr ""
-"Voer een actie uit op de agent om hier de stappen, bewijzen en diffs te "
-"zien."
-
-#: assets/src/ProviderWizard.tsx:266
-msgid "Save and continue"
-msgstr "Opslaan en doorgaan"
-
-#: assets/src/ProviderWizard.tsx:266
-msgid "Saving…"
-msgstr "Opslaan…"
-
-#: assets/src/App.tsx:835
-msgid "Search…"
-msgstr "Zoeken…"
-
-#: assets/src/App.tsx:769
-msgid "Send"
-msgstr "Verzenden"
-
-#: assets/src/App.tsx:555
-#, javascript-format
-msgid "Session %d is empty."
-msgstr "Sessie %d is leeg."
-
-#: assets/src/App.tsx:898
-msgid "Session only"
-msgstr "Alleen sessie"
-
-#: assets/src/App.tsx:830
-msgid "Settings"
-msgstr "Instellingen"
-
-#: assets/src/Diagnostic.tsx:119
-msgid "Severe criteria"
-msgstr "Ernstige criteria"
-
-#: assets/src/App.tsx:908
-msgid "Source"
-msgstr "Bron"
-
-#: assets/src/App.tsx:636
-msgid "Start a new conversation with the active LLM"
-msgstr "Start een nieuw gesprek met de actieve LLM"
-
-#: assets/src/App.tsx:594
-msgid "Template Preview"
-msgstr "Sjabloonvoorvertoning"
-
-#: assets/src/App.tsx:856
-msgid "Template categories"
-msgstr "Sjabloon-categorieën"
-
-#: assets/src/App.tsx:824
-msgid "Templates"
-msgstr "Sjablonen"
-
-#: assets/src/App.tsx:321
-#, javascript-format
-msgid "Templates failed: %s"
-msgstr "Sjablonen mislukt: %s"
-
-#: assets/src/App.tsx:1006
-msgid "The action ran but the final response failed."
-msgstr "De actie is uitgevoerd maar de laatste reactie is mislukt."
-
-#: assets/src/ProviderWizard.tsx:263
-msgid ""
-"The key is encrypted (AES-256-GCM) in the WordPress store and never returned"
-" over REST."
-msgstr ""
-"De sleutel is versleuteld (AES-256-GCM) in de WordPress-opslag en wordt "
-"nooit via REST teruggegeven."
-
-#: assets/src/App.tsx:1004
-msgid "The runtime rejected this call."
-msgstr "De runtime heeft deze aanroep afgewezen."
-
-#: assets/src/App.tsx:747
-msgid "Thinking…"
-msgstr "Aan het denken…"
-
-#: assets/src/App.tsx:1002
-msgid "This action requires confirmation."
-msgstr "Deze actie vereist bevestiging."
-
-#: assets/src/ProviderWizard.tsx:305
-msgid ""
-"This provider does not allow manual models; check your credential or retry."
-msgstr ""
-"Deze provider staat geen handmatige modellen toe; controleer je "
-"inloggegevens of probeer opnieuw."
-
-#: assets/src/ActionInspector.tsx:175
-msgid "This tool produces no diff (read-only or without workflow state)."
-msgstr ""
-"Deze tool produceert geen diff (alleen-lezen of zonder workflowstatus)."
-
-#: assets/src/ActionInspector.tsx:86
-#, javascript-format
-msgid "Timeline (%d)"
-msgstr "Tijdlijn (%d)"
-
-#: assets/src/ActionInspector.tsx:88
-msgid "Timeline is empty."
-msgstr "Tijdlijn is leeg."
-
-#: assets/src/ProviderWizard.tsx:167
-msgid "To send messages to the agent you need to pick a provider and a model."
-msgstr ""
-"Om berichten naar de agent te sturen, moet je een provider en een model "
-"kiezen."
-
-#: assets/src/App.tsx:691
-msgid "Tool:"
-msgstr "Tool:"
-
-#: assets/src/Diagnostic.tsx:91
-msgid "Total tokens"
-msgstr "Totaal tokens"
-
-#: assets/src/App.tsx:983
-msgid "Unexpected error."
-msgstr "Onverwachte fout."
-
-#: assets/src/ActionInspector.tsx:25
-msgid "Waiting for the agent response…"
-msgstr "Wachten op reactie van de agent…"
-
-#: assets/src/App.tsx:765
-msgid "Waiting for the agent…"
-msgstr "Wachten op de agent…"
-
-#: assets/src/App.tsx:904
-msgid "Workflow API"
-msgstr "Workflow API"
-
-#: assets/src/App.tsx:334
-msgid ""
-"Workflow API check failed. See dependency status for the exact endpoint "
-"result."
-msgstr ""
-"Controle van Workflow API mislukt. Zie de afhankelijkheidsstatus voor het "
-"exacte endpoint-resultaat."
-
-#: assets/src/App.tsx:813
-msgid "Workflow API consumer"
-msgstr "Workflow API-consument"
-
-#: assets/src/App.tsx:174
-msgid "Workflow API has not been checked yet."
-msgstr "Workflow API is nog niet gecontroleerd."
-
-#: assets/src/App.tsx:318
-msgid "Workflow API responded for workflows and templates."
-msgstr "Workflow API reageerde voor workflows en sjablonen."
-
-#: assets/src/App.tsx:594
-msgid "Workflow View"
-msgstr "Workflow-weergave"
-
-#: assets/src/App.tsx:642
-msgid "Workflow companion"
-msgstr "Workflow-metgezel"
-
-#: assets/src/Diagnostic.tsx:164
-msgid "Workflow dependency"
-msgstr "Workflow-afhankelijkheid"
-
-#: assets/src/App.tsx:658
-msgid "Workflow dependency active"
-msgstr "Workflow-afhankelijkheid actief"
-
-#: assets/src/App.tsx:658
-msgid "Workflow dependency inactive"
-msgstr "Workflow-afhankelijkheid inactief"
-
-#: assets/src/App.tsx:276
-msgid "Workflow plugin is not active. API calls were skipped."
-msgstr "Workflow-plug-in is niet actief. API-aanroepen overgeslagen."
-
-#: assets/src/App.tsx:652
-msgid ""
-"Workflow plugin was not detected during page bootstrap. API calls may fail "
-"until it is active."
-msgstr ""
-"Workflow-plug-in werd niet gedetecteerd tijdens het opstarten van de pagina."
-" API-aanroepen kunnen mislukken totdat het actief is."
-
-#: assets/src/App.tsx:821
-msgid "Workflows"
-msgstr "Workflows"
-
-#: assets/src/App.tsx:320
-#, javascript-format
-msgid "Workflows failed: %s"
-msgstr "Workflows mislukt: %s"
-
-#: assets/src/App.tsx:812
-msgid "Workspace"
-msgstr "Werkruimte"
-
-#: assets/src/Diagnostic.tsx:61
-msgid "beta partial"
-msgstr "bèta gedeeltelijk"
-
-#: assets/src/Diagnostic.tsx:61
-msgid "beta ready"
-msgstr "bèta-klaar"
-
-#: assets/src/App.tsx:717
-#, javascript-format
-msgid "diff: %s"
-msgstr "diff: %s"
-
-#: assets/src/ProviderWizard.tsx:301
-msgid "model-id"
-msgstr "model-id"
-
-#: assets/src/App.tsx:444
-msgid "no message"
-msgstr "geen bericht"
-
-#: assets/src/App.tsx:443
-msgid "unknown"
-msgstr "onbekend"
-
-#: assets/src/ProviderWizard.tsx:240
-msgid "— Pick one —"
-msgstr "— Kies er een —"
-
-#: assets/src/ProviderWizard.tsx:694
-#, javascript-format
-msgid ""
-"\"%s\" will be permanently deleted along with its messages. This action "
-"cannot be undone."
-msgstr ""
-"\"%s\" wordt permanent verwijderd samen met de berichten. Deze actie kan "
-"niet ongedaan worden gemaakt."
-
-#: assets/src/ProviderWizard.tsx:429
-#, javascript-format
 msgid "%1$d turn(s) · updated %2$s"
 msgstr "%1$d beurt(en) · bijgewerkt %2$s"
 
-#: assets/src/ProviderWizard.tsx:1005
-#, javascript-format
-msgid ""
-"All conversations whose last activity is older than %d days will be "
-"permanently deleted. This action cannot be undone."
-msgstr ""
-"Alle gesprekken waarvan de laatste activiteit ouder is dan %d dagen worden "
-"permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt."
+msgid "%1$s %2$s%3$s"
+msgstr "%1$s %2$s%3$s"
 
-#: assets/src/App.tsx:629 assets/src/App.tsx:630
-msgid "Back to conversations"
-msgstr "Terug naar gesprekken"
+msgid "%1$s / %2$s tokens (%3$d%%)"
+msgstr "%1$s / %2$s tokens (%3$d%%)"
 
-#: assets/src/ProviderWizard.tsx:811
-msgid "Base URL"
-msgstr "Basis-URL"
+msgid "%1$s coupon%2$s"
+msgstr "%1$s coupon%2$s"
 
-#: assets/src/ProviderWizard.tsx:447
-msgid "Conversation pages"
-msgstr "Gesprekspagina's"
+msgid "%1$s order%2$s"
+msgstr "%1$s bestelling%2$s"
 
-#: assets/src/App.tsx:655
-msgid "Conversation title"
-msgstr "Gesprektitel"
+msgid "%1$s product%2$s"
+msgstr "%1$s product%2$s"
 
-#: assets/src/ProviderWizard.tsx:830
-msgid "Credential"
-msgstr "Inloggegevens"
+msgid "%1$s tokens, %2$s"
+msgstr "%1$s tokens, %2$s"
 
-#: assets/src/ProviderWizard.tsx:476
-msgid "Credentials"
-msgstr "Inloggegevens"
+msgid "%d execution(s)"
+msgstr "%d uitvoering(en)"
 
-#: assets/src/ProviderWizard.tsx:742
-#, javascript-format
-msgid ""
-"Credentials for \"%s\" will be removed from the encrypted store. This action"
-" cannot be undone."
-msgstr ""
-"Inloggegevens voor \"%s\" worden verwijderd uit de versleutelde opslag. Deze"
-" actie kan niet ongedaan worden gemaakt."
+msgid "%d issue(s)"
+msgstr "%d probleem(s)"
 
-#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
-msgid "Delete"
-msgstr "Verwijderen"
+msgid "(manual)"
+msgstr "(handmatig)"
 
-#: assets/src/ProviderWizard.tsx:413
-#, javascript-format
-msgid "Delete all conversations older than %d days"
-msgstr "Alle gesprekken ouder dan %d dagen verwijderen"
+msgid "+ Add new credential"
+msgstr "+ Nieuwe inloggegevens toevoegen"
 
-#: assets/src/ProviderWizard.tsx:438 assets/src/ProviderWizard.tsx:689
-msgid "Delete conversation"
-msgstr "Gesprek verwijderen"
+msgid "+ New"
+msgstr "+ Nieuw"
 
-#: assets/src/ProviderWizard.tsx:437
-#, javascript-format
-msgid "Delete conversation %s"
-msgstr "Gesprek %s verwijderen"
+msgid "A coupon code is required."
+msgstr "Een couponcode is verplicht."
 
-#: assets/src/ProviderWizard.tsx:1026
-msgid "Delete conversations"
-msgstr "Gesprekken verwijderen"
+msgid "A custom rule is in place. Use the advanced editor to change it."
+msgstr "Er geldt een aangepaste regel. Gebruik de geavanceerde editor om deze te wijzigen."
 
-#: assets/src/ProviderWizard.tsx:519 assets/src/ProviderWizard.tsx:737
-msgid "Delete credential"
-msgstr "Inloggegevens verwijderen"
+msgid "A form id is required."
+msgstr "Een form-id is verplicht."
 
-#: assets/src/ProviderWizard.tsx:518
-#, javascript-format
-msgid "Delete credential %s"
-msgstr "Inloggegevens %s verwijderen"
+msgid "A logged-in user is required."
+msgstr "Een ingelogde gebruiker is vereist."
 
-#: assets/src/ProviderWizard.tsx:715 assets/src/ProviderWizard.tsx:763
-msgid "Deleting…"
-msgstr "Verwijderen…"
+msgid "A menu name is required."
+msgstr "Een menunaam is verplicht."
 
-#: assets/src/ProviderWizard.tsx:813
-msgid "Discovery"
-msgstr "Ontdekking"
+msgid "A non-empty list of terms is required."
+msgstr "Een niet-lege lijst met termen is verplicht."
 
-#: assets/src/ProviderWizard.tsx:819
-msgid "Last validation"
-msgstr "Laatste validatie"
+msgid "A note is required."
+msgstr "Een notitie is verplicht."
 
-#: assets/src/ProviderWizard.tsx:895
-msgid "Load"
-msgstr "Laden"
+msgid "A reply needs content."
+msgstr "Een antwoord heeft inhoud nodig."
 
-#: assets/src/ProviderWizard.tsx:508 assets/src/ProviderWizard.tsx:785
-#, javascript-format
-msgid "Manage %s"
-msgstr "%s beheren"
+msgid "A role is required."
+msgstr "Een rol is verplicht."
 
-#: assets/src/ProviderWizard.tsx:509
-msgid "Manage credential"
-msgstr "Inloggegevens beheren"
+msgid "A stock quantity is required."
+msgstr "Een voorraadaantal is verplicht."
 
-#: assets/src/App.tsx:779
-msgid "Management"
-msgstr "Beheer"
+msgid "A term name is required."
+msgstr "Een termnaam is verplicht."
 
-#: assets/src/ProviderWizard.tsx:941
-msgid "Manual model IDs"
-msgstr "Handmatige model-ID's"
+msgid "A title or content is required."
+msgstr "Een titel of inhoud is verplicht."
 
-#: assets/src/ProviderWizard.tsx:887
-msgid "Models"
-msgstr "Modellen"
+msgid "A user_id is required to read enrollments."
+msgstr "Een user_id is verplicht om inschrijvingen te lezen."
 
-#: assets/src/App.tsx:816
-msgid ""
-"Neither Project Flash Workflow nor Project Flash Management is installed."
-msgstr ""
-"Noch Project Flash Workflow noch Project Flash Management is geïnstalleerd."
+msgid "A valid http(s) URL is required."
+msgstr "Een geldige http(s)-URL is verplicht."
 
-#: assets/src/ProviderWizard.tsx:832
-msgid "New API key"
-msgstr "Nieuwe API-sleutel"
+msgid "A valid order status is required."
+msgstr "Een geldige bestelstatus is verplicht."
 
-#: assets/src/ProviderWizard.tsx:543
-msgid "New credential"
-msgstr "Nieuwe inloggegevens"
+msgid "A valid taxonomy is required."
+msgstr "Een geldige taxonomie is verplicht."
 
-#: assets/src/ProviderWizard.tsx:465
-msgid "Next page"
-msgstr "Volgende pagina"
+msgid "A valid user_id and course_id are required."
+msgstr "Een geldige user_id en course_id zijn verplicht."
 
-#: assets/src/ProviderWizard.tsx:421
-msgid "No conversations yet."
-msgstr "Nog geen gesprekken."
+msgid "A valid user_id and membership_id are required."
+msgstr "Een geldige user_id en membership_id zijn verplicht."
 
-#: assets/src/ProviderWizard.tsx:934
-msgid ""
-"No model list loaded yet. Click Load to fetch from the API or Refresh to "
-"bypass cache."
-msgstr ""
-"Modellenlijst nog niet geladen. Klik op Laden om op te halen via de API of "
-"op Vernieuwen om de cache te omzeilen."
+msgid "A valid user_id is required."
+msgstr "Een geldige user_id is verplicht."
 
-#: assets/src/ProviderWizard.tsx:929
-msgid "No models returned."
-msgstr "Geen modellen teruggegeven."
+msgid "A valid username and email are required."
+msgstr "Een geldige gebruikersnaam en e-mail zijn verplicht."
 
-#: assets/src/ProviderWizard.tsx:1049
-msgid "Not configured"
-msgstr "Niet geconfigureerd"
+msgid "A value is required."
+msgstr "Een waarde is verplicht."
 
-#: assets/src/ProviderWizard.tsx:1045
-msgid "Not verified"
-msgstr "Niet geverifieerd"
+msgid "API key"
+msgstr "API-sleutel"
 
-#: assets/src/ProviderWizard.tsx:458
-#, javascript-format
-msgid "Page %1$d of %2$d"
-msgstr "Pagina %1$d van %2$d"
+msgid "API key is required and must be at least 8 characters."
+msgstr "API-sleutel is verplicht en moet minimaal 8 tekens lang zijn."
 
-#: assets/src/ProviderWizard.tsx:837
-msgid "Paste API key to confirm changes"
-msgstr "Plak API-sleutel om wijzigingen te bevestigen"
+msgid "Action cancelled by the user."
+msgstr "Actie geannuleerd door de gebruiker."
 
-#: assets/src/ProviderWizard.tsx:453
-msgid "Previous page"
-msgstr "Vorige pagina"
+msgid "Activate a workflow"
+msgstr "Een workflow activeren"
 
-#: assets/src/App.tsx:800
-msgid "Project Flash Management"
-msgstr "Project Flash Management"
+msgid "Activate this workflow so it starts firing on its trigger?"
+msgstr "Deze workflow activeren zodat hij begint te activeren op zijn trigger?"
 
-#: assets/src/App.tsx:808
-msgid "Project Flash Workflow"
-msgstr "Project Flash Workflow"
+msgid "Activate workflow \"%s\" so it starts firing on its trigger?"
+msgstr "Workflow \"%s\" activeren zodat hij begint te activeren op zijn trigger?"
 
-#: assets/src/App.tsx:769
-msgid "Project Flash views"
-msgstr "Project Flash-weergaven"
+msgid "Active (%s)"
+msgstr "Actief (%s)"
 
-#: assets/src/ProviderWizard.tsx:416
-#, javascript-format
-msgid "Purge > %dd"
-msgstr "Opschonen > %dd"
-
-#: assets/src/ProviderWizard.tsx:1000
-msgid "Purge old conversations"
-msgstr "Oude gesprekken opschonen"
-
-#: assets/src/ProviderWizard.tsx:416 assets/src/ProviderWizard.tsx:1026
-msgid "Purging…"
-msgstr "Opschonen…"
-
-#: assets/src/ProviderWizard.tsx:253
-msgid "Re-enter the API key to save changes."
-msgstr "Voer de API-sleutel opnieuw in om wijzigingen op te slaan."
-
-#: assets/src/App.tsx:676 assets/src/App.tsx:677
-msgid "Rename conversation"
-msgstr "Gesprek hernoemen"
-
-#: assets/src/ProviderWizard.tsx:863
-msgid "Save"
-msgstr "Opslaan"
-
-#: assets/src/ProviderWizard.tsx:957
-msgid "Save manual list"
-msgstr "Handmatige lijst opslaan"
-
-#: assets/src/App.tsx:663 assets/src/App.tsx:664
-msgid "Save title"
-msgstr "Titel opslaan"
-
-#: assets/src/ProviderWizard.tsx:912
-#, javascript-format
-msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
-msgstr "Bron: %1$s · opgehaald %2$s · %3$d model(len)"
-
-#: assets/src/ProviderWizard.tsx:801
-msgid "Status"
-msgstr "Status"
-
-#: assets/src/ProviderWizard.tsx:807
-msgid "Stored key"
-msgstr "Opgeslagen sleutel"
-
-#: assets/src/ProviderWizard.tsx:499 assets/src/ProviderWizard.tsx:871
-msgid "Test connection"
-msgstr "Verbinding testen"
-
-#: assets/src/ProviderWizard.tsx:498
-#, javascript-format
-msgid "Test connection for %s"
-msgstr "Verbinding testen voor %s"
-
-#: assets/src/ProviderWizard.tsx:1047
-msgid "Validation failed"
-msgstr "Validatie mislukt"
-
-#: assets/src/ProviderWizard.tsx:1043
-msgid "Verified"
-msgstr "Geverifieerd"
-
-#: assets/src/App.tsx:579 assets/src/App.tsx:580
-msgid "Volver al admin de WordPress"
-msgstr "Terug naar WordPress-admin"
-
-#: assets/src/App.tsx:791
-msgid "Workflow"
-msgstr "Workflow"
-
-#: assets/src/ProviderWizard.tsx:808
-msgid "not stored"
-msgstr "niet opgeslagen"
-
-#: assets/src/ProviderWizard.tsx:945
-msgid "one model id per line"
-msgstr "één model-id per regel"
-
-#: assets/src/ProviderWizard.tsx:694
-#, javascript-format
-msgid ""
-"\"%s\" will be permanently deleted along with its messages. This action "
-"cannot be undone."
-msgstr ""
-"\"%s\" wordt permanent verwijderd samen met de berichten. Deze actie kan "
-"niet ongedaan worden gemaakt."
-
-#: assets/src/App.tsx:611
 msgid "Active LLM"
 msgstr "Actieve LLM"
 
-#: assets/src/App.tsx:618
+msgid "Added"
+msgstr "Toegevoegd"
+
+msgid "Added an order note%s"
+msgstr "Een bestelnotitie toegevoegd%s"
+
+msgid "Adjusted"
+msgstr "Aangepast"
+
+msgid "Adjusted stock"
+msgstr "Voorraad aangepast"
+
+msgid "Agent capability manifest is invalid."
+msgstr "Agent-capability-manifest is ongeldig."
+
+msgid "Agent capability manifest is missing."
+msgstr "Agent-capability-manifest ontbreekt."
+
+msgid "Agent runtime failed: %s"
+msgstr "Agent-runtime mislukt: %s"
+
+msgid "Agent tool contract file is invalid."
+msgstr "Bestand met agent-toolcontract is ongeldig."
+
+msgid "Agent tool contract file is missing."
+msgstr "Bestand met agent-toolcontract ontbreekt."
+
+msgid "Agent tool entries must be objects."
+msgstr "Agent-toolvermeldingen moeten objecten zijn."
+
+msgid "All conversations whose last activity is older than %d days will be permanently deleted. This action cannot be undone."
+msgstr "Alle gesprekken waarvan de laatste activiteit ouder is dan %d dagen worden permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt."
+
+msgid "Allow"
+msgstr "Toestaan"
+
+msgid "An entry_id and a valid action (read/spam/trash/star/note) are required."
+msgstr "Een entry_id en een geldige actie (read/spam/trash/star/note) zijn verplicht."
+
+msgid "An item_id is required to remove a line."
+msgstr "Een item_id is verplicht om een regel te verwijderen."
+
+msgid "An order id and a note are required."
+msgstr "Een bestel-id en een notitie zijn verplicht."
+
+msgid "Applied"
+msgstr "Toegepast"
+
+msgid "Applied a coupon to order%s"
+msgstr "Een coupon toegepast op bestelling%s"
+
+msgid "Applying changes…"
+msgstr "Wijzigingen toepassen…"
+
+msgid "Ask"
+msgstr "Vragen"
+
+msgid "Ask it in plain language to manage your posts, media, users, comments and settings — and your WooCommerce, SEO and forms when those plugins are active. It proposes; you approve every change."
+msgstr "Vraag het in gewone taal om je berichten, media, gebruikers, reacties en instellingen te beheren — en je WooCommerce, SEO en formulieren wanneer die plug-ins actief zijn. Het stelt voor; jij keurt elke wijziging goed."
+
+msgid "Ask it to create entities, draw workflows or explore your data. The agent knows the PFM model and the PFW catalog — it builds whatever you describe."
+msgstr "Vraag het om entiteiten te maken, workflows te tekenen of je data te verkennen. De agent kent het PFM-model en de PFW-catalogus — het bouwt wat je ook beschrijft."
+
+msgid "Ask the agent…"
+msgstr "Vraag de agent…"
+
+msgid "Assigned"
+msgstr "Toegewezen"
+
+msgid "Assigned terms"
+msgstr "Termen toegewezen"
+
+msgid "At least one manual model id is required."
+msgstr "Er is ten minste één handmatige model-id vereist."
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Back to WordPress admin"
+msgstr "Terug naar WordPress-admin"
+
+msgid "Back to admin"
+msgstr "Terug naar admin"
+
+msgid "Back to conversations"
+msgstr "Terug naar gesprekken"
+
+msgid "Balance: %1$s %2$s (topped up %3$s · granted %4$s)"
+msgstr "Saldo: %1$s %2$s (opgewaardeerd %3$s · toegekend %4$s)"
+
+msgid "Base URL"
+msgstr "Basis-URL"
+
+msgid "Browse records (customers, orders, anything you store). Read-only."
+msgstr "Blader door records (klanten, bestellingen, alles wat je opslaat). Alleen-lezen."
+
+msgid "Browse your workflow library"
+msgstr "Blader door je workflow-bibliotheek"
+
+msgid "Cache read $/Mtok"
+msgstr "Cache-lezen $/Mtok"
+
+msgid "Cache write $/Mtok"
+msgstr "Cache-schrijven $/Mtok"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "Cancelled order%s"
+msgstr "Bestelling geannuleerd%s"
+
+msgid "Capabilities:"
+msgstr "Capabilities:"
+
+msgid "Capability matrix"
+msgstr "Capability-matrix"
+
+msgid "Change"
+msgstr "Wijzigen"
+
 msgid "Change LLM"
 msgstr "LLM wijzigen"
 
-#: assets/src/ProviderWizard.tsx:742
-#, javascript-format
-msgid ""
-"Credentials for \"%s\" will be removed from the encrypted store. This action"
-" cannot be undone."
-msgstr ""
-"Inloggegevens voor \"%s\" worden verwijderd uit de versleutelde opslag. Deze"
-" actie kan niet ongedaan worden gemaakt."
+msgid "Change a specific section of an existing workflow without rewriting the rest."
+msgstr "Wijzig een specifiek deel van een bestaande workflow zonder de rest te herschrijven."
 
-#: assets/src/ProviderWizard.tsx:694
-#, javascript-format
-msgid ""
-"\"%s\" will be permanently deleted along with its messages. This action "
-"cannot be undone."
-msgstr ""
-"\"%s\" wordt permanent verwijderd samen met de berichten. Deze actie kan "
-"niet ongedaan worden gemaakt."
+msgid "Change provider"
+msgstr "Provider wijzigen"
 
-#: assets/src/App.tsx:625
+msgid "Change the name of a workflow as it appears in your library."
+msgstr "Wijzig de naam van een workflow zoals die in je bibliotheek verschijnt."
+
+msgid "Chat session not found after creation."
+msgstr "Chatsessie niet gevonden na aanmaken."
+
+msgid "Chat session not found."
+msgstr "Chatsessie niet gevonden."
+
+msgid "Checking Workflow API endpoints…"
+msgstr "Workflow API-endpoints controleren…"
+
+msgid "Close"
+msgstr "Sluiten"
+
 msgid "Configure"
 msgstr "Configureren"
 
-#: assets/src/ProviderWizard.tsx:742
-#, javascript-format
-msgid ""
-"Credentials for \"%s\" will be removed from the encrypted store. This action"
-" cannot be undone."
-msgstr ""
-"Inloggegevens voor \"%s\" worden verwijderd uit de versleutelde opslag. Deze"
-" actie kan niet ongedaan worden gemaakt."
+msgid "Configure LLM"
+msgstr "LLM configureren"
 
-#: assets/src/App.tsx:635
+msgid "Configured providers (%d)"
+msgstr "Geconfigureerde providers (%d)"
+
+msgid "Confirm"
+msgstr "Bevestigen"
+
+msgid "Connection failed: %s"
+msgstr "Verbinding mislukt: %s"
+
+msgid "Connection test returned HTTP %d without a valid models payload."
+msgstr "Verbindingstest gaf HTTP %d terug zonder geldige models-payload."
+
+msgid "Connection validated through provider model discovery."
+msgstr "Verbinding gevalideerd via provider-modelontdekking."
+
+msgid "Connection validation updated."
+msgstr "Verbindingsvalidatie bijgewerkt."
+
+msgid "Contact Form 7 does not store submissions; there are no entries to list."
+msgstr "Contact Form 7 slaat geen inzendingen op; er zijn geen vermeldingen om weer te geven."
+
+msgid "Context length (tokens)"
+msgstr "Contextlengte (tokens)"
+
+msgid "Context length and max output tokens are required (greater than zero) before confirming the model."
+msgstr "Contextlengte en max output-tokens zijn verplicht (groter dan nul) voordat je het model bevestigt."
+
+msgid "Context window usage"
+msgstr "Contextvenstergebruik"
+
+msgid "Continue a previous conversation or proceed to start a new one."
+msgstr "Ga verder met een eerder gesprek of start een nieuwe."
+
+msgid "Continuing…"
+msgstr "Doorgaan…"
+
+msgid "Conversation"
+msgstr "Gesprek"
+
+msgid "Conversation pages"
+msgstr "Gesprekspagina's"
+
+msgid "Conversation title"
+msgstr "Gesprektitel"
+
+msgid "Conversations (30d)"
+msgstr "Gesprekken (30d)"
+
+msgid "Cost and tokens (last %dh)"
+msgstr "Kosten en tokens (laatste %dh)"
+
+msgid "Create %1$s \"%2$s\"?"
+msgstr "%1$s \"%2$s\" maken?"
+
+msgid "Create a new %s?"
+msgstr "Een nieuwe %s maken?"
+
+msgid "Create or change records"
+msgstr "Records maken of wijzigen"
+
+msgid "Create or replace a workflow"
+msgstr "Een workflow maken of vervangen"
+
+msgid "Create record in %1$s%2$s?"
+msgstr "Record maken in %1$s%2$s?"
+
+msgid "Create workflow \"%s\"?"
+msgstr "Workflow \"%s\" maken?"
+
+msgid "Created"
+msgstr "Gemaakt"
+
+msgid "Created %1$s%2$s%3$s"
+msgstr "%1$s%2$s%3$s gemaakt"
+
+msgid "Created an order%s"
+msgstr "Een bestelling gemaakt%s"
+
+msgid "Created term%s"
+msgstr "Term gemaakt%s"
+
+msgid "Created user%1$s%2$s"
+msgstr "Gebruiker gemaakt%1$s%2$s"
+
+msgid "Credential"
+msgstr "Inloggegevens"
+
+msgid "Credential decryption failed."
+msgstr "Decryptie van inloggegevens mislukt."
+
+msgid "Credential encryption failed."
+msgstr "Encryptie van inloggegevens mislukt."
+
+msgid "Credential encryption is not available on this WordPress runtime."
+msgstr "Encryptie van inloggegevens is niet beschikbaar op deze WordPress-runtime."
+
+msgid "Credential stored but connection has not been validated."
+msgstr "Inloggegevens opgeslagen maar verbinding is niet gevalideerd."
+
+msgid "Credentials"
+msgstr "Inloggegevens"
+
+msgid "Credentials for \"%s\" will be removed from the encrypted store. This action cannot be undone."
+msgstr "Inloggegevens voor \"%s\" worden verwijderd uit de versleutelde opslag. Deze actie kan niet ongedaan worden gemaakt."
+
+msgid "Current user cannot view workflows. API calls were skipped."
+msgstr "Huidige gebruiker kan geen workflows zien. API-aanroepen overgeslagen."
+
+msgid "Custom rule"
+msgstr "Aangepaste regel"
+
+msgid "Database unavailable."
+msgstr "Database niet beschikbaar."
+
+msgid "Declare a workflow variable"
+msgstr "Een workflow-variabele declareren"
+
+msgid "Default for any other action"
+msgstr "Standaard voor elke andere actie"
+
+msgid "Default reasoning effort"
+msgstr "Standaard reasoning-inspanning"
+
+msgid "Defaults:"
+msgstr "Standaardwaarden:"
+
+msgid "Define a new variable that workflows can read or write."
+msgstr "Definieer een nieuwe variabele die workflows kunnen lezen of schrijven."
+
+msgid "Delete"
+msgstr "Verwijderen"
+
+msgid "Delete a workflow"
+msgstr "Een workflow verwijderen"
+
+msgid "Delete all conversations older than %d days"
+msgstr "Alle gesprekken ouder dan %d dagen verwijderen"
+
+msgid "Delete conversation"
+msgstr "Gesprek verwijderen"
+
+msgid "Delete conversation %s"
+msgstr "Gesprek %s verwijderen"
+
+msgid "Delete conversations"
+msgstr "Gesprekken verwijderen"
+
+msgid "Delete credential"
+msgstr "Inloggegevens verwijderen"
+
+msgid "Delete credential %s"
+msgstr "Inloggegevens %s verwijderen"
+
+msgid "Delete this workflow? This cannot be undone."
+msgstr "Deze workflow verwijderen? Dit kan niet ongedaan worden gemaakt."
+
+msgid "Delete workflow \"%s\"? This cannot be undone."
+msgstr "Workflow \"%s\" verwijderen? Dit kan niet ongedaan worden gemaakt."
+
+msgid "Deleted"
+msgstr "Verwijderd"
+
+msgid "Deleting…"
+msgstr "Verwijderen…"
+
+msgid "Deny"
+msgstr "Weigeren"
+
+msgid "Diagnostic"
+msgstr "Diagnose"
+
+msgid "Discover your data model"
+msgstr "Ontdek je datamodel"
+
+msgid "Discovery"
+msgstr "Ontdekking"
+
+msgid "Done."
+msgstr "Klaar."
+
+msgid "Edit part of a workflow"
+msgstr "Een deel van een workflow bewerken"
+
+msgid "Edit the raw rules JSON. Use this for argument-pattern rules that the simple list above cannot express."
+msgstr "Bewerk de ruwe regels-JSON. Gebruik dit voor argumentpatroonregels die de eenvoudige lijst hierboven niet kan uitdrukken."
+
+msgid "Enrolled"
+msgstr "Ingeschreven"
+
+msgid "Enrolled a user in a course"
+msgstr "Een gebruiker ingeschreven voor een cursus"
+
+msgid "Error:"
+msgstr "Fout:"
+
+msgid "Estimated cost"
+msgstr "Geschatte kosten"
+
+msgid "Events recorded"
+msgstr "Geregistreerde gebeurtenissen"
+
+msgid "Exploring the workspace…"
+msgstr "Werkruimte verkennen…"
+
+msgid "FAIL"
+msgstr "MISLUKT"
+
+msgid "Failed to create the chat session."
+msgstr "Aanmaken van chatsessie mislukt."
+
+msgid "Failed to delete the chat session."
+msgstr "Verwijderen van chatsessie mislukt."
+
+msgid "Failed: "
+msgstr "Mislukt: "
+
+msgid "Fluent Forms submissions table not found."
+msgstr "Fluent Forms-inzendingentabel niet gevonden."
+
+msgid "For each thing the agent can do, choose whether it runs straight away, asks you first, or is not allowed at all. \"Ask\" is the safe default."
+msgstr "Kies voor elke actie die de agent kan uitvoeren of deze meteen wordt uitgevoerd, eerst om toestemming vraagt, of helemaal niet is toegestaan. \"Vragen\" is de veilige standaard."
+
+msgid "Generated at %s."
+msgstr "Gegenereerd op %s."
+
+msgid "Granted"
+msgstr "Toegekend"
+
+msgid "Hide advanced editor"
+msgstr "Geavanceerde editor verbergen"
+
+msgid "Implementing the workflow logic…"
+msgstr "Workflow-logica implementeren…"
+
+msgid "Imported media%s"
+msgstr "Media geïmporteerd%s"
+
+msgid "Inactive (fallback in use)"
+msgstr "Inactief (fallback in gebruik)"
+
+msgid "Input $/Mtok"
+msgstr "Input $/Mtok"
+
+msgid "LLM error: %1$s — %2$s"
+msgstr "LLM-fout: %1$s — %2$s"
+
+msgid "Last updated: %s"
+msgstr "Laatst bijgewerkt: %s"
+
+msgid "Last validation"
+msgstr "Laatste validatie"
+
+msgid "LearnDash is not installed on this site."
+msgstr "LearnDash is niet geïnstalleerd op deze site."
+
+msgid "List records"
+msgstr "Records weergeven"
+
+msgid "Listed"
+msgstr "Weergegeven"
+
+msgid "Listed forms"
+msgstr "Formulieren weergegeven"
+
+msgid "Listed plugins"
+msgstr "Plug-ins weergegeven"
+
+msgid "Listing resources…"
+msgstr "Bronnen weergeven…"
+
+msgid "Load"
+msgstr "Laden"
+
+msgid "Loading a resource…"
+msgstr "Een bron laden…"
+
+msgid "Loading beta readiness report…"
+msgstr "Bèta-gereedheidsrapport laden…"
+
+msgid "Loading models…"
+msgstr "Modellen laden…"
+
+msgid "Look at which entities, fields and actions you have configured. Read-only."
+msgstr "Bekijk welke entiteiten, velden en acties je hebt geconfigureerd. Alleen-lezen."
+
+msgid "Look inside a single workflow without making changes."
+msgstr "Bekijk een enkele workflow van binnen zonder wijzigingen aan te brengen."
+
+msgid "Looking up the data model…"
+msgstr "Datamodel opzoeken…"
+
+msgid "Manage %s"
+msgstr "%s beheren"
+
+msgid "Manage credential"
+msgstr "Inloggegevens beheren"
+
+msgid "Management"
+msgstr "Beheer"
+
+msgid "Manual model IDs"
+msgstr "Handmatige model-ID's"
+
+msgid "Manual model entries are not allowed for this provider preset."
+msgstr "Handmatige modelinvoer is niet toegestaan voor deze provider-preset."
+
+msgid "Max output (tokens)"
+msgstr "Max output (tokens)"
+
+msgid "MemberPress is not installed on this site."
+msgstr "MemberPress is niet geïnstalleerd op deze site."
+
+msgid "Message to the agent"
+msgstr "Bericht aan de agent"
+
+msgid "Messages (30d)"
+msgstr "Berichten (30d)"
+
+msgid "Modalities:"
+msgstr "Modaliteiten:"
+
+msgid "Model"
+msgstr "Model"
+
+msgid "Model (manual)"
+msgstr "Model (handmatig)"
+
+msgid "Models"
+msgstr "Modellen"
+
+msgid "Moderated"
+msgstr "Gemodereerd"
+
+msgid "Moderated a comment"
+msgstr "Een reactie gemodereerd"
+
+msgid "New API key"
+msgstr "Nieuwe API-sleutel"
+
+msgid "New conversation"
+msgstr "Nieuw gesprek"
+
+msgid "New conversation."
+msgstr "Nieuw gesprek."
+
+msgid "New credential"
+msgstr "Nieuwe inloggegevens"
+
+msgid "Next page"
+msgstr "Volgende pagina"
+
 msgid "No LLM configured."
 msgstr "Geen LLM geconfigureerd."
+
+msgid "No SEO plugin is installed on this site."
+msgstr "Er is geen SEO-plug-in geïnstalleerd op deze site."
+
+msgid "No conversations yet."
+msgstr "Nog geen gesprekken."
+
+msgid "No credentials in the store yet. Add one to continue."
+msgstr "Nog geen inloggegevens in de opslag. Voeg er een toe om door te gaan."
+
+msgid "No credentials stored yet. Configure one from Settings."
+msgstr "Nog geen inloggegevens opgeslagen. Configureer er een via Instellingen."
+
+msgid "No model list loaded yet. Click Load to fetch from the API or Refresh to bypass cache."
+msgstr "Modellenlijst nog niet geladen. Klik op Laden om op te halen via de API of op Vernieuwen om de cache te omzeilen."
+
+msgid "No models returned."
+msgstr "Geen modellen teruggegeven."
+
+msgid "No response from the runtime."
+msgstr "Geen reactie van de runtime."
+
+msgid "No updatable fields were provided."
+msgstr "Er zijn geen bijwerkbare velden opgegeven."
+
+msgid "Not configured"
+msgstr "Niet geconfigureerd"
+
+msgid "Not verified"
+msgstr "Niet geverifieerd"
+
+msgid "Notes are not supported for Fluent Forms entries here."
+msgstr "Notities worden hier niet ondersteund voor Fluent Forms-vermeldingen."
+
+msgid "Only public custom fields can be set (protected keys are refused)."
+msgstr "Alleen openbare aangepaste velden kunnen worden ingesteld (beschermde sleutels worden geweigerd)."
+
+msgid "Open a record"
+msgstr "Een record openen"
+
+msgid "Open a workflow to read it"
+msgstr "Een workflow openen om te lezen"
+
+msgid "Open agent"
+msgstr "Agent openen"
+
+msgid "Open this in WordPress admin"
+msgstr "Dit openen in WordPress-admin"
+
+msgid "Optimized SEO%1$s%2$s"
+msgstr "SEO geoptimaliseerd%1$s%2$s"
+
+msgid "Other capability — see this site's integrator for details."
+msgstr "Andere capability — raadpleeg de integrator van deze site voor details."
+
+msgid "Output $/Mtok"
+msgstr "Output $/Mtok"
+
+msgid "PASS"
+msgstr "OK"
+
+msgid "PF Agent"
+msgstr "PF Agent"
+
+msgid "PF Management"
+msgstr "PF Management"
+
+msgid "PF Workflow"
+msgstr "PF Workflow"
+
+msgid "Page %1$d of %2$d"
+msgstr "Pagina %1$d van %2$d"
+
+msgid "Partial capabilities"
+msgstr "Gedeeltelijke capabilities"
+
+msgid "Paste API key to confirm changes"
+msgstr "Plak API-sleutel om wijzigingen te bevestigen"
+
+msgid "Per provider"
+msgstr "Per provider"
+
+msgid "Permission rules"
+msgstr "Toestemmingsregels"
+
+msgid "Permissions"
+msgstr "Toestemmingen"
+
+msgid "Pick a model or enter the id manually."
+msgstr "Kies een model of voer de id handmatig in."
+
+msgid "Pick a provider and paste the API key."
+msgstr "Kies een provider en plak de API-sleutel."
+
+msgid "Pick an LLM provider to get started. Your credentials live encrypted inside the WordPress store."
+msgstr "Kies een LLM-provider om te beginnen. Je inloggegevens worden versleuteld bewaard in de WordPress-opslag."
+
+msgid "Pre-filled when the provider API exposes caps; required otherwise. Stored on the credential so the runtime never has to guess."
+msgstr "Vooraf ingevuld wanneer de provider-API caps beschikbaar stelt; anders verplicht. Opgeslagen bij de inloggegevens zodat de runtime nooit hoeft te gissen."
+
+msgid "Previous page"
+msgstr "Vorige pagina"
+
+msgid "Provide a post_id or a url for the menu item."
+msgstr "Geef een post_id of een url op voor het menu-item."
+
+msgid "Provide at least one SEO field to set (title, description, focus_keyword, canonical, noindex, og_title, og_description)."
+msgstr "Geef ten minste één SEO-veld op om in te stellen (title, description, focus_keyword, canonical, noindex, og_title, og_description)."
+
+msgid "Provider"
+msgstr "Provider"
+
+msgid "Provider base URL must be an HTTP URL."
+msgstr "Provider-basis-URL moet een HTTP-URL zijn."
+
+msgid "Provider discovery failed recently and is on cooldown."
+msgstr "Providerontdekking is onlangs mislukt en staat in de afkoelperiode."
+
+msgid "Provider does not expose API model discovery. Manual model entries are required for this preset."
+msgstr "Provider biedt geen API-modelontdekking. Handmatige modelinvoer is vereist voor deze preset."
+
+msgid "Provider family declares no discovery endpoints."
+msgstr "Providerfamilie declareert geen ontdekkings-endpoints."
+
+msgid "Provider family does not expose a models endpoint for connection testing."
+msgstr "Providerfamilie biedt geen models-endpoint voor verbindingstest."
+
+msgid "Provider family does not expose the required runtime endpoint."
+msgstr "Providerfamilie biedt het vereiste runtime-endpoint niet."
+
+msgid "Provider family does not support connection testing yet."
+msgstr "De providerfamilie ondersteunt nog geen verbindingstest."
+
+msgid "Provider family is not supported for generation yet."
+msgstr "Providerfamilie wordt nog niet ondersteund voor generatie."
+
+msgid "Provider family is not supported for runtime calls."
+msgstr "Providerfamilie wordt niet ondersteund voor runtime-aanroepen."
+
+msgid "Provider is not configured."
+msgstr "Provider is niet geconfigureerd."
+
+msgid "Provider model discovery returned no models."
+msgstr "Provider-modelontdekking gaf geen modellen terug."
+
+msgid "Provider model discovery returned no text generation model candidate."
+msgstr "Provider-modelontdekking gaf geen kandidaat voor een tekstgeneratiemodel terug."
+
+msgid "Provider modelHints must remain non-authoritative and empty; real models come from discovery, cache or explicit manual entry."
+msgstr "Provider-modelHints moeten niet-gezaghebbend en leeg blijven; echte modellen komen uit ontdekking, cache of expliciete handmatige invoer."
+
+msgid "Provider must be configured before saving models."
+msgstr "Provider moet worden geconfigureerd voordat modellen worden opgeslagen."
+
+msgid "Provider preset entries must be keyed objects."
+msgstr "Provider-presetvermeldingen moeten objecten met sleutels zijn."
+
+msgid "Provider preset references an unknown family."
+msgstr "Provider-preset verwijst naar een onbekende family."
+
+msgid "Provider preset was not found."
+msgstr "Provider-preset niet gevonden."
+
+msgid "Provider presets file is missing."
+msgstr "Bestand met provider-presets ontbreekt."
+
+msgid "Provider presets file is not valid JSON."
+msgstr "Bestand met provider-presets is geen geldig JSON."
+
+msgid "Provider presets must define families and presets."
+msgstr "Provider-presets moeten families en presets definiëren."
+
+msgid "Provider presets must not define defaultModels."
+msgstr "Provider-presets mogen geen defaultModels definiëren."
+
+msgid "Provider presets require label, family and baseUrl."
+msgstr "Provider-presets vereisen label, family en baseUrl."
+
+msgid "Provider presets schemaVersion must be 1."
+msgstr "schemaVersion van provider-presets moet 1 zijn."
+
+msgid "Provider requires additional settings before runtime call."
+msgstr "Provider vereist extra instellingen vóór runtime-aanroep."
+
+msgid "Provider requires additional settings before testing connection."
+msgstr "Provider vereist extra instellingen vóór het testen van de verbinding."
+
+msgid "Provider:"
+msgstr "Provider:"
+
+msgid "Providers configured"
+msgstr "Geconfigureerde providers"
+
+msgid "Purge > %dd"
+msgstr "Opschonen > %dd"
+
+msgid "Purge old conversations"
+msgstr "Oude gesprekken opschonen"
+
+msgid "Purging…"
+msgstr "Opschonen…"
+
+msgid "Ran"
+msgstr "Uitgevoerd"
+
+msgid "Rate limit reached for \"%1$s\" (%2$d per %3$ds). Retry in %4$ds."
+msgstr "Ratelimiet bereikt voor \"%1$s\" (%2$d per %3$ds). Probeer opnieuw over %4$ds."
+
+msgid "Re-enter the API key to save changes."
+msgstr "Voer de API-sleutel opnieuw in om wijzigingen op te slaan."
+
+msgid "Read"
+msgstr "Lezen"
+
+msgid "Read LearnDash courses"
+msgstr "LearnDash-cursussen lezen"
+
+msgid "Read MemberPress data"
+msgstr "MemberPress-data lezen"
+
+msgid "Read SEO fields%s"
+msgstr "SEO-velden lezen%s"
+
+msgid "Read WooCommerce data"
+msgstr "WooCommerce-data lezen"
+
+msgid "Read setting%s"
+msgstr "Instelling lezen%s"
+
+msgid "Read the full content of a single record. Read-only."
+msgstr "Lees de volledige inhoud van een enkel record. Alleen-lezen."
+
+msgid "Reading the reference library…"
+msgstr "Referentiebibliotheek lezen…"
+
+msgid "Reasoning:"
+msgstr "Reasoning:"
+
+msgid "Refresh"
+msgstr "Vernieuwen"
+
+msgid "Refresh diagnostic"
+msgstr "Diagnose vernieuwen"
+
+msgid "Refund REQUESTED via the agent%1$s%2$s — NOT yet issued. A person must review and process this refund in WooCommerce."
+msgstr "Refund AANGEVRAAGD via de agent%1$s%2$s — nog NIET uitgevoerd. Een persoon moet deze refund beoordelen en verwerken in WooCommerce."
+
+msgid "Refund request recorded on the order. It was NOT issued — a person must approve and process it in WooCommerce."
+msgstr "Refund request geregistreerd op de bestelling. Deze is NIET uitgevoerd — een persoon moet hem goedkeuren en verwerken in WooCommerce."
+
+msgid "Refunded"
+msgstr "Terugbetaald"
+
+msgid "Remove a workflow from your library permanently."
+msgstr "Verwijder een workflow permanent uit je bibliotheek."
+
+msgid "Removing a file…"
+msgstr "Een bestand verwijderen…"
+
+msgid "Rename a workflow"
+msgstr "Een workflow hernoemen"
+
+msgid "Rename conversation"
+msgstr "Gesprek hernoemen"
+
+msgid "Rename this workflow?"
+msgstr "Deze workflow hernoemen?"
+
+msgid "Reorganising files…"
+msgstr "Bestanden reorganiseren…"
+
+msgid "Request body exceeds %1$d bytes (got %2$d)."
+msgstr "Aanvraagbody overschrijdt %1$d bytes (ontvangen: %2$d)."
+
+msgid "Requested a refund%s"
+msgstr "Een refund request ingediend%s"
+
+msgid "Resuming…"
+msgstr "Hervatten…"
+
+msgid "Revoked"
+msgstr "Ingetrokken"
+
+msgid "Rules JSON"
+msgstr "Regels-JSON"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Save a brand-new workflow or fully replace the contents of an existing one."
+msgstr "Sla een gloednieuwe workflow op of vervang de inhoud van een bestaande volledig."
+
+msgid "Save advanced JSON"
+msgstr "Geavanceerde JSON opslaan"
+
+msgid "Save and continue"
+msgstr "Opslaan en doorgaan"
+
+msgid "Save changes to %1$s \"%2$s\"?"
+msgstr "Wijzigingen aan %1$s \"%2$s\" opslaan?"
+
+msgid "Save changes to a %s?"
+msgstr "Wijzigingen aan een %s opslaan?"
+
+msgid "Save changes to workflow \"%s\"?"
+msgstr "Wijzigingen aan workflow \"%s\" opslaan?"
+
+msgid "Save manual list"
+msgstr "Handmatige lijst opslaan"
+
+msgid "Save model config"
+msgstr "Modelconfiguratie opslaan"
+
+msgid "Save new records or modify existing ones (customers, orders, configuration, etc.)."
+msgstr "Sla nieuwe records op of wijzig bestaande (klanten, bestellingen, configuratie, enz.)."
+
+msgid "Save title"
+msgstr "Titel opslaan"
+
+msgid "Saved product%1$s%2$s"
+msgstr "Product opgeslagen%1$s%2$s"
+
+msgid "Saved."
+msgstr "Opgeslagen."
+
+msgid "Saving…"
+msgstr "Opslaan…"
+
+msgid "See the workflows that exist on this site. Read-only."
+msgstr "Bekijk de workflows die op deze site bestaan. Alleen-lezen."
+
+msgid "Send"
+msgstr "Verzenden"
+
+msgid "Send { kind: \"<entity|record|action|application|module|group|role|page>\", payload: { <kind>: {...} } }."
+msgstr "Stuur { kind: \"<entity|record|action|application|module|group|role|page>\", payload: { <kind>: {...} } }."
+
+msgid "Session %d is empty."
+msgstr "Sessie %d is leeg."
+
+msgid "Session %s"
+msgstr "Sessie %s"
+
+msgid "Setyenv Agent"
+msgstr "Setyenv Agent"
+
+msgid "Setyenv Management"
+msgstr "Setyenv Management"
+
+msgid "Setyenv Workflow"
+msgstr "Setyenv Workflow"
+
+msgid "Setyenv views"
+msgstr "Setyenv-weergaven"
+
+msgid "Setyenv — setyenv.com"
+msgstr "Setyenv — setyenv.com"
+
+msgid "Setyenv — visit setyenv.com"
+msgstr "Setyenv — bezoek setyenv.com"
+
+msgid "Severe criteria"
+msgstr "Ernstige criteria"
+
+msgid "Show advanced editor"
+msgstr "Geavanceerde editor tonen"
+
+msgid "Site overview"
+msgstr "Site-overzicht"
+
+msgid "Snapshot:"
+msgstr "Snapshot:"
+
+msgid "Source: %1$s · fetched %2$s · %3$d model(s)"
+msgstr "Bron: %1$s · opgehaald %2$s · %3$d model(len)"
+
+msgid "Start a new conversation with the active LLM"
+msgstr "Start een nieuw gesprek met de actieve LLM"
+
+msgid "Starting…"
+msgstr "Starten…"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Still working…"
+msgstr "Nog bezig…"
+
+msgid "Stored credential cipher is unsupported."
+msgstr "Opgeslagen inloggegevens-cipher wordt niet ondersteund."
+
+msgid "Stored credential payload is invalid."
+msgstr "Opgeslagen inloggegevens-payload is ongeldig."
+
+msgid "Stored key"
+msgstr "Opgeslagen sleutel"
+
+msgid "Summarising older context…"
+msgstr "Oudere context samenvatten…"
+
+msgid "Templates failed: %s"
+msgstr "Sjablonen mislukt: %s"
+
+msgid "Test connection"
+msgstr "Verbinding testen"
+
+msgid "Test connection for %s"
+msgstr "Verbinding testen voor %s"
+
+msgid "That URL is not allowed (it points at a private or unsafe address)."
+msgstr "Die URL is niet toegestaan (deze wijst naar een privé- of onveilig adres)."
+
+msgid "That comment does not exist."
+msgstr "Die reactie bestaat niet."
+
+msgid "That content could not be found."
+msgstr "Die inhoud kon niet worden gevonden."
+
+msgid "That content type does not exist."
+msgstr "Dat inhoudstype bestaat niet."
+
+msgid "That form plugin does not expose entries here."
+msgstr "Die formulier-plug-in stelt hier geen vermeldingen beschikbaar."
+
+msgid "That form plugin does not support managing entries here."
+msgstr "Die formulier-plug-in ondersteunt hier het beheren van vermeldingen niet."
+
+msgid "That media item does not exist."
+msgstr "Dat media-item bestaat niet."
+
+msgid "That menu does not exist."
+msgstr "Dat menu bestaat niet."
+
+msgid "That order does not exist."
+msgstr "Die bestelling bestaat niet."
+
+msgid "That product does not exist."
+msgstr "Dat product bestaat niet."
+
+msgid "That role does not exist."
+msgstr "Die rol bestaat niet."
+
+msgid "That setting cannot be changed through the agent."
+msgstr "Die instelling kan niet via de agent worden gewijzigd."
+
+msgid "That setting is not readable through the agent."
+msgstr "Die instelling is niet leesbaar via de agent."
+
+msgid "That taxonomy does not exist."
+msgstr "Die taxonomie bestaat niet."
+
+msgid "That user does not exist."
+msgstr "Die gebruiker bestaat niet."
+
+msgid "The action ran but the final response failed."
+msgstr "De actie is uitgevoerd maar de laatste reactie is mislukt."
+
+msgid "The advanced JSON must be an object."
+msgstr "De geavanceerde JSON moet een object zijn."
+
+msgid "The agent is about to apply a change. Confirm to proceed."
+msgstr "De agent staat op het punt een wijziging toe te passen. Bevestig om door te gaan."
+
+msgid "The comment status could not be changed."
+msgstr "De reactiestatus kon niet worden gewijzigd."
+
+msgid "The content could not be moved to trash."
+msgstr "De inhoud kon niet naar de prullenbak worden verplaatst."
+
+msgid "The email address is not valid."
+msgstr "Het e-mailadres is niet geldig."
+
+msgid "The key is encrypted (AES-256-GCM) in the WordPress store and never returned over REST."
+msgstr "De sleutel is versleuteld (AES-256-GCM) in de WordPress-opslag en wordt nooit via REST teruggegeven."
+
+msgid "The reply could not be posted."
+msgstr "Het antwoord kon niet worden geplaatst."
+
+msgid "The requested tool is not in the declared agent tool registry."
+msgstr "De gevraagde tool staat niet in het gedeclareerde agent-toolregister."
+
+msgid "The runtime rejected this call."
+msgstr "De runtime heeft deze aanroep afgewezen."
+
+msgid "Thinking…"
+msgstr "Aan het denken…"
+
+msgid "This action requires confirmation."
+msgstr "Deze actie vereist bevestiging."
+
+msgid "This provider does not allow manual models; check your credential or retry."
+msgstr "Deze provider staat geen handmatige modellen toe; controleer je inloggegevens of probeer opnieuw."
+
+msgid "Tool is not executable by Management API bridge."
+msgstr "Tool is niet uitvoerbaar door de Management API-bridge."
+
+msgid "Tool is not executable by Workflow API bridge."
+msgstr "Tool is niet uitvoerbaar door Workflow API-bridge."
+
+msgid "Tool is not executable by the VFS bridge."
+msgstr "Tool is niet uitvoerbaar door de VFS-bridge."
+
+msgid "Total tokens"
+msgstr "Totaal tokens"
+
+msgid "Trashed"
+msgstr "Naar prullenbak verplaatst"
+
+msgid "Trashed %1$s%2$s%3$s"
+msgstr "%1$s%2$s%3$s naar prullenbak verplaatst"
+
+msgid "Turn on a draft workflow so it starts running when its trigger fires."
+msgstr "Schakel een concept-workflow in zodat hij begint te draaien wanneer zijn trigger afgaat."
+
+msgid "Unexpected error."
+msgstr "Onverwachte fout."
+
+msgid "Unknown menu action (use create_menu or add_item)."
+msgstr "Onbekende menu-actie (gebruik create_menu of add_item)."
+
+msgid "Unknown moderation action."
+msgstr "Onbekende moderatie-actie."
+
+msgid "Update record in %1$s%2$s?"
+msgstr "Record bijwerken in %1$s%2$s?"
+
+msgid "Updated"
+msgstr "Bijgewerkt"
+
+msgid "Updated %1$s meta%2$s"
+msgstr "%1$s meta bijgewerkt%2$s"
+
+msgid "Updated %1$s%2$s%3$s"
+msgstr "%1$s%2$s%3$s bijgewerkt"
+
+msgid "Updated a form entry"
+msgstr "Een formuliervermelding bijgewerkt"
+
+msgid "Updated membership access"
+msgstr "Lidmaatschapstoegang bijgewerkt"
+
+msgid "Updated menu%s"
+msgstr "Menu bijgewerkt%s"
+
+msgid "Updated order items%s"
+msgstr "Bestelitems bijgewerkt%s"
+
+msgid "Updated order%s"
+msgstr "Bestelling bijgewerkt%s"
+
+msgid "Updated setting%s"
+msgstr "Instelling bijgewerkt%s"
+
+msgid "Updated stock%s"
+msgstr "Voorraad bijgewerkt%s"
+
+msgid "Updated user%1$s%2$s"
+msgstr "Gebruiker bijgewerkt%1$s%2$s"
+
+msgid "Used when a future capability is added that you have not set up yet."
+msgstr "Gebruikt wanneer een toekomstige capability wordt toegevoegd die je nog niet hebt ingesteld."
+
+msgid "Validation failed"
+msgstr "Validatie mislukt"
+
+msgid "Verified"
+msgstr "Geverifieerd"
+
+msgid "Viewed"
+msgstr "Bekeken"
+
+msgid "Viewed %s"
+msgstr "%s bekeken"
+
+msgid "Viewed comments"
+msgstr "Reacties bekeken"
+
+msgid "Viewed form entries"
+msgstr "Formuliervermeldingen bekeken"
+
+msgid "Viewed media item%s"
+msgstr "Media-item bekeken%s"
+
+msgid "Viewed media library"
+msgstr "Mediabibliotheek bekeken"
+
+msgid "Viewed navigation menus"
+msgstr "Navigatiemenu's bekeken"
+
+msgid "Viewed taxonomies"
+msgstr "Taxonomieën bekeken"
+
+msgid "Viewed users"
+msgstr "Gebruikers bekeken"
+
+msgid "WP PFAgent"
+msgstr "WP PFAgent"
+
+msgid "WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory."
+msgstr "WP PFAgent-assets ontbreken. Voer npm install en npm run build uit binnen de plug-inmap."
+
+msgid "WP PFAgent assets are not built."
+msgstr "WP PFAgent-assets zijn niet gebouwd."
+
+msgid "WP PFWorkflow plugin is not active."
+msgstr "WP PFWorkflow-plug-in is niet actief."
+
+msgid "WPForms stores form entries only in the Pro version. This site runs WPForms Lite, which does not save entries."
+msgstr "WPForms slaat formuliervermeldingen alleen op in de Pro-versie. Deze site draait WPForms Lite, dat geen vermeldingen opslaat."
+
+msgid "Waiting for the agent…"
+msgstr "Wachten op de agent…"
+
+msgid "WooCommerce action"
+msgstr "WooCommerce-actie"
+
+msgid "WooCommerce is not installed on this site."
+msgstr "WooCommerce is niet geïnstalleerd op deze site."
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "WordPress action: %s"
+msgstr "WordPress-actie: %s"
+
+msgid "WordPress actions this turn"
+msgstr "WordPress-acties deze beurt"
+
+msgid "WordPress admin"
+msgstr "WordPress-admin"
+
+msgid "WordPress database is not available."
+msgstr "WordPress-database is niet beschikbaar."
+
+msgid "Workflow"
+msgstr "Workflow"
+
+msgid "Workflow API has not been checked yet."
+msgstr "Workflow API is nog niet gecontroleerd."
+
+msgid "Workflow API responded for workflows and templates."
+msgstr "Workflow API reageerde voor workflows en sjablonen."
+
+msgid "Workflow dependency"
+msgstr "Workflow-afhankelijkheid"
+
+msgid "Workflow plugin is not active. API calls were skipped."
+msgstr "Workflow-plug-in is niet actief. API-aanroepen overgeslagen."
+
+msgid "Workflows failed: %s"
+msgstr "Workflows mislukt: %s"
+
+msgid "Working on it…"
+msgstr "Bezig…"
+
+msgid "You cannot add media."
+msgstr "Je kunt geen media toevoegen."
+
+msgid "You cannot browse the media library."
+msgstr "Je kunt de mediabibliotheek niet doorbladeren."
+
+msgid "You cannot change MemberPress access."
+msgstr "Je kunt MemberPress-toegang niet wijzigen."
+
+msgid "You cannot change site settings."
+msgstr "Je kunt site-instellingen niet wijzigen."
+
+msgid "You cannot change user roles."
+msgstr "Je kunt gebruikersrollen niet wijzigen."
+
+msgid "You cannot create this content type."
+msgstr "Je kunt dit inhoudstype niet maken."
+
+msgid "You cannot create users."
+msgstr "Je kunt geen gebruikers maken."
+
+msgid "You cannot edit WooCommerce orders."
+msgstr "Je kunt WooCommerce-bestellingen niet bewerken."
+
+msgid "You cannot edit this content."
+msgstr "Je kunt deze inhoud niet bewerken."
+
+msgid "You cannot edit users."
+msgstr "Je kunt gebruikers niet bewerken."
+
+msgid "You cannot grant a role with more capabilities than your own."
+msgstr "Je kunt geen rol toekennen met meer capabilities dan je eigen rol."
+
+msgid "You cannot grant the administrator role."
+msgstr "Je kunt de administrator-rol niet toekennen."
+
+msgid "You cannot list forms."
+msgstr "Je kunt formulieren niet weergeven."
+
+msgid "You cannot list users."
+msgstr "Je kunt gebruikers niet weergeven."
+
+msgid "You cannot manage LearnDash enrollments."
+msgstr "Je kunt LearnDash-inschrijvingen niet beheren."
+
+msgid "You cannot manage WooCommerce."
+msgstr "Je kunt WooCommerce niet beheren."
+
+msgid "You cannot manage form entries."
+msgstr "Je kunt formuliervermeldingen niet beheren."
+
+msgid "You cannot manage navigation menus."
+msgstr "Je kunt navigatiemenu's niet beheren."
+
+msgid "You cannot manage terms in this taxonomy."
+msgstr "Je kunt termen in deze taxonomie niet beheren."
+
+msgid "You cannot moderate comments."
+msgstr "Je kunt reacties niet modereren."
+
+msgid "You cannot publish this content."
+msgstr "Je kunt deze inhoud niet publiceren."
+
+msgid "You cannot read LearnDash data."
+msgstr "Je kunt LearnDash-data niet lezen."
+
+msgid "You cannot read MemberPress data."
+msgstr "Je kunt MemberPress-data niet lezen."
+
+msgid "You cannot read WooCommerce data."
+msgstr "Je kunt WooCommerce-data niet lezen."
+
+msgid "You cannot read form entries."
+msgstr "Je kunt formuliervermeldingen niet lezen."
+
+msgid "You cannot read navigation menus."
+msgstr "Je kunt navigatiemenu's niet lezen."
+
+msgid "You cannot read site settings."
+msgstr "Je kunt site-instellingen niet lezen."
+
+msgid "You cannot read the media library."
+msgstr "Je kunt de mediabibliotheek niet lezen."
+
+msgid "You cannot read the plugin list."
+msgstr "Je kunt de plug-inlijst niet lezen."
+
+msgid "You cannot read the site overview."
+msgstr "Je kunt het site-overzicht niet lezen."
+
+msgid "You cannot read this content."
+msgstr "Je kunt deze inhoud niet lezen."
+
+msgid "You cannot read users."
+msgstr "Je kunt gebruikers niet lezen."
+
+msgid "You cannot read widgets."
+msgstr "Je kunt widgets niet lezen."
+
+msgid "You cannot trash this content."
+msgstr "Je kunt deze inhoud niet naar de prullenbak verplaatsen."
+
+msgid "You do not have access to this chat session."
+msgstr "Je hebt geen toegang tot deze chatsessie."
+
+msgid "You do not have permission to manage WP PFAgent."
+msgstr "Je hebt geen toestemming om WP PFAgent te beheren."
+
+msgid "Your natural-language copilot"
+msgstr "Je copilot voor natuurlijke taal"
+
+msgid "action"
+msgstr "actie"
+
+msgid "an entity"
+msgstr "een entiteit"
+
+msgid "application"
+msgstr "applicatie"
+
+msgid "beta partial"
+msgstr "bèta gedeeltelijk"
+
+msgid "beta ready"
+msgstr "bèta-klaar"
+
+msgid "conversationId is required."
+msgstr "conversationId is verplicht."
+
+msgid "conversationId, confirmationToken, providerId and model are required."
+msgstr "conversationId, confirmationToken, providerId en model zijn verplicht."
+
+msgid "conversationId, providerId and model are required."
+msgstr "conversationId, providerId en model zijn verplicht."
+
+msgid "diff: %s"
+msgstr "diff: %s"
+
+msgid "e.g. 128000 — fill in manually"
+msgstr "bijv. 128000 — handmatig invullen"
+
+msgid "e.g. 8192 — fill in manually"
+msgstr "bijv. 8192 — handmatig invullen"
+
+msgid "entity"
+msgstr "entiteit"
+
+msgid "group"
+msgstr "groep"
+
+msgid "kind and ref are required."
+msgstr "kind en ref zijn verplicht."
+
+msgid "kind is required (entity, record, action, application, module, group, role, page)."
+msgstr "kind is verplicht (entity, record, action, application, module, group, role, page)."
+
+msgid "label cannot be empty."
+msgstr "label kan niet leeg zijn."
+
+msgid "low | medium | high | max"
+msgstr "low | medium | high | max"
+
+msgid "message is required."
+msgstr "message is verplicht."
+
+msgid "model is required for the framework runtime."
+msgstr "model is verplicht voor de framework-runtime."
+
+msgid "model-id"
+msgstr "model-id"
+
+msgid "module"
+msgstr "module"
+
+msgid "no message"
+msgstr "geen bericht"
+
+msgid "none"
+msgstr "geen"
+
+msgid "not stored"
+msgstr "niet opgeslagen"
+
+msgid "one model id per line"
+msgstr "één model-id per regel"
+
+msgid "oversized request body"
+msgstr "te grote aanvraagbody"
+
+msgid "page"
+msgstr "pagina"
+
+msgid "payload is required: send { payload: { workflow: { id, name, status }, graph: { schemaVersion: 1, nodes: [], connections: [] } } }."
+msgstr "payload is verplicht: stuur { payload: { workflow: { id, name, status }, graph: { schemaVersion: 1, nodes: [], connections: [] } } }."
+
+msgid "providerId is required."
+msgstr "providerId is verplicht."
+
+msgid "record"
+msgstr "record"
+
+msgid "required — e.g. 128000"
+msgstr "verplicht — bijv. 128000"
+
+msgid "required — e.g. 8192"
+msgstr "verplicht — bijv. 8192"
+
+msgid "resource"
+msgstr "bron"
+
+msgid "role"
+msgstr "rol"
+
+msgid "role \"%1$s\" is not in the allowed enum (%2$s)."
+msgstr "rol \"%1$s\" staat niet in de toegestane enum (%2$s)."
+
+msgid "rules must be a JSON object."
+msgstr "rules moet een JSON-object zijn."
+
+msgid "unknown"
+msgstr "onbekend"
+
+msgid "workflowId is required."
+msgstr "workflowId is verplicht."
+
+msgid "wp-pfmanagement agent-ready service is not available."
+msgstr "wp-pfmanagement agent-ready-service is niet beschikbaar."
+
+msgid "wp-pfworkflow agent-ready service is not available."
+msgstr "wp-pfworkflow agent-ready-service is niet beschikbaar."
+
+msgid "— Pick one —"
+msgstr "— Kies er een —"
+
+msgid "— none —"
+msgstr "— geen —"

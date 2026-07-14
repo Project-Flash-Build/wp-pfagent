@@ -1,4 +1,4 @@
-# Copyright (C) 2026 ProjectFlash
+# Copyright (C) 2026 Setyenv
 # This file is distributed under the same license as the WP PFAgent plugin.
 msgid ""
 msgstr ""
@@ -23,12 +23,12 @@ msgstr ""
 
 #. Description of the plugin
 #: wp-pfagent.php
-msgid "Agent console for ProjectFlash products."
+msgid "Agent console for Setyenv products."
 msgstr ""
 
 #. Author of the plugin
 #: wp-pfagent.php
-msgid "ProjectFlash"
+msgid "Setyenv"
 msgstr ""
 
 #: includes/AdminPage.php:26
@@ -1125,7 +1125,7 @@ msgid "Models"
 msgstr ""
 
 #: assets/src/App.tsx:816
-msgid "Neither Project Flash Workflow nor Project Flash Management is installed."
+msgid "Neither Setyenv Workflow nor Setyenv Management is installed."
 msgstr ""
 
 #: assets/src/ProviderWizard.tsx:832
@@ -1174,15 +1174,15 @@ msgid "Previous page"
 msgstr ""
 
 #: assets/src/App.tsx:800
-msgid "Project Flash Management"
+msgid "Setyenv Management"
 msgstr ""
 
 #: assets/src/App.tsx:808
-msgid "Project Flash Workflow"
+msgid "Setyenv Workflow"
 msgstr ""
 
 #: assets/src/App.tsx:769
-msgid "Project Flash views"
+msgid "Setyenv views"
 msgstr ""
 
 #: assets/src/ProviderWizard.tsx:416

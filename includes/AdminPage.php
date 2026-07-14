@@ -69,6 +69,11 @@ final class AdminPage
         if (strpos($tag, 'type="module"') !== false) {
             return $tag;
         }
+        // This is the script_loader_tag filter rewriting the ALREADY-ENQUEUED
+        // bundle's own <script> tag to add type="module" (vite ESM entrypoint).
+        // The script is registered/enqueued via wp_enqueue_script; nothing new
+        // is injected here, so the non-enqueued-script sniff mis-fires.
+        // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- rewriting the enqueued bundle's own tag to add type="module".
         return '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>' . "\n";
     }
 
@@ -122,16 +127,16 @@ final class AdminPage
 
         $config_json = (string) wp_json_encode($this->app_config());
         $admin_url = esc_url(admin_url());
-        $title = esc_html__('WP PFAgent', 'wp-pfagent');
-        $back_label = esc_html__('Back to admin', 'wp-pfagent');
-        $missing_label = esc_html__('WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory.', 'wp-pfagent');
+        $title = __('WP PFAgent', 'wp-pfagent');
+        $back_label = __('Back to admin', 'wp-pfagent');
+        $missing_label = __('WP PFAgent assets are missing. Run npm install and npm run build inside the plugin directory.', 'wp-pfagent');
         ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo('charset'); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="same-origin">
-<title><?php echo $title; ?></title>
+<title><?php echo esc_html($title); ?></title>
 <style>
 html, body { margin: 0; padding: 0; min-height: 100vh; background: #0c1118; color: #edf4ff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 /* Override the embedded-in-admin layout rules from styles.css when running
@@ -155,11 +160,22 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
 <?php if (!is_array($entry)): ?>
 <div class="pfa-fullscreen-fallback">
   <strong><?php echo esc_html__('WP PFAgent assets are not built.', 'wp-pfagent'); ?></strong>
-  <p><?php echo $missing_label; ?></p>
-  <p><a href="<?php echo $admin_url; ?>"><?php echo $back_label; ?></a></p>
+  <p><?php echo esc_html($missing_label); ?></p>
+  <p><a href="<?php echo esc_url($admin_url); ?>"><?php echo esc_html($back_label); ?></a></p>
 </div>
 <?php endif; ?>
-<script>window.ProjectFlashAgent = <?php echo $config_json; ?>;</script>
+<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- SPA bootstrap-config inline script: the app's entry data, which cannot be a separately-loaded file. ?>
+<script>
+<?php
+        // The SPA bootstrap config. $config_json is wp_json_encode() output —
+        // a safe JS value injected into a <script> context (NOT HTML): running
+        // it through esc_html() would corrupt the JSON and break the app, so it
+        // is emitted verbatim. This inline bootstrap script IS the SPA's entry
+        // data; it cannot be a separately-enqueued file.
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() output injected into a JS context; escaping would corrupt it.
+        echo 'window.ProjectFlashAgent = ' . $config_json . ';';
+        ?>
+</script>
 <?php
         // wp_print_scripts emits wp-i18n (dependency) and our pfagent-app
         // bundle. We then explicitly emit the translations script for our
@@ -171,6 +187,10 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
         if (is_array($entry)) {
             $translations = wp_scripts()->print_translations(self::SCRIPT_HANDLE, false);
             if (is_string($translations) && $translations !== '') {
+                // $translations is WordPress' own print_translations() output
+                // (a generated <script> block of Jed locale data) — trusted
+                // core output, not user input; emitted verbatim by design.
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-generated translations script block, not user data.
                 echo "<script id='" . esc_attr(self::SCRIPT_HANDLE) . "-js-translations'>\n" . $translations . "\n</script>\n";
             }
         }
@@ -229,8 +249,14 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
             'workflowRestUrl' => (string) ($workflow_dependency['restUrl'] ?? ''),
             'nonce' => wp_create_nonce('wp_rest'),
             'version' => WP_PFAGENT_VERSION,
+            // Header title, derived from THIS plugin's own name header so the
+            // full build and the extracted standalone build each show their own
+            // name without a hard-coded string in the SPA.
+            'name' => $this->plugin_display_name(),
             'adminUrl' => esc_url_raw(admin_url()),
             'iconUrl' => esc_url_raw(WP_PFAGENT_URL . 'assets/static/icon.png'),
+            // Setyenv vendor logo shown top-right in the header (links setyenv.com).
+            'setyenvLogoUrl' => esc_url_raw(WP_PFAGENT_URL . 'assets/img/setyenv-logo.png'),
             'workflowDependency' => $workflow_dependency,
             'managementDependency' => ManagementDependency::status_payload(),
             'activeLlm' => $active_llm,
@@ -243,6 +269,21 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
                 'viewLogs' => (bool) ($workflow_capabilities['viewLogs'] ?? false),
             ],
         ];
+    }
+
+    /**
+     * This plugin's display name, read from its own plugin-header "Plugin Name".
+     * The full and standalone builds are separate plugin files, so each returns
+     * its own name — no hard-coded product string lives in the SPA.
+     */
+    private function plugin_display_name(): string
+    {
+        if (!function_exists('get_plugin_data')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        $data = get_plugin_data(WP_PFAGENT_FILE, false, false);
+        $name = trim((string) ($data['Name'] ?? ''));
+        return $name !== '' ? $name : 'WP-PFAgent';
     }
 
     /**
