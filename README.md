@@ -31,7 +31,7 @@
 It is the **open-source AI layer of the [Setyenv™](https://setyenv.com) suite**. On its own it manages your WordPress site conversationally; alongside the premium platform it designs whole data schemas and visual workflows from a one-line description — every change gated behind your confirmation.
 
 <p align="center">
-  <img src="assets/screens/pfa-home.png" alt="The WP-PFAgent console inside the WordPress dashboard" width="340" />
+  <img src="assets/screens/pfa-chat.png" alt="The WP-PFAgent chat console inside the WordPress dashboard" width="820" />
 </p>
 
 ## ⚠️ Before you install — read this
@@ -42,62 +42,20 @@ WP-PFAgent is an AI agent that reads from and acts on the data in your site. You
 
 WP-PFAgent is provided "as is", without warranty of any kind, to the maximum extent permitted by law. See the [EULA](https://setyenv.com/eula/) and the [Terms of Service](https://setyenv.com/terms-of-service/).
 
-## See it in action
+## See WP-PFAgent in action
 
-Every change is proposed and waits for your click; you bring your own model and keys; you keep fine-grained control of what the agent may touch.
-
-<p align="center">
-  <img src="assets/screens/pfa-confirmation-gate.png" alt="A confirmation dialog: the agent proposes a change and waits for your approval" width="270" />
-  <img src="assets/screens/pfa-model-select.png" alt="Choosing the LLM model for a conversation" width="270" />
-  <img src="assets/screens/pfa-providers.png" alt="Configuring AI providers and encrypted API credentials" width="270" />
-</p>
-
-<p align="center">
-  <em>Left to right: the confirmation gate before any side effect · pick your model · bring-your-own-key provider setup.</em>
-</p>
-
-| Fine-grained permission rules | Provider diagnostics & token budget |
+| | |
 |:---:|:---:|
-| <img src="assets/screens/pfa-permission-rules.png" alt="Per-tool permission rules governing what the agent may do" width="440" /> | <img src="assets/screens/pfa-diagnostics.png" alt="Provider health diagnostics and token budget" width="300" /> |
-
-## The Setyenv™ platform
-
-> **Your own ServiceNow, Zapier, and ChatGPT plugins. Inside WordPress. No SaaS in the middle.**
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-setyenv-dark.png" />
-    <img src="assets/logo-setyenv-light.png" alt="Setyenv" width="360" />
-  </picture>
-</p>
-
-Setyenv™ turns a WordPress install into a self-hosted automation platform — four pieces that fit together, with your process data and credentials never leaving your server. WP-PFAgent is one of them.
+| <img src="assets/screens/pfa-chat.png" alt="Chat with the agent in plain language" width="430" /> | <img src="assets/screens/pfa-confirmation-gate.png" alt="A confirmation dialog before any change" width="430" /> |
+| **Chat in plain language.** Ask for what you need; the agent finds the right tools and drafts the work. | **You approve every change.** Any action with a side effect opens a confirmation dialog first — the agent proposes, you decide. |
+| <img src="assets/screens/pfa-action.png" alt="An approved action landing in WordPress" width="430" /> | <img src="assets/screens/pfa-wordpress-tab.png" alt="The WordPress tab: a live view of your admin following the agent" width="430" /> |
+| **Actions land in WordPress.** Once you approve, the change is applied through WordPress's own APIs and reported back. | **The WordPress tab.** A live view of your admin that follows the agent's actions as they happen. |
 
 <p align="center">
-  <img src="assets/cross-plugin-architecture.svg" alt="Setyenv architecture: WP-PFAgent, an LLM-driven console, builds WP-PFManagement entities and WP-PFWorkflow workflows inside your WordPress install; WP-PFWorkflow publishes an HMAC-signed job queue that wp-executor polls from a machine you control." width="900" />
+  <img src="assets/screens/pfa-providers.png" alt="Configure AI providers and encrypted API credentials" height="360" />
+  <img src="assets/screens/pfa-model-select.png" alt="Choose the model for a conversation" height="360" />
 </p>
-
-| Piece | What it is | License | Links |
-|---|---|:---:|---|
-| **WP-PFManagement™** | The **low-code platform**. A ServiceNow-style layer, native to WordPress: model your processes, assets and services — entities, fields, forms, lists, row- and field-level permissions and business rules — and ship real apps (ITSM, CRM, asset/CMDB, service desk) with no code. Includes first-class Agile project management: a Kanban board and a Gantt where each task's width is its duration, with typed dependencies and milestones. | proprietary | [setyenv.com](https://setyenv.com) · [repo](https://github.com/setyenv/wp-pfmanagement) |
-| **WP-PFWorkflow™** | The **visual workflow engine**. Automations as diagrams you can open and read — triggers, conditional branches, function calls and error boundaries on a real execution canvas, with queue, retries, replay and idempotency. It reacts to your site's events natively (orders, record changes, schedules, webhooks). | proprietary | [setyenv.com](https://setyenv.com) · [repo](https://github.com/setyenv/wp-pfworkflow) |
-| **WP-PFAgent™** *(this repo)* | The **AI agent**. Describe what you want; it manages your site and — with the suite present — designs the schema or the workflow, using your own LLM provider keys. | **open source** | [repo](https://github.com/setyenv/wp-pfagent) |
-| **wp-executor** | The **host-side runner**. A single Rust binary that takes workflow events and runs them on *your own machine* — shell, files, outbound HTTP — under a capability allowlist you define. | **open source** | [repo](https://github.com/setyenv/wp-executor) |
-
-**How they fit:** you **define** data and processes in WP-PFManagement, **automate** them in WP-PFWorkflow, reach your **own machine** through wp-executor, and drive all of it in **plain language** with WP-PFAgent. WP-PFManagement and WP-PFWorkflow are proprietary and licensed per domain (the standard build ships obfuscated and is refundable; an optional annual add-on delivers the clean PHP source). **WP-PFAgent and wp-executor are open source and free.** See a worked end-to-end example at [setyenv.com/use-case](https://setyenv.com/use-case), or spin up a live sandbox at [setyenv.com/demo](https://setyenv.com/demo/).
-
-<p align="center">
-  <img src="assets/screens/pfw-editor.png" alt="WP-PFWorkflow visual editor: triggers, branches and functions on a canvas" width="440" />
-  <img src="assets/screens/pfw-dashboard.png" alt="WP-PFWorkflow workflow library" width="440" />
-</p>
-<p align="center">
-  <img src="assets/screens/pfm-entity-view.png" alt="WP-PFManagement entity list with per-entity layout" width="290" />
-  <img src="assets/screens/pfm-kanban.png" alt="WP-PFManagement Agile Kanban board" width="290" />
-  <img src="assets/screens/pfm-agile-gantt.png" alt="WP-PFManagement Agile Gantt where each task's width is its duration" width="290" />
-</p>
-<p align="center">
-  <em>The premium suite WP-PFAgent drives: the WP-PFWorkflow editor &amp; library, and WP-PFManagement's entities, Kanban board and Agile Gantt.</em>
-</p>
+<p align="center"><em>Bring your own AI: configure any provider with your own key (stored encrypted), and pick the model per conversation.</em></p>
 
 ## What WP-PFAgent does
 
@@ -136,7 +94,7 @@ Each integration appears only when the matching plugin is active, talks to that 
 With a licensed **WP-PFManagement™** and/or **WP-PFWorkflow™** on the site, WP-PFAgent becomes the conductor of the whole platform — still confirmation-gated:
 
 - **Design data models from a sentence** — describe an entity and it creates the entity, its fields and its form layout in WP-PFManagement, ready to use.
-- **Wire automations from a sentence** — describe a process and it assembles the WP-PFWorkflow graph: triggers, branches, functions and error boundaries.
+- **Wire automations from a sentence** — describe a process and it assembles the WP-PFWorkflow graph: triggers, branches, functions and error boundaries, and can activate it.
 - **Read and act across your records** — it reads and writes your WP-PFManagement data and drives WP-PFWorkflow, so "when an order is refunded, open a case and notify the owner" becomes real structure, not a prompt.
 
 ### Bring your own AI
@@ -146,6 +104,73 @@ Connect **Anthropic (Claude)**, **OpenAI**, **Google (Gemini)**, or **any OpenAI
 ### Speaks your language
 
 The interface ships localized in **14 languages**, and you can chat with the agent in any language your model understands.
+
+## The Setyenv™ platform
+
+> **Your own ServiceNow, Zapier, and ChatGPT plugins. Inside WordPress. No SaaS in the middle.**
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-setyenv-dark.png" />
+    <img src="assets/logo-setyenv-light.png" alt="Setyenv" width="360" />
+  </picture>
+</p>
+
+Setyenv™ turns a WordPress install into a self-hosted automation platform — four pieces that fit together, with your process data and credentials never leaving your server. WP-PFAgent is one of them.
+
+<p align="center">
+  <img src="assets/cross-plugin-architecture.svg" alt="Setyenv architecture: WP-PFAgent, an LLM-driven console, builds WP-PFManagement entities and WP-PFWorkflow workflows inside your WordPress install; WP-PFWorkflow publishes an HMAC-signed job queue that wp-executor polls from a machine you control." width="900" />
+</p>
+
+| Piece | What it is | License | Links |
+|---|---|:---:|---|
+| **WP-PFManagement™** | The **low-code platform**. A ServiceNow-style layer, native to WordPress: model your processes, assets and services — entities, fields, forms, lists, row- and field-level permissions and business rules — and ship real apps (ITSM, CRM, asset/CMDB, service desk) with no code. Includes first-class Agile project management: a Kanban board and a Gantt where each task's width is its duration, with typed dependencies and milestones. | proprietary | [setyenv.com](https://setyenv.com) · [repo](https://github.com/setyenv/wp-pfmanagement) |
+| **WP-PFWorkflow™** | The **visual workflow engine**. Automations as diagrams you can open and read — triggers, conditional branches, function calls and error boundaries on a real execution canvas, with queue, retries, replay and idempotency. It reacts to your site's events natively (orders, record changes, schedules, webhooks). | proprietary | [setyenv.com](https://setyenv.com) · [repo](https://github.com/setyenv/wp-pfworkflow) |
+| **WP-PFAgent™** *(this repo)* | The **AI agent**. Describe what you want; it manages your site and — with the suite present — designs the schema or the workflow, using your own LLM provider keys. | **open source** | [repo](https://github.com/setyenv/wp-pfagent) |
+| **wp-executor** | The **host-side runner**. A single Rust binary that takes workflow events and runs them on *your own machine* — shell, files, outbound HTTP — under a capability allowlist you define. | **open source** | [repo](https://github.com/setyenv/wp-executor) |
+
+**How they fit:** you **define** data and processes in WP-PFManagement, **automate** them in WP-PFWorkflow, reach your **own machine** through wp-executor, and drive all of it in **plain language** with WP-PFAgent. WP-PFManagement and WP-PFWorkflow are proprietary and licensed per domain (the standard build ships obfuscated and is refundable; an optional annual add-on delivers the clean PHP source). **WP-PFAgent and wp-executor are open source and free.** Try a live sandbox at [setyenv.com/demo](https://setyenv.com/demo/).
+
+### The visual workflow engine — WP-PFWorkflow™
+
+<p align="center">
+  <img src="assets/screens/pfw-editor.png" alt="WP-PFWorkflow visual editor: triggers, branches and functions on a canvas" width="880" />
+</p>
+<p align="center">
+  <img src="assets/screens/pfw-dashboard.png" alt="WP-PFWorkflow workflow library with execution state" width="880" />
+</p>
+
+### The low-code platform — WP-PFManagement™
+
+<p align="center">
+  <img src="assets/screens/pfm-modules.png" alt="WP-PFManagement apps and modules in the sidebar" width="430" />
+  <img src="assets/screens/pfm-tasks.png" alt="A WP-PFManagement entity list" width="430" />
+</p>
+<p align="center">
+  <img src="assets/screens/pfm-agile-gantt.png" alt="WP-PFManagement Agile Gantt where each task's width is its duration" width="880" />
+</p>
+<p align="center">
+  <img src="assets/screens/pfm-kanban.png" alt="WP-PFManagement Agile Kanban board" width="880" />
+</p>
+
+## A worked example, end to end
+
+The pieces are designed to hand off to each other. Here a WooCommerce order becomes a support case, an AI triage, a workflow, and host-side work on your own machine — all inside your WordPress, no external SaaS. Full write-up at [setyenv.com/use-case](https://setyenv.com/use-case).
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="assets/screens/usecase-1-order.png" alt="A WooCommerce order arrives" width="250" /> | <img src="assets/screens/usecase-2-support.png" alt="A support case is opened in WP-PFManagement" width="250" /> | <img src="assets/screens/usecase-3-triage.png" alt="WP-PFAgent triages the case" width="250" /> |
+| **1. Order** — a WooCommerce order arrives. | **2. Support** — a case is opened in WP-PFManagement. | **3. Triage** — WP-PFAgent reads and classifies it. |
+
+<p align="center">
+  <img src="assets/screens/usecase-4-workflow.png" alt="A WP-PFWorkflow automation orchestrates the response" width="820" />
+</p>
+<p align="center"><em>4. Workflow — WP-PFWorkflow orchestrates the response: branches, functions and error boundaries on a real canvas.</em></p>
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="assets/screens/usecase-5-agent.png" alt="The agent drafts the customer reply" width="250" /> | <img src="assets/screens/usecase-6-executor.png" alt="wp-executor generates a file on your own machine" width="250" /> | <img src="assets/screens/usecase-7-resolution.png" alt="The case is resolved" width="250" /> |
+| **5. Agent** — WP-PFAgent drafts the reply. | **6. Executor** — wp-executor produces the RMA file on your machine. | **7. Resolution** — the case closes, fully tracked. |
 
 ## Install
 
