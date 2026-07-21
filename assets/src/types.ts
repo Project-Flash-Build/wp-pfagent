@@ -101,6 +101,10 @@ export interface AppConfig {
   name?: string;
   /** Setyenv vendor logo URL, shown top-right in the header (links setyenv.com). */
   setyenvLogoUrl?: string;
+  /** Sibling products for the header suite switcher (hamburger). Admin-gated
+   *  on the PHP side: empty for non-admins, so the SPA hides the hamburger.
+   *  Each entry is {slug,label,url}; WP Admin closes the list. */
+  products?: Array<{ slug: string; label: string; url: string }>;
   workflowDependency: {
     active: boolean;
     namespace: string;

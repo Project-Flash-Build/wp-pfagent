@@ -35,6 +35,7 @@ import {
 import { agentResume, agentProgress, agentContinue } from './api';
 import type { ProviderCredentialStatus } from './types';
 import { ProviderWizard } from './ProviderWizard';
+import { ProductSwitcher } from './ProductSwitcher';
 import type {
   AgentRuntimeExecution,
   AgentRuntimeProgressNarration,
@@ -1057,14 +1058,7 @@ export function App() {
   return (
     <>
       <header className="pfa-fullscreen-bar" role="banner">
-        <a
-          className="pfa-back-to-admin"
-          href={adminUrl || '/wp-admin/'}
-          title={ __('Back to WordPress admin', 'wp-pfagent') }
-          aria-label={ __('Back to WordPress admin', 'wp-pfagent') }
-        >
-          <ChevronLeft size={16} />
-        </a>
+        <ProductSwitcher products={config.products ?? []} />
         <span className="pfa-mark" aria-hidden="true">
           {config.iconUrl ? <img src={config.iconUrl} alt="" /> : <Bot size={18} strokeWidth={2.4} />}
         </span>
@@ -2038,8 +2032,17 @@ function initialBootMessages(): ChatMessage[] {
 }
 
 function messagesFromSession(sessionMessages: ChatSessionMessage[]): ChatMessage[] {
+  // DISPLAY-ONLY filter — mirrors what the LIVE transcript shows (user +
+  // assistant turns), never what goes to the LLM. Every persisted 'system'
+  // message is the system prompt at ordinal 1 (context/priming); the live view
+  // never renders it, so a reopened session must not either — otherwise the
+  // prompt "leaks" as a giant first bubble and throws the whole transcript off.
+  // The context the Loop assembles and sends is untouched: this only decides
+  // what the frontend paints from a loaded session. Ephemeral 'system' UI
+  // notices ("New conversation.", "Session N is empty.") are added directly via
+  // message('system', …), not through here, so they still show.
   return sessionMessages
-    .filter((entry) => entry.role === 'user' || entry.role === 'assistant' || entry.role === 'system')
+    .filter((entry) => entry.role === 'user' || entry.role === 'assistant')
     .map((entry, index) => ({
       id: `${entry.at ?? Date.now()}-${index}`,
       role: entry.role,

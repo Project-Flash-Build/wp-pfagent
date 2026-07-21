@@ -244,6 +244,8 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
             'updatedAt' => (string) ($active_llm_raw['updatedAt'] ?? ''),
         ];
 
+        $is_admin_user = current_user_can('manage_options');
+
         return [
             'restUrl' => esc_url_raw(rest_url('wp-pfagent/v1/')),
             'workflowRestUrl' => (string) ($workflow_dependency['restUrl'] ?? ''),
@@ -257,6 +259,28 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
             'iconUrl' => esc_url_raw(WP_PFAGENT_URL . 'assets/static/icon.png'),
             // Setyenv vendor logo shown top-right in the header (links setyenv.com).
             'setyenvLogoUrl' => esc_url_raw(WP_PFAGENT_URL . 'assets/img/setyenv-logo.png'),
+            // Suite switcher (header hamburger). The HOME link is listed for
+            // EVERYONE (the exception) so the hamburger is always present; it
+            // points at the site's domain base. Manage/Workflow (when active) +
+            // WP Admin are ADMIN-ONLY. Labels mirror each module's admin-menu title.
+            'products' => array_values(array_filter([
+                self::suite_home_link(),
+                ($is_admin_user && ManagementDependency::is_active()) ? [
+                    'slug' => 'pfmanagement',
+                    'label' => 'PF Manage',
+                    'url' => ManagementDependency::admin_url(),
+                ] : null,
+                ($is_admin_user && WorkflowDependency::is_active()) ? [
+                    'slug' => 'pfworkflow',
+                    'label' => 'PF Workflow',
+                    'url' => WorkflowDependency::admin_url(),
+                ] : null,
+                $is_admin_user ? [
+                    'slug' => 'wpadmin',
+                    'label' => __('WP Admin', 'wp-pfagent'),
+                    'url' => admin_url(),
+                ] : null,
+            ])),
             'workflowDependency' => $workflow_dependency,
             'managementDependency' => ManagementDependency::status_payload(),
             'activeLlm' => $active_llm,
@@ -268,6 +292,30 @@ body.pfa-fullscreen .pfa-shell { min-height: calc(100vh - 40px); }
                 'runWorkflows' => (bool) ($workflow_capabilities['runWorkflows'] ?? false),
                 'viewLogs' => (bool) ($workflow_capabilities['viewLogs'] ?? false),
             ],
+        ];
+    }
+
+    /**
+     * The "home" entry for the suite switcher — visible to EVERYONE.
+     *
+     * Label = the first host label, capitalised (an IP is shown verbatim):
+     *   own.setyenv.com → "Own", setyenv.com → "Setyenv", localhost → "Localhost".
+     * TARGET = the current host's ROOT, always "/". No domain logic: a computed base
+     * dropped the port on a host:port (localhost:8095 → dead bare "localhost"); "/"
+     * works on any host:port — on localhost and everywhere.
+     *
+     * @return array{slug:string,label:string,url:string}
+     */
+    private static function suite_home_link(): array
+    {
+        $host   = (string) (wp_parse_url(home_url('/'), PHP_URL_HOST) ?: 'localhost');
+        $is_ip  = filter_var($host, FILTER_VALIDATE_IP) !== false;
+        $labels = explode('.', $host);
+
+        return [
+            'slug'  => 'home',
+            'label' => $is_ip ? $host : ucfirst($labels[0]),
+            'url'   => '/',
         ];
     }
 

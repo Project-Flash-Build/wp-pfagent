@@ -80,6 +80,103 @@ body.toplevel_page_wp-pfagent #wpfooter {
   border: 0 !important;
 }
 
+/* Suite switcher (header hamburger). Mirrors the PF Manage / PF Workflow
+   switcher, styled for the dark Agent theme. !important resets keep the WP
+   admin button chrome from bleeding into the <button>, same as
+   back-to-admin. */
+.pfa-products {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.pfa-products-btn {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  color: var(--pfa-muted) !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  line-height: 1 !important;
+  transition: background 0.12s, color 0.12s;
+}
+.pfa-products-btn:hover,
+.pfa-products-btn:focus,
+.pfa-products-btn:focus-visible,
+.pfa-products-btn.is-open {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--pfa-text) !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+.pfa-products-btn .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+.pfa-products-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 224px;
+  z-index: 120;
+  padding: 6px;
+  background: var(--pfa-panel);
+  border: 1px solid var(--pfa-border);
+  border-radius: 10px;
+  box-shadow: var(--pfa-shadow);
+}
+.pfa-products-menu-header {
+  color: var(--pfa-dim);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 10px 4px;
+}
+.pfa-products-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pfa-muted);
+  text-decoration: none;
+}
+.pfa-products-item:hover,
+.pfa-products-item:focus {
+  background: var(--pfa-panel-2);
+  color: var(--pfa-text);
+  box-shadow: none;
+}
+.pfa-products-item .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--pfa-dim);
+}
+.pfa-products-item:hover .dashicons {
+  color: var(--pfa-accent);
+}
+.pfa-products-divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--pfa-border);
+}
+
 /* The PFA mark: bitmap PNG from project-flash-portal/logos/agent.png when
    exposed via config.iconUrl, otherwise the lucide Bot fallback. */
 .pfa-mark {

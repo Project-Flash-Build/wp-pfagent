@@ -89,6 +89,18 @@ final class Compiler
     /** @var array<string, array{nodeId: string, output: string}> */
     private array $constAliases = [];
 
+    /**
+     * Handle-graph model: maps each `const <handle>` name to the id of the
+     * node it created, and stores the info needed to wire its data inputs in
+     * a second pass (so declaration order is irrelevant).
+     *
+     * @var array<string, string>
+     */
+    private array $handleNodeId = [];
+
+    /** @var array<string, array<string, mixed>> */
+    private array $handleInfo = [];
+
     /** @var array<string, string> */
     private array $flowVarIds = [];   // name → variable id
 
@@ -145,48 +157,65 @@ final class Compiler
     private function compileProgram(array $program): array
     {
         $decls = (array) ($program['declarations'] ?? []);
-        $flow = null;
+
+        // HANDLE-GRAPH model. The program is a flat list of top-level items:
+        // `name` / `status` directives, node-handle declarations
+        // (`const h = nodes.<node>({...});`) and wiring statements
+        // (`h.exeOut([...]);`). Order is IRRELEVANT — the graph is defined by
+        // the wiring, not the sequence — so we make THREE passes:
+        //   (1) create every node, so all handles are known;
+        //   (2) wire data inputs (they reference other handles' `.out` pins);
+        //   (3) wire exec edges from the wiring statements.
+        $handleDecls = [];
+        $wiringStmts = [];
         foreach ($decls as $decl) {
             switch ((string) ($decl['type'] ?? '')) {
-                case 'TriggerDecl':
-                    $this->compileTriggerDecl($decl);
-                    break;
                 case 'NameDecl':
                     $this->workflowName = (string) $decl['value'];
                     break;
                 case 'StatusDecl':
                     $this->workflowStatus = (string) $decl['value'];
                     break;
-                case 'FlowDecl':
-                    if ($flow !== null) {
-                        throw CompileError::compile('multiple_flows', (int) $decl['line'], (int) $decl['column'], 'Only one `flow async function workflow(event) {...}` declaration is allowed.');
-                    }
-                    $flow = $decl;
+                case 'VarDecl':
+                    $handleDecls[] = $decl;
+                    break;
+                case 'ExprStmt':
+                    $wiringStmts[] = $decl;
                     break;
                 default:
-                    throw CompileError::compile('unknown_declaration', (int) ($decl['line'] ?? 0), (int) ($decl['column'] ?? 0), sprintf('Unknown top-level declaration "%s".', (string) ($decl['type'] ?? '')));
+                    throw CompileError::compile('unexpected_top_level', (int) ($decl['line'] ?? 0), (int) ($decl['column'] ?? 0), sprintf('Unexpected top-level item "%s". Only `name` / `status` directives, `const <handle> = nodes.<node>({...});` declarations and exec wiring statements are allowed.', (string) ($decl['type'] ?? '')));
             }
         }
 
-        if ($this->triggerKey === null) {
-            throw CompileError::compile('missing_trigger', 0, 0, 'A workflow must declare exactly one trigger.');
+        // Pass 1 — create a node shell per handle (id/key/type/label/data).
+        foreach ($handleDecls as $decl) {
+            $this->createHandleNode($decl);
         }
-        if ($flow === null) {
-            throw CompileError::compile('missing_flow', 0, 0, 'A workflow must declare one `flow async function workflow(event) {...}`.');
+        // Pass 2 — wire data inputs now that every handle is known.
+        foreach ($this->handleInfo as $info) {
+            $this->wireHandleInputs($info);
+        }
+        // Pass 3 — wire exec edges.
+        foreach ($wiringStmts as $stmt) {
+            $this->compileWiringStmt($stmt);
         }
 
-        $this->eventAlias = (string) $flow['paramName'];
+        // Exactly one trigger node is a GRAPH invariant.
+        $triggerIds = [];
+        foreach ($this->nodes as $n) {
+            if (($n['type'] ?? '') === 'trigger') {
+                $triggerIds[] = (string) $n['id'];
+            }
+        }
+        if (count($triggerIds) === 0) {
+            throw CompileError::compile('missing_trigger', 0, 0, 'A workflow must contain exactly one trigger node.', 'Declare it as a handle: const event = nodes.<X>$Trigger();');
+        }
+        if (count($triggerIds) > 1) {
+            throw CompileError::compile('multiple_triggers', 0, 0, sprintf('A workflow must contain exactly one trigger node; found %d.', count($triggerIds)), 'A workflow is driven by a single event channel. Split into separate workflows or keep one trigger.');
+        }
 
-        // The trigger node is the exec source for the flow body.
-        $this->execTail = $this->nodes[0]['id'] ?? null;
-        $this->execTailOutput = 'next';
-
-        $this->compileStatements((array) $flow['body']);
-
-        // Auto-layout any nodes without explicit positions so the preview
-        // pane in the chat UI does not stack them all at (0,0). Strategy:
-        // BFS from triggers along exec edges, x = depth * col_step, y =
-        // slot_index * row_step.
+        // Auto-layout any nodes without explicit positions (BFS from the
+        // trigger along exec edges).
         $this->autoLayoutPositions();
 
         return [
@@ -203,6 +232,237 @@ final class Compiler
                 'connections' => $this->connections,
             ],
         ];
+    }
+
+    /**
+     * Pass 1: create the node shell for `const <handle> = nodes.<node>({...});`.
+     * No data inputs are wired yet — they may reference handles declared later.
+     *
+     * @param array<string, mixed> $decl
+     */
+    private function createHandleNode(array $decl): void
+    {
+        $name = (string) $decl['name'];
+        $line = (int) ($decl['line'] ?? 0);
+        $col = (int) ($decl['column'] ?? 0);
+        if (isset($this->handleNodeId[$name])) {
+            throw CompileError::compile('duplicate_handle', $line, $col, sprintf('Handle "%s" is declared twice; each `const` name must be unique.', $name));
+        }
+        $init = $decl['init'] ?? null;
+        // Tolerate (and unwrap) a stray `await` in front of the factory call.
+        if (is_array($init) && ($init['type'] ?? '') === 'AwaitExpr') {
+            $init = $init['argument'] ?? null;
+        }
+        if (!is_array($init) || ($init['type'] ?? '') !== 'CallExpr') {
+            throw CompileError::compile('handle_not_node_call', $line, $col, sprintf('`const %s` must be a node factory call: const %s = nodes.<node>({ ... });', $name, $name));
+        }
+        $callExpr = $init;
+        $verbKey = $this->resolveVerbKey($callExpr['callee'], $line, $col);
+        $verb = VerbCatalog::find($verbKey);
+        if ($verb === null) {
+            throw CompileError::compile('unknown_verb', $line, $col, sprintf('Node "%s" is not in the catalog.', $verbKey), 'See /lib/nodes.d.ts and /lib/manage.d.ts for the available nodes.');
+        }
+        $args = (array) ($callExpr['arguments'] ?? []);
+        if (count($args) > 1) {
+            throw CompileError::compile('too_many_args', $line, $col, sprintf('Node "%s" takes a single named-object argument.', $verbKey));
+        }
+        $arg_obj = $args === [] ? ['type' => 'ObjectExpr', 'properties' => []] : $args[0];
+        if (($arg_obj['type'] ?? '') !== 'ObjectExpr') {
+            throw CompileError::compile('verb_arg_not_object', $line, $col, sprintf('Node "%s" expects a named-object argument like { key: value, ... }.', $verbKey));
+        }
+
+        $node_id = $this->makeId($this->shortFor($verbKey));
+        $data = [];
+        // Structural identifiers the compiler injects from a typed virtual
+        // (entity slug / variableName) — never authored by the LLM.
+        if ($this->pendingEntityInjection !== null) {
+            $data['entity'] = $this->pendingEntityInjection;
+            $this->pendingEntityInjection = null;
+        }
+        if ($this->pendingEntityFilterInjection !== null) {
+            // Entity-scoped trigger (Entity$Created$Trigger etc.): the runtime
+            // dispatcher skips the workflow when the firing event's entity
+            // does not match this filter.
+            $data['entityFilter'] = $this->pendingEntityFilterInjection;
+            $this->pendingEntityFilterInjection = null;
+        }
+        if ($this->pendingVariableInjection !== null) {
+            $data['variableName'] = $this->pendingVariableInjection;
+            $data['variableId'] = $this->pendingVariableInjection;
+            $this->pendingVariableInjection = null;
+        }
+        $node = [
+            'id' => $node_id,
+            'key' => $verbKey,
+            'type' => (string) $verb['kind'],
+            'label' => (string) ($verb['label'] ?? $verbKey),
+            'data' => $data,
+        ];
+        $this->nodes[] = $node;
+        $nodeIndex = count($this->nodes) - 1;
+
+        if ((string) $verb['kind'] === 'trigger') {
+            $this->triggerKey = $verbKey;
+            $this->triggerNodeId = $node_id;
+        }
+
+        $this->handleNodeId[$name] = $node_id;
+        $this->handleInfo[$name] = [
+            'name' => $name,
+            'nodeId' => $node_id,
+            'nodeIndex' => $nodeIndex,
+            'verb' => $verb,
+            'argObj' => $arg_obj,
+            'line' => $line,
+            'column' => $col,
+        ];
+    }
+
+    /**
+     * Pass 2: wire the data inputs of one handle. Every handle exists now, so
+     * `otherHandle.out.<pin>` references resolve to real node outputs.
+     *
+     * @param array<string, mixed> $info
+     */
+    private function wireHandleInputs(array $info): void
+    {
+        $verb = (array) $info['verb'];
+        $node_id = (string) $info['nodeId'];
+        $arg_obj = (array) $info['argObj'];
+        $line = (int) $info['line'];
+        $col = (int) $info['column'];
+
+        // Reference into the live node so config writes persist.
+        $node = &$this->nodes[$info['nodeIndex']];
+
+        $wired = [];
+        foreach ((array) ($arg_obj['properties'] ?? []) as $prop) {
+            $key = (string) ($prop['key'] ?? '');
+            $argKind = VerbCatalog::argKind($verb, $key);
+            if ($argKind === null) {
+                $allowed = $this->describeAllowedArgs($verb);
+                throw CompileError::compile('unknown_arg', (int) ($prop['line'] ?? $line), (int) ($prop['column'] ?? $col), sprintf('Node "%s" has no arg named "%s". %s', (string) $verb['key'], $key, $allowed));
+            }
+            $desc = $this->compileExpression($prop['value']);
+            $this->wireValueIntoNode($desc, $node, $node_id, $key);
+            $wired[$key] = true;
+        }
+        unset($node);
+
+        // Auto-seed operator-tunable pins the LLM omitted (EQL / cron /
+        // templates / thresholds) → a workflow variable + get_variable wire.
+        $this->seedAutoVariablesForVerb($verb, $node_id, $wired);
+    }
+
+    /**
+     * Pass 3: turn one wiring statement (`<handle>.exeOut([...]);` and the
+     * exeOutYes / exeOutNo / exeIn variants) into exec edges.
+     *
+     * @param array<string, mixed> $stmt
+     */
+    private function compileWiringStmt(array $stmt): void
+    {
+        $expr = $stmt['expression'] ?? null;
+        $line = (int) ($stmt['line'] ?? 0);
+        $col = (int) ($stmt['column'] ?? 0);
+        if (!is_array($expr) || ($expr['type'] ?? '') !== 'CallExpr') {
+            throw CompileError::compile('invalid_wiring', $line, $col, 'A bare top-level statement must be an exec wiring call like `handle.exeOut([target, ...]);`.');
+        }
+        $callee = $expr['callee'] ?? null;
+        if (!is_array($callee) || ($callee['type'] ?? '') !== 'MemberExpr' || !empty($callee['computed'])
+            || !is_array($callee['object'] ?? null) || ($callee['object']['type'] ?? '') !== 'Identifier') {
+            throw CompileError::compile('invalid_wiring', $line, $col, 'Exec wiring must be `<handle>.exeOut([...])` / `.exeOutYes([...])` / `.exeOutNo([...])` / `.exeIn([...])`.');
+        }
+        $srcName = (string) $callee['object']['name'];
+        $method = (string) $callee['property'];
+        if (!isset($this->handleNodeId[$srcName])) {
+            throw CompileError::compile('unknown_handle', $line, $col, sprintf('Unknown handle "%s". Declare it first: const %s = nodes.<node>({ ... });', $srcName, $srcName));
+        }
+        $srcNodeId = $this->handleNodeId[$srcName];
+
+        $args = (array) ($expr['arguments'] ?? []);
+        if (count($args) !== 1 || ($args[0]['type'] ?? '') !== 'ArrayExpr') {
+            throw CompileError::compile('wiring_arg', $line, $col, sprintf('%s(...) takes a single array of handles, e.g. %s.%s([targetA, targetB]).', $method, $srcName, $method));
+        }
+        $targetIds = [];
+        foreach ((array) ($args[0]['elements'] ?? []) as $el) {
+            if (!is_array($el) || ($el['type'] ?? '') !== 'Identifier') {
+                throw CompileError::compile('wiring_element', $line, $col, 'Exec wiring arrays contain node handles only, e.g. [stepA, stepB].');
+            }
+            $tName = (string) $el['name'];
+            if (!isset($this->handleNodeId[$tName])) {
+                throw CompileError::compile('unknown_handle', $line, $col, sprintf('Unknown handle "%s" in the wiring array.', $tName));
+            }
+            $targetIds[] = $this->handleNodeId[$tName];
+        }
+
+        // exeIn is the reverse form: each listed handle flows INTO this one
+        // through its own `next` output (n-to-1 merge sugar).
+        if ($method === 'exeIn') {
+            $this->assertHasExecIn($srcName, $srcNodeId, $line, $col);
+            foreach ($targetIds as $tId) {
+                $this->addExec($tId, 'next', $srcNodeId, 'in');
+            }
+            return;
+        }
+
+        // Exec output name → graph socket. `exeOut` is the single `next`
+        // output; `exeOutYes`/`exeOutNo` are the condition branches; and any
+        // node-specific branch (a loop's `item`/`complete`, a try's
+        // `try`/`catch`, etc.) is `exeOut<Branch>` → the lowercased socket.
+        if (strncmp($method, 'exeOut', 6) !== 0) {
+            throw CompileError::compile('unknown_exec_output', $line, $col, sprintf('Unknown exec output "%s" on handle "%s". Valid: exeOut, exeOutYes, exeOutNo, exeIn (and node-specific exeOut<Branch>).', $method, $srcName));
+        }
+        $suffix = substr($method, 6);
+        $srcOutput = $suffix === '' ? 'next' : lcfirst($suffix);
+        $this->assertExecOutput($srcName, $srcNodeId, $method, $line, $col);
+        foreach ($targetIds as $tId) {
+            $this->addExec($srcNodeId, $srcOutput, $tId, 'in');
+        }
+    }
+
+    private function nodeKindFor(string $nodeId): string
+    {
+        foreach ($this->nodes as $n) {
+            if (($n['id'] ?? '') === $nodeId) {
+                return (string) ($n['type'] ?? '');
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Validate an exec OUTPUT wiring against the source node's kind, matching
+     * exactly what the editor renders (previewPortsForCatalogItem): pure
+     * (transform/note) → none; condition → yes/no; everything else → next.
+     */
+    private function assertExecOutput(string $name, string $nodeId, string $method, int $line, int $col): void
+    {
+        $kind = $this->nodeKindFor($nodeId);
+        if ($kind === 'transform' || $kind === 'note') {
+            throw CompileError::compile('pure_node_no_exec', $line, $col, sprintf('Handle "%s" is a pure node (kind %s) with no exec pins — it runs when its `.out` is consumed. Do not wire its exec; just read %s.out.<pin>.', $name, $kind, $name));
+        }
+        if ($kind === 'trigger' && $method !== 'exeOut') {
+            throw CompileError::compile('wrong_exec_output', $line, $col, sprintf('Handle "%s" is a trigger — it has a single exec output; wire it with %s.exeOut([...]).', $name, $name));
+        }
+        // Everything else exposes node-specific exec branches: a plain
+        // condition has exeOutYes/exeOutNo; a try_catch has exeOutTry/
+        // exeOutCatch; an approval has exeOutApprove/exeOutReject/exeOutPending;
+        // a loop has exeOutItem/exeOutComplete; an action has exeOut plus
+        // exeOutError/exeOutAttempt. The graph (and the node's own contract)
+        // is the authority on which exist, so accept any exeOut<Branch> here —
+        // the typings steer the LLM to the right ones per node.
+    }
+
+    private function assertHasExecIn(string $name, string $nodeId, int $line, int $col): void
+    {
+        $kind = $this->nodeKindFor($nodeId);
+        if ($kind === 'trigger') {
+            throw CompileError::compile('trigger_no_exec_in', $line, $col, sprintf('Handle "%s" is a trigger — it has no exec input. Wire FROM it with %s.exeOut([...]).', $name, $name));
+        }
+        if ($kind === 'transform' || $kind === 'note') {
+            throw CompileError::compile('pure_node_no_exec', $line, $col, sprintf('Handle "%s" is a pure node — it has no exec pins.', $name));
+        }
     }
 
     /**
@@ -1464,6 +1724,40 @@ final class Compiler
     private function resolveVerbKey(array $callee, int $line, int $column): string
     {
         $this->pendingEntityInjection = null;
+
+        // HANDLE-GRAPH model: `nodes.<Method>(...)`. The method name IS the
+        // typed virtual identifier (Category$verb, Entity$Operation,
+        // Name$Variable$Get, ...) — resolve it through the merged resolver
+        // exactly like the legacy bare-identifier form.
+        if (($callee['type'] ?? '') === 'MemberExpr'
+            && empty($callee['computed'])
+            && is_array($callee['object'] ?? null)
+            && ($callee['object']['type'] ?? '') === 'Identifier'
+            && (string) ($callee['object']['name'] ?? '') === 'nodes'
+        ) {
+            $name = (string) $callee['property'];
+            $resolver = $this->resolver();
+            if (isset($resolver[$name])) {
+                $entry = $resolver[$name];
+                if (isset($entry['entity']) && $entry['entity'] !== '') {
+                    $this->pendingEntityInjection = (string) $entry['entity'];
+                }
+                if (isset($entry['entityFilter']) && $entry['entityFilter'] !== '') {
+                    $this->pendingEntityFilterInjection = (string) $entry['entityFilter'];
+                }
+                if (isset($entry['variableName']) && $entry['variableName'] !== '') {
+                    $this->pendingVariableInjection = (string) $entry['variableName'];
+                }
+                return (string) $entry['verb'];
+            }
+            throw CompileError::compile(
+                'unknown_virtual_node',
+                $line,
+                $column,
+                sprintf('nodes.%s does not resolve to a node. Use the exact method names declared in /lib/nodes.d.ts and /lib/manage.d.ts (Category$verb / Entity$Operation).', $name)
+            );
+        }
+
         if ($callee['type'] === 'Identifier') {
             $name = (string) $callee['name'];
             $resolver = $this->resolver();
@@ -1525,6 +1819,13 @@ final class Compiler
      * appears as a literal in the LLM source.
      */
     private ?string $pendingVariableInjection = null;
+
+    /**
+     * Set by resolveVerbKey when the resolved identifier was an entity-scoped
+     * TRIGGER (`Incidentes$Created$Trigger` etc.) so the caller can inline the
+     * entityFilter onto the trigger node's data.
+     */
+    private ?string $pendingEntityFilterInjection = null;
 
     /**
      * @param array<string, mixed> $verb
@@ -1623,7 +1924,12 @@ final class Compiler
         if ($name === 'execution') {
             return ['kind' => 'token', 'token' => 'execution'];
         }
-        throw CompileError::compile('unknown_identifier', $line, $column, sprintf('Unknown name "%s". Declare it with `let %s = ...;` or read it from the event/const alias.', $name, $name));
+        // A bare handle used where a value is expected. Data flows only
+        // through a node's typed OUTPUT pins — point the LLM at `.out.<pin>`.
+        if (isset($this->handleNodeId[$name])) {
+            throw CompileError::compile('handle_needs_out_pin', $line, $column, sprintf('"%s" is a node handle, not a value. Read one of its outputs: %s.out.<pin>.', $name, $name));
+        }
+        throw CompileError::compile('unknown_identifier', $line, $column, sprintf('Unknown name "%s". Reference a node output (handle.out.<pin>) or read a workflow variable with nodes.<Name>$Variable$Get().', $name));
     }
 
     /**
@@ -1636,6 +1942,22 @@ final class Compiler
             throw CompileError::compile('computed_member', (int) ($expr['line'] ?? 0), (int) ($expr['column'] ?? 0), 'Computed member access `[...]` is not in v1.0.');
         }
         $property = (string) $expr['property'];
+
+        // HANDLE-GRAPH model: `<handle>.out.<pin>` → the pin output of the
+        // node the handle created. This is the ONLY way data flows between
+        // nodes. `event.out.story`, `query1.out.count`, etc.
+        $obj = $expr['object'] ?? null;
+        if (is_array($obj)
+            && ($obj['type'] ?? '') === 'MemberExpr'
+            && empty($obj['computed'])
+            && (string) ($obj['property'] ?? '') === 'out'
+            && is_array($obj['object'] ?? null)
+            && ($obj['object']['type'] ?? '') === 'Identifier'
+            && isset($this->handleNodeId[(string) ($obj['object']['name'] ?? '')])
+        ) {
+            $handleName = (string) $obj['object']['name'];
+            return ['kind' => 'token', 'token' => 'node.' . $this->handleNodeId[$handleName] . '.' . $property];
+        }
 
         // const aliases pre-bind to a SPECIFIC output of the aliased
         // node (the verb's primary output, set in compileVarDecl). When
@@ -1987,7 +2309,7 @@ final class Compiler
                 'literal_on_input_pin',
                 (int) ($valueDescriptor['line'] ?? 0),
                 (int) ($valueDescriptor['column'] ?? 0),
-                sprintf('Arg "%s" on verb "%s" is a literal, but input pins are wires: they take a variable or an upstream output, never a literal constant. If this pin is operator-tunable (filters, cron, templates, thresholds), OMIT it — it auto-seeds a variable. Otherwise read a variable with its getter (see /lib/variables.d.ts): const x = await Name$Variable$Get(); then pass x. Do NOT use `let` (rejected) or `variables.x.get()` (removed). See the AUTHORING RULES at the top of /lib/nodes.d.ts.', $slotKey, $verbKey)
+                sprintf('Arg "%s" on node "%s" is a literal, but input pins are wires: they take an upstream node output (handle.out.<pin>) or a workflow variable, never a literal constant. If this pin is operator-tunable (filters, cron, templates, thresholds), OMIT it — it auto-seeds a variable. Otherwise read a variable with its pure getter node: const v = nodes.Name$Variable$Get(); then pass v.out.valueToGet. See the AUTHORING MODEL at the top of /lib/nodes.d.ts.', $slotKey, $verbKey)
             );
         }
         if ($argKind === 'input' && $kind === 'template') {
@@ -1995,7 +2317,7 @@ final class Compiler
                 'template_on_input_pin',
                 (int) ($valueDescriptor['line'] ?? 0),
                 (int) ($valueDescriptor['column'] ?? 0),
-                sprintf('Arg "%s" on verb "%s" is a template literal (still literal text), which cannot land on an input pin. OMIT the pin to auto-seed a tunable variable, or build the text upstream (a text-render node, or a variable read via Name$Variable$Get()) and wire that. See the AUTHORING RULES at the top of /lib/nodes.d.ts.', $slotKey, $verbKey)
+                sprintf('Arg "%s" on node "%s" is a template literal (still literal text), which cannot land on an input pin. OMIT the pin to auto-seed a tunable variable, or build the text upstream (a text-render node, or a variable read via nodes.Name$Variable$Get()) and wire that node output. See the AUTHORING MODEL at the top of /lib/nodes.d.ts.', $slotKey, $verbKey)
             );
         }
 

@@ -64,6 +64,23 @@ final class Decompiler
     private int $aliasCounter = 0;
 
     /**
+     * HANDLE-GRAPH model: nodeId → the `const` handle name used in the
+     * emitted source (the single trigger is always `event`).
+     *
+     * @var array<string, string>
+     */
+    private array $handleName = [];
+
+    /**
+     * Reverse of the virtual resolver: a lookup key derived from a node's
+     * (verb, entity/entityFilter) → the typed identifier the LLM writes
+     * (`Email$send_email`, `Incidentes$Created$Trigger`, ...).
+     *
+     * @var array<string, string>
+     */
+    private array $reverseResolver = [];
+
+    /**
      * Decompile a workflow envelope into `.pfflow` source.
      *
      * F12 disambiguation: the input is the NORMALIZED workflow envelope
@@ -161,34 +178,318 @@ final class Decompiler
         if ($this->triggerKey === null) {
             return $out . "// (workflow has no trigger; nothing to decompile)\n";
         }
-        // Render the trigger declaration. F11 Path B: prefer the typed-
-        // identifier form (e.g. `Incidentes$Created$Trigger`) when the
-        // virtualResolver knows a mapping; fall back to the legacy
-        // string form (`'entity.verb'`) when the verb has no typed
-        // identifier (rare — only happens for verbs added outside the
-        // resolver's filter contributors). The Parser accepts both
-        // shapes (Path A) so the round-trip is safe either way.
-        $trigger_node = $this->byId[(string) $this->triggerNodeId] ?? null;
-        $trigger_data = is_array($trigger_node['data'] ?? null) ? $trigger_node['data'] : [];
-        $typed = self::resolveTypedTriggerKey((string) $this->triggerKey);
-        $rendered_trigger = $typed !== null ? $typed : $this->quote((string) $this->triggerKey);
-        if ($trigger_data !== []) {
-            $out .= sprintf("trigger %s as %s with %s;\n", $rendered_trigger, $this->eventAlias, $this->literal($trigger_data));
-        } else {
-            $out .= sprintf("trigger %s as %s;\n", $rendered_trigger, $this->eventAlias);
-        }
-        if ($this->workflowName !== '' && $this->workflowName !== 'Untitled workflow') {
-            $out .= sprintf("name %s;\n", $this->quote($this->workflowName));
-        }
-        $out .= sprintf("status %s;\n\n", $this->quote((string) $this->workflowStatus));
 
-        // Build the flow body.
-        $out .= sprintf("flow async function workflow(%s) {\n", $this->eventAlias);
-        $body = $this->emitVariableDeclarations(1);
-        $body .= $this->emitFromExec($this->triggerNodeId, 1);
-        $out .= $body;
-        $out .= "}\n";
+        // HANDLE-GRAPH emission. Every node becomes `const <handle> =
+        // nodes.<Method>({ ... });` and every exec edge becomes a wiring
+        // statement. INTEGRAL: no node is ever dropped — pure/data nodes off
+        // the exec chain (a query feeding a later input) appear like any
+        // other, which is exactly what the old exec-walk decompiler lost.
+        $this->buildReverseResolver();
+        $this->assignHandles();
+
+        $out .= sprintf("name %s;\n", $this->quote($this->workflowName !== '' ? $this->workflowName : 'Untitled workflow'));
+        $out .= sprintf("status %s;\n\n", $this->quote((string) ($this->workflowStatus !== '' ? $this->workflowStatus : 'draft')));
+
+        // Variable inventory as a comment so the LLM sees which names exist
+        // (they are operator-owned; the get/set nodes reference them).
+        $out .= $this->emitVariableComments();
+
+        // One declaration per node, in the graph's node order (stable).
+        foreach ($this->nodes as $node) {
+            $out .= $this->emitHandleDecl($node);
+        }
+
+        // Exec wiring, grouped per source output.
+        $wiring = $this->emitWiring();
+        if ($wiring !== '') {
+            $out .= "\n" . $wiring;
+        }
+
         return $out;
+    }
+
+    /**
+     * Assign a stable, readable handle name to every node. The single
+     * trigger is always `event`; the rest derive from their verb, deduped
+     * with a numeric suffix.
+     */
+    private function assignHandles(): void
+    {
+        $used = [];
+        if ($this->triggerNodeId !== null) {
+            $this->handleName[$this->triggerNodeId] = 'event';
+            $used['event'] = true;
+        }
+        foreach ($this->nodes as $node) {
+            $id = (string) $node['id'];
+            if (isset($this->handleName[$id])) {
+                continue;
+            }
+            $base = $this->handleBaseFor($node);
+            $name = $base;
+            $i = 1;
+            while (isset($used[$name]) || $name === 'nodes' || $name === 'event') {
+                $i++;
+                $name = $base . $i;
+            }
+            $used[$name] = true;
+            $this->handleName[$id] = $name;
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $node
+     */
+    private function handleBaseFor(array $node): string
+    {
+        $key = (string) ($node['key'] ?? 'node');
+        $parts = explode('.', $key);
+        $verb = end($parts) ?: 'node';
+        $camel = lcfirst(str_replace(['_', '-'], '', ucwords($verb, '_-')));
+        return $camel !== '' ? $camel : 'node';
+    }
+
+    /**
+     * Build the reverse resolver: for every typed identifier the compiler
+     * knows, index it by the (verb, entity/entityFilter) it produces so a
+     * node can be turned back into the exact identifier the LLM writes.
+     */
+    private function buildReverseResolver(): void
+    {
+        $resolver = Compiler::virtualResolver(0);
+        foreach ($resolver as $ident => $entry) {
+            if (!is_string($ident) || !is_array($entry)) {
+                continue;
+            }
+            // Variable getters/setters are reconstructed directly from the
+            // node's variableName, not via this table.
+            if (isset($entry['variableName'])) {
+                continue;
+            }
+            $verb = (string) ($entry['verb'] ?? '');
+            if ($verb === '') {
+                continue;
+            }
+            $scope = (string) ($entry['entity'] ?? $entry['entityFilter'] ?? '');
+            $lookup = $verb . '|' . $scope;
+            // First identifier wins (deterministic — resolver order is stable).
+            if (!isset($this->reverseResolver[$lookup])) {
+                $this->reverseResolver[$lookup] = $ident;
+            }
+        }
+    }
+
+    /**
+     * Turn a node back into the typed `nodes.<Method>` identifier.
+     *
+     * @param array<string, mixed> $node
+     */
+    private function reverseIdentifier(array $node): string
+    {
+        $key = (string) ($node['key'] ?? '');
+        $data = is_array($node['data'] ?? null) ? $node['data'] : [];
+
+        // Variable get/set → <Name>$Variable$Get / $Set from variableName.
+        if ($key === 'workflow.get_variable' || $key === 'workflow.set_variable') {
+            $varName = trim((string) ($data['variableName'] ?? $data['variableId'] ?? ''));
+            $ident = $this->variableIdent($varName !== '' ? $varName : $this->variableName((string) ($data['variableId'] ?? '')));
+            $op = $key === 'workflow.get_variable' ? 'Get' : 'Set';
+            return $ident . '$Variable$' . $op;
+        }
+
+        // Entity/plain node via the reverse resolver, keyed on (verb, scope).
+        $scope = (string) ($data['entity'] ?? $data['entityFilter'] ?? '');
+        $lookup = $key . '|' . $scope;
+        if (isset($this->reverseResolver[$lookup])) {
+            return $this->reverseResolver[$lookup];
+        }
+        // Same verb, any scope (covers plain nodes whose resolver entry has
+        // no scope while the node carries none either).
+        if (isset($this->reverseResolver[$key . '|'])) {
+            return $this->reverseResolver[$key . '|'];
+        }
+
+        // Fallback: reconstruct the PFW scheme from the dotted key + kind.
+        $dot = strpos($key, '.');
+        if ($dot === false) {
+            return $key;
+        }
+        $cat = substr($key, 0, $dot);
+        $verb = substr($key, $dot + 1);
+        $ident = ucfirst($cat) . '$' . $verb;
+        if ((string) ($node['type'] ?? '') === 'trigger') {
+            $ident .= '$Trigger';
+        }
+        return $ident;
+    }
+
+    /**
+     * Slugify a variable name to its TS identifier, matching
+     * VariablesTypingsBuilder::tsIdent (clean → ucfirst).
+     */
+    private function variableIdent(string $name): string
+    {
+        $clean = preg_replace('/[^A-Za-z0-9_]/', '_', trim($name)) ?? '';
+        if ($clean === '') {
+            return 'Variable';
+        }
+        if (preg_match('/^[0-9]/', $clean)) {
+            $clean = '_' . $clean;
+        }
+        return ucfirst($clean);
+    }
+
+    private function emitVariableComments(): string
+    {
+        if ($this->variables === []) {
+            return '';
+        }
+        $out = '';
+        foreach ($this->variables as $var) {
+            $name = (string) ($var['name'] ?? $var['id'] ?? '');
+            if ($name === '') {
+                continue;
+            }
+            $default = $var['default'] ?? ($var['defaultValue'] ?? null);
+            $out .= sprintf("// variable %s = %s\n", $this->variableIdent($name), $this->literal($default));
+        }
+        return $out . "\n";
+    }
+
+    /**
+     * `const <handle> = nodes.<Method>({ <args> });`
+     *
+     * @param array<string, mixed> $node
+     */
+    private function emitHandleDecl(array $node): string
+    {
+        $id = (string) $node['id'];
+        $handle = $this->handleName[$id] ?? $id;
+        $method = $this->reverseIdentifier($node);
+        $args = $this->collectArgs($node);
+        if ($args === '') {
+            return sprintf("const %s = nodes.%s();\n", $handle, $method);
+        }
+        return sprintf("const %s = nodes.%s({ %s });\n", $handle, $method, $args);
+    }
+
+    /**
+     * Build the `{ key: value, ... }` argument list for a node: data inputs
+     * become `pin: <srcHandle>.out.<srcOut>`; config literals become
+     * `key: <literal>`. Compiler-injected structural keys (entity /
+     * entityFilter / variableName / variableId) are omitted — they are
+     * encoded in the method identifier, not authored.
+     *
+     * @param array<string, mixed> $node
+     */
+    private function collectArgs(array $node): string
+    {
+        $id = (string) $node['id'];
+        $key = (string) ($node['key'] ?? '');
+        $verb = VerbCatalog::find($key);
+        $data = is_array($node['data'] ?? null) ? $node['data'] : [];
+        $structural = ['entity' => true, 'entityFilter' => true, 'variableName' => true, 'variableId' => true];
+        $parts = [];
+
+        $inputs = $verb !== null && is_array($verb['inputs'] ?? null) ? $verb['inputs'] : [];
+        foreach ($inputs as $pin) {
+            $k = (string) ($pin['key'] ?? '');
+            if ($k === '') {
+                continue;
+            }
+            $conn = null;
+            foreach ($this->dataByTarget[$id] ?? [] as $c) {
+                if ((string) ($c['targetInput'] ?? '') === $k) {
+                    $conn = $c;
+                    break;
+                }
+            }
+            if ($conn !== null) {
+                $parts[] = sprintf('%s: %s', $this->safeKey($k), $this->handleRef((string) $conn['source'], (string) ($conn['sourceOutput'] ?? '')));
+                continue;
+            }
+            if (array_key_exists($k, $data) && !isset($structural[$k])) {
+                $parts[] = sprintf('%s: %s', $this->safeKey($k), $this->literal($data[$k]));
+            }
+        }
+
+        $config = $verb !== null && is_array($verb['config'] ?? null) ? $verb['config'] : [];
+        foreach ($config as $field) {
+            $k = (string) ($field['key'] ?? '');
+            if ($k === '' || isset($structural[$k]) || !array_key_exists($k, $data)) {
+                continue;
+            }
+            $parts[] = sprintf('%s: %s', $this->safeKey($k), $this->literal($data[$k]));
+        }
+
+        return implode(', ', $parts);
+    }
+
+    /**
+     * `<handle>.out.<pin>` reference to another node's output.
+     */
+    private function handleRef(string $sourceNodeId, string $output): string
+    {
+        $handle = $this->handleName[$sourceNodeId] ?? null;
+        if ($handle === null) {
+            return '/* missing source ' . $sourceNodeId . ' */ null';
+        }
+        if ($output === '') {
+            return $handle . '.out';
+        }
+        return $handle . '.out.' . $output;
+    }
+
+    /**
+     * Emit the exec wiring: for each node, one statement per exec output.
+     */
+    private function emitWiring(): string
+    {
+        // Group exec edges by source → output → [targets], preserving order.
+        $grouped = [];
+        foreach ($this->exec as $c) {
+            $src = (string) ($c['source'] ?? '');
+            $outp = (string) ($c['sourceOutput'] ?? 'next');
+            $grouped[$src][$outp][] = (string) ($c['target'] ?? '');
+        }
+        $out = '';
+        foreach ($this->nodes as $node) {
+            $id = (string) $node['id'];
+            if (!isset($grouped[$id])) {
+                continue;
+            }
+            $srcHandle = $this->handleName[$id] ?? $id;
+            foreach ($grouped[$id] as $outp => $targets) {
+                $method = $this->execMethodFor((string) $outp);
+                $handles = [];
+                foreach ($targets as $t) {
+                    $handles[] = $this->handleName[$t] ?? $t;
+                }
+                $out .= sprintf("%s.%s([%s]);\n", $srcHandle, $method, implode(', ', $handles));
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Map a graph exec output socket to its handle-model method name.
+     * next → exeOut, yes → exeOutYes, no → exeOutNo. Any other (legacy /
+     * exotic) socket becomes exeOut<Camel> so it stays visible even though
+     * the current compiler only wires the three canonical ones.
+     */
+    private function execMethodFor(string $output): string
+    {
+        switch ($output) {
+            case 'next':
+            case '':
+                return 'exeOut';
+            case 'yes':
+                return 'exeOutYes';
+            case 'no':
+                return 'exeOutNo';
+            default:
+                return 'exeOut' . ucfirst(str_replace(['_', '-'], '', ucwords($output, '_-')));
+        }
     }
 
     private function emitVariableDeclarations(int $indent): string
@@ -1214,7 +1515,7 @@ final class Decompiler
             return (string) $value;
         }
         if (is_string($value)) {
-            return $this->renderStringValue($value);
+            return $this->renderConfigValue($value);
         }
         if (is_array($value)) {
             if (array_is_list($value)) {
@@ -1236,5 +1537,26 @@ final class Decompiler
             return $key;
         }
         return $this->quote($key);
+    }
+
+    /**
+     * Render a string value stored in node.data (a config slot, or an input
+     * that a legacy graph baked as a `{{token}}` string instead of a data
+     * edge). Two shapes:
+     *   - EXACTLY one `{{node.<id>.<out>}}` token → a wire reference
+     *     `<handle>.out.<out>`, so the recompile relinks it to the node by
+     *     handle (the raw id would be stale after ids regenerate).
+     *   - anything else → a PLAIN quoted string. Any `{{event.x}}` /
+     *     `{{variable.x}}` / `{{site.x}}` markers are the RUNTIME's own
+     *     interpolation, stored verbatim in config — NOT TS template
+     *     interpolation — so they must NOT become a backtick template
+     *     (which the compiler rejects). They round-trip as literal text.
+     */
+    private function renderConfigValue(string $value): string
+    {
+        if (preg_match('/^\{\{\s*node\.([^.}\s]+)\.([^}\s]+)\s*\}\}$/', $value, $m)) {
+            return $this->handleRef((string) $m[1], (string) $m[2]);
+        }
+        return $this->quote($value);
     }
 }

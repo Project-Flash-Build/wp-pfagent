@@ -48,47 +48,27 @@ final class Parser
     {
         $declarations = [];
         while (!$this->isAtEnd()) {
-            $declarations[] = $this->parseTopLevelDeclaration();
+            $declarations[] = $this->parseTopLevelItem();
         }
 
-        // F21 + F26 + F27: post-parse structural validation. Count
-        // trigger / name / status declarations and reject programs
-        // that don't have exactly one of each. The flow declaration is
-        // optional from this pass' perspective (a workflow may decompile
-        // with only a trigger + metadata), but a workflow without name
-        // or status is operator-illegal and the LLM keeps inventing
-        // those without scaffold so we force the explicit declaration.
-        $triggerCount = 0;
+        // Structural validation for the HANDLE-GRAPH model. A program is a
+        // flat list of top-level items: `name`, `status`, node-handle
+        // declarations (`const h = nodes.<node>({...});`) and wiring
+        // statements (`h.exeOut([...]);`). Order is irrelevant. We require
+        // exactly one `name` and one `status`. The TRIGGER is no longer a
+        // dedicated declaration — it is an ordinary node handle
+        // (`const event = nodes.<X>$Trigger();`); "exactly one trigger node"
+        // is a GRAPH invariant validated at compile time, not here.
         $nameCount = 0;
         $statusCount = 0;
         $firstTok = $this->tokens[0] ?? ['line' => 0, 'column' => 0];
         foreach ($declarations as $decl) {
             $t = (string) ($decl['type'] ?? '');
-            if ($t === 'TriggerDecl') {
-                $triggerCount++;
-            } elseif ($t === 'NameDecl') {
+            if ($t === 'NameDecl') {
                 $nameCount++;
             } elseif ($t === 'StatusDecl') {
                 $statusCount++;
             }
-        }
-        if ($triggerCount === 0) {
-            throw CompileError::parse(
-                'missing_trigger',
-                (int) ($firstTok['line'] ?? 0),
-                (int) ($firstTok['column'] ?? 0),
-                'A workflow must declare exactly one trigger.',
-                'Add a `trigger <Identifier> as event;` line near the top of the file.'
-            );
-        }
-        if ($triggerCount > 1) {
-            throw CompileError::parse(
-                'multiple_triggers',
-                (int) ($firstTok['line'] ?? 0),
-                (int) ($firstTok['column'] ?? 0),
-                sprintf('A workflow must declare exactly one trigger; found %d.', $triggerCount),
-                'Only the first event channel can drive a workflow. Split into multiple workflows or pick one trigger.'
-            );
         }
         if ($nameCount === 0) {
             throw CompileError::parse(
@@ -113,33 +93,69 @@ final class Parser
     }
 
     /**
+     * One top-level item of the handle-graph program: `name` / `status`
+     * directives, a node-handle declaration (`const h = nodes.<node>({...});`),
+     * or a wiring statement (`h.exeOut([...]);` — a bare expression statement).
+     * Order does not matter; the wiring defines the graph.
+     *
      * @return array<string, mixed>
      */
-    private function parseTopLevelDeclaration(): array
+    private function parseTopLevelItem(): array
     {
         $tok = $this->peek();
         $value = is_string($tok['value']) ? $tok['value'] : '';
-        // F20: `async function workflow(event)` without the `flow` prefix
-        // is the leniency the cert hunt surfaced. The documented grammar
-        // requires `flow async function workflow(event) { ... }`. Reject
-        // the bare-async form and direct the LLM to the canonical shape.
+
+        // Old-model constructs → point the LLM at the handle-graph model.
         if ($tok['type'] === Lexer::T_KEYWORD && $value === 'async') {
             throw $this->error(
-                'flow_keyword_required',
-                'Workflow function declaration must be preceded by the `flow` keyword.',
-                'Write: flow async function workflow(event) { ... }'
+                'flow_wrapper_removed',
+                'There is no `flow async function workflow(event) { ... }` wrapper.',
+                'Declare nodes at top level and wire them: const event = nodes.<X>$Trigger(); const step = nodes.<node>({ ... }); event.exeOut([step]);'
+            );
+        }
+        if ($tok['type'] === Lexer::T_KEYWORD && ($value === 'let' || $value === 'var')) {
+            throw $this->error(
+                'let_var_not_allowed',
+                sprintf('`%s` is not allowed; every node handle is a `const`.', $value),
+                'Write: const <handle> = nodes.<node>({ ... }); Workflow variables come from the operator editor or auto-seeding — read one with nodes.<Name>$Variable$Get().'
+            );
+        }
+        if ($tok['type'] === Lexer::T_KEYWORD && $value === 'const') {
+            return $this->parseVarDecl();
+        }
+        if ($tok['type'] === Lexer::T_KEYWORD && in_array($value, ['if', 'for', 'while', 'do', 'switch', 'try', 'return', 'throw', 'function', 'class'], true)) {
+            throw $this->error(
+                'control_flow_removed',
+                sprintf('`%s` is not part of the workflow language — there is no control flow or statement ordering.', $value),
+                'Branching IS a condition node (wire cond.exeOutYes([...]) / cond.exeOutNo([...])); looping IS a loop node. Wire them like any other node.'
             );
         }
         if ($tok['type'] === Lexer::T_IDENT || $tok['type'] === Lexer::T_KEYWORD) {
-            return match ($value) {
-                'trigger' => $this->parseTriggerDecl(),
-                'name' => $this->parseNameDecl(),
-                'status' => $this->parseStatusDecl(),
-                'flow' => $this->parseFlowDecl(),
-                default => throw $this->error('unknown_top_level', sprintf('Unknown top-level declaration "%s".', $value), 'Allowed at top level: trigger, name, status, flow.'),
-            };
+            if ($value === 'name') {
+                return $this->parseNameDecl();
+            }
+            if ($value === 'status') {
+                return $this->parseStatusDecl();
+            }
+            if ($value === 'trigger') {
+                throw $this->error(
+                    'trigger_decl_removed',
+                    'The `trigger <X> as event;` declaration no longer exists.',
+                    'The trigger is an ordinary node handle: const event = nodes.<X>$Trigger();'
+                );
+            }
+            if ($value === 'flow') {
+                throw $this->error(
+                    'flow_wrapper_removed',
+                    'There is no `flow` wrapper.',
+                    'Declare nodes at top level: const event = nodes.<X>$Trigger(); ... and wire them with exeOut*([...]).'
+                );
+            }
         }
-        throw $this->error('top_level_expected', sprintf('Expected a top-level declaration (trigger, name, status, flow), got "%s".', (string) (is_array($tok['value']) ? '' : $tok['value'])), 'A program must begin with declarations; statements only live inside the flow body.');
+
+        // Anything else is a top-level expression statement — the wiring
+        // calls (`h.exeOut([...]);`) and any other bare expression.
+        return $this->parseExprStmt();
     }
 
     /**

@@ -2,12 +2,13 @@
 /**
  * Plugin Name: WP-PFAgent
  * Description: Open-source AI agent console for the Setyenv suite. Drives WP-PFWorkflow and WP-PFManagement from natural language.
- * Version: 1.0.8
+ * Version: 1.0.11
  * Author: Setyenv Build
  * Requires PHP: 8.1
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wp-pfagent
+ * Update URI: https://updates.setyenv.com/wp-pfagent/
  */
 
 if (!defined('ABSPATH')) {
@@ -15,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('WP_PFAGENT_VERSION')) {
-    define('WP_PFAGENT_VERSION', '1.0.8');
+    define('WP_PFAGENT_VERSION', '1.0.11');
 }
 if (!defined('WP_PFAGENT_FILE')) {
     define('WP_PFAGENT_FILE', __FILE__);
@@ -27,6 +28,7 @@ if (!defined('WP_PFAGENT_URL')) {
     define('WP_PFAGENT_URL', plugin_dir_url(__FILE__));
 }
 
+require_once WP_PFAGENT_DIR . 'includes/UpdateChannel.php';
 require_once WP_PFAGENT_DIR . 'includes/Capabilities.php';
 require_once WP_PFAGENT_DIR . 'includes/RateLimiter.php';
 require_once WP_PFAGENT_DIR . 'includes/WorkflowDependency.php';
@@ -124,6 +126,11 @@ require_once WP_PFAGENT_DIR . 'includes/Framework/Loop.php';
 require_once WP_PFAGENT_DIR . 'includes/Framework/Llm/Prompts.php';
 require_once WP_PFAGENT_DIR . 'includes/Framework/LlmCompactor.php';
 require_once WP_PFAGENT_DIR . 'includes/FrameworkRuntime.php';
+
+// Canal de actualización (mecanismo estándar de WP: cabecera `Update URI:` +
+// filtro por host). Sin LicenseClient — PFAgent es OSS; el canal usa una
+// identidad anónima estable solo para el turno del escalonado.
+\ProjectFlash\Agent\UpdateChannel::register(WP_PFAGENT_FILE, 'wp-pfagent', WP_PFAGENT_VERSION);
 
 register_activation_hook(WP_PFAGENT_FILE, ['\\ProjectFlash\\Agent\\TraceLogger', 'install']);
 // Compiler caches — only when the .pfflow compiler ships (guarded so a derived
